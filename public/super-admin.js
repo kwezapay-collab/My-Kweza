@@ -421,13 +421,26 @@ async function deleteUser(id) {
 }
 
 // Withdrawal Management
+const normalizeWithdrawalStatus = (status) => {
+    const normalized = String(status || 'pending').toLowerCase();
+    return normalized === 'approved' ? 'accepted' : normalized;
+};
+
+const withdrawalStatusClass = (status) => {
+    const normalized = normalizeWithdrawalStatus(status);
+    if (normalized === 'paid') return 'status-paid';
+    if (normalized === 'accepted') return 'status-accepted';
+    if (normalized === 'rejected') return 'status-rejected';
+    return 'status-pending';
+};
+
 async function loadWithdrawals() {
     try {
         const res = await apiFetch('/api/super/withdrawals');
         allWithdrawals = await res.json();
         renderWithdrawals();
         
-        const pendingCount = allWithdrawals.filter(w => w.status === 'pending').length;
+        const pendingCount = allWithdrawals.filter(w => normalizeWithdrawalStatus(w.status) === 'pending').length;
         const badge = document.getElementById('withdrawalBadge');
         if (badge) {
             if (pendingCount > 0) {
@@ -496,6 +509,7 @@ function renderWithdrawals() {
     }
 
     allWithdrawals.forEach(w => {
+        const status = normalizeWithdrawalStatus(w.status);
         const row = document.createElement('tr');
         row.innerHTML = `
             <td style="padding: 1rem 0;">
@@ -507,11 +521,11 @@ function renderWithdrawals() {
                 <div style="font-weight: 500;">${w.method}</div>
                 <div style="font-size: 0.75rem; color: var(--text-muted);">${w.details}</div>
             </td>
-            <td><span class="status-pill status-${w.status}">${w.status}</span></td>
+            <td><span class="status-pill ${withdrawalStatusClass(status)}">${status}</span></td>
             <td>
-                ${w.status === 'pending' ? `
+                ${status === 'pending' ? `
                     <div class="action-btns">
-                        <button class="btn btn-primary btn-sm" onclick="updateWithdrawalStatus(${w.id}, 'approved')">Approve</button>
+                        <button class="btn btn-primary btn-sm" onclick="updateWithdrawalStatus(${w.id}, 'accepted')">Accept</button>
                         <button class="btn btn-secondary btn-sm" onclick="updateWithdrawalStatus(${w.id}, 'rejected')">Reject</button>
                     </div>
                 ` : '---'}

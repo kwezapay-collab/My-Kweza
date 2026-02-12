@@ -19,6 +19,14 @@ async function migrate() {
             status TEXT DEFAULT 'pending',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )`);
+        await db.execute(`ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS reviewed_by INTEGER`);
+        await db.execute(`ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS reviewed_at TIMESTAMP`);
+        await db.execute(`ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS notification_message TEXT`);
+        await db.execute(`ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS notification_sent_at TIMESTAMP`);
+        await db.execute(`ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS notification_sent_by INTEGER`);
+        await db.execute(`ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP`);
+        await db.execute(`UPDATE withdrawal_requests SET updated_at = created_at WHERE updated_at IS NULL`);
+        await db.execute(`UPDATE withdrawal_requests SET status = 'accepted' WHERE status = 'approved'`);
 
         await db.execute(`CREATE TABLE IF NOT EXISTS complaints (
             id SERIAL PRIMARY KEY,

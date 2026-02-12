@@ -130,6 +130,59 @@
                 </form>
             </section>
 
+            <section class="glass-card animate-fade" id="myWithdrawalsSection">
+                <h2>My Withdrawal Requests</h2>
+                <p id="myWithdrawalsHint" style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Track request status and payment notifications from the Financial Manager.</p>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
+                                <th style="padding-bottom: 1rem;">SUBMITTED</th>
+                                <th style="padding-bottom: 1rem;">AMOUNT</th>
+                                <th style="padding-bottom: 1rem;">METHOD</th>
+                                <th style="padding-bottom: 1rem;">STATUS</th>
+                                <th style="padding-bottom: 1rem;">MANAGER UPDATE</th>
+                            </tr>
+                        </thead>
+                        <tbody id="myWithdrawalsTable">
+                            <tr>
+                                <td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">
+                                    Loading requests...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="glass-card animate-fade" id="financialManagerPanel" style="display: none;">
+                <div style="display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                    <h2>Financial Manager Withdrawal Queue</h2>
+                    <p id="financialPendingCount" style="font-size: 0.8rem; color: var(--text-muted);">Pending: 0</p>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
+                                <th style="padding-bottom: 1rem;">MEMBER</th>
+                                <th style="padding-bottom: 1rem;">AMOUNT</th>
+                                <th style="padding-bottom: 1rem;">METHOD & DETAILS</th>
+                                <th style="padding-bottom: 1rem;">STATUS</th>
+                                <th style="padding-bottom: 1rem;">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="financialWithdrawalsTable">
+                            <tr>
+                                <td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">
+                                    Loading queue...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
             <!-- Complaint Report Section -->
             <section class="glass-card animate-fade">
                 <h2>Report Complaint</h2>

@@ -81,7 +81,13 @@ const initDb = async () => {
         method TEXT NOT NULL,
         details TEXT,
         status TEXT DEFAULT 'pending',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        reviewed_by INTEGER REFERENCES users(id),
+        reviewed_at TIMESTAMP,
+        notification_message TEXT,
+        notification_sent_at TIMESTAMP,
+        notification_sent_by INTEGER REFERENCES users(id),
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`);
 
     await db.execute(`CREATE TABLE IF NOT EXISTS revenue (

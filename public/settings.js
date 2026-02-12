@@ -4,7 +4,7 @@ lucide.createIcons();
 let currentUser = null;
 let founderMembers = [];
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
-const isFounderRole = (role) => role === 'Founder' || role === 'Founder Member';
+const isFinancialManagerRole = (role) => role === 'Financial Manager';
 const isDevOpsAssistantRole = (role) => role === 'Dev Operations Assistant';
 
 async function loadSettings() {
@@ -18,7 +18,7 @@ async function loadSettings() {
 
         updateUI();
 
-        if (isFounderRole(currentUser.role)) {
+        if (isFinancialManagerRole(currentUser.role)) {
             const founderSection = document.getElementById('founderCompSection');
             if (founderSection) founderSection.style.display = 'block';
             await loadFounderMembers();
@@ -174,7 +174,7 @@ document.getElementById('founderMemberSelect')?.addEventListener('change', (e) =
 
 document.getElementById('founderCompForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!isFounderRole(currentUser?.role)) return;
+    if (!isFinancialManagerRole(currentUser?.role)) return;
 
     const memberId = document.getElementById('founderMemberSelect').value;
     const salary = Number(document.getElementById('founderSalaryInput').value || 0);

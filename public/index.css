@@ -127,9 +127,19 @@ body.devops-purple-theme .status-approved {
     color: #d9c8ff;
 }
 
+body.devops-purple-theme .status-accepted {
+    background: rgba(188, 163, 255, 0.22);
+    color: #d9c8ff;
+}
+
 body.devops-purple-theme .status-pending {
     background: rgba(255, 217, 160, 0.2);
     color: #ffd9a6;
+}
+
+body.devops-purple-theme .status-rejected {
+    background: rgba(255, 111, 159, 0.2);
+    color: #ffb5d1;
 }
 
 body.devops-purple-theme .stat-item.total .value {
@@ -464,6 +474,16 @@ tr:last-child {
 .status-approved {
     background: rgba(52, 152, 219, 0.2);
     color: #3498db;
+}
+
+.status-accepted {
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+}
+
+.status-rejected {
+    background: rgba(231, 76, 60, 0.2);
+    color: var(--danger);
 }
 
 /* Switches */

@@ -32,6 +32,14 @@ const ensureSchema = async () => {
     await db.execute('ALTER TABLE users ADD COLUMN IF NOT EXISTS salary DOUBLE PRECISION DEFAULT 0');
     await db.execute('ALTER TABLE users ADD COLUMN IF NOT EXISTS bonus DOUBLE PRECISION DEFAULT 0');
     await db.execute('ALTER TABLE users ADD COLUMN IF NOT EXISTS dividends DOUBLE PRECISION DEFAULT 0');
+    await db.execute('ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS reviewed_by INTEGER');
+    await db.execute('ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS reviewed_at TIMESTAMP');
+    await db.execute('ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS notification_message TEXT');
+    await db.execute('ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS notification_sent_at TIMESTAMP');
+    await db.execute('ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS notification_sent_by INTEGER');
+    await db.execute('ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP');
+    await db.execute('UPDATE withdrawal_requests SET updated_at = created_at WHERE updated_at IS NULL');
+    await db.execute("UPDATE withdrawal_requests SET status = 'accepted' WHERE status = 'approved'");
 };
 
 app.use(express.json());
@@ -68,9 +76,9 @@ const isDevOpsAssistant = (req, res, next) => {
     next();
 };
 
-const isFounder = (req, res, next) => {
-    if (req.user.role !== 'Founder' && req.user.role !== 'Founder Member') {
-        return res.status(403).json({ error: 'Founder access required' });
+const isFinancialManager = (req, res, next) => {
+    if (req.user.role !== 'Financial Manager') {
+        return res.status(403).json({ error: 'Financial Manager access required' });
     }
     next();
 };
@@ -214,7 +222,7 @@ app.post('/api/profile/change-pin', authenticate, async (req, res) => {
 });
 
 // Founder Compensation Management
-app.get('/api/founder/members', authenticate, isFounder, async (req, res) => {
+app.get('/api/founder/members', authenticate, isFinancialManager, async (req, res) => {
     try {
         const result = await db.execute(`
             SELECT id, member_id, name, role, branch, salary, bonus, dividends
@@ -227,7 +235,7 @@ app.get('/api/founder/members', authenticate, isFounder, async (req, res) => {
     }
 });
 
-app.put('/api/founder/members/:id/compensation', authenticate, isFounder, async (req, res) => {
+app.put('/api/founder/members/:id/compensation', authenticate, isFinancialManager, async (req, res) => {
     try {
         const { id } = req.params;
         const salary = Number(req.body.salary || 0);
@@ -442,12 +450,105 @@ app.post('/api/super/revenue', authenticate, isSuperAdmin, async (req, res) => {
 });
 
 // Withdrawal Requests APIs
+app.get('/api/withdrawals', authenticate, async (req, res) => {
+    try {
+        const result = await db.execute({
+            sql: `
+                SELECT id, amount, method, details, status, created_at, reviewed_at, notification_message, notification_sent_at, updated_at
+                FROM withdrawal_requests
+                WHERE user_id = ?
+                ORDER BY created_at DESC, id DESC
+            `,
+            args: [req.user.id]
+        });
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 app.post('/api/withdrawals', authenticate, async (req, res) => {
     try {
         const { amount, method, details } = req.body;
         await db.execute({
             sql: 'INSERT INTO withdrawal_requests (user_id, amount, method, details) VALUES (?, ?, ?, ?)',
             args: [req.user.id, amount, method, details]
+        });
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/financial/withdrawals', authenticate, isFinancialManager, async (req, res) => {
+    try {
+        const result = await db.execute(`
+            SELECT wr.*, u.name as member_name, u.member_id
+            FROM withdrawal_requests wr
+            JOIN users u ON wr.user_id = u.id
+            ORDER BY wr.created_at DESC, wr.id DESC
+        `);
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.put('/api/financial/withdrawals/:id/status', authenticate, isFinancialManager, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const status = String(req.body.status || '').toLowerCase();
+        if (!['accepted', 'rejected'].includes(status)) {
+            return res.status(400).json({ error: 'Status must be accepted or rejected' });
+        }
+
+        await db.execute({
+            sql: `
+                UPDATE withdrawal_requests
+                SET status = ?, reviewed_by = ?, reviewed_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+            `,
+            args: [status, req.user.id, id]
+        });
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.put('/api/financial/withdrawals/:id/notify', authenticate, isFinancialManager, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const message = String(req.body.message || '').trim();
+        if (!message) {
+            return res.status(400).json({ error: 'Notification message is required' });
+        }
+
+        const requestResult = await db.execute({
+            sql: 'SELECT status FROM withdrawal_requests WHERE id = ?',
+            args: [id]
+        });
+        const requestRow = requestResult.rows[0];
+        if (!requestRow) {
+            return res.status(404).json({ error: 'Withdrawal request not found' });
+        }
+
+        const currentStatus = String(requestRow.status || '').toLowerCase();
+        if (currentStatus !== 'accepted' && currentStatus !== 'paid') {
+            return res.status(400).json({ error: 'Request must be accepted before sending payment notification' });
+        }
+
+        await db.execute({
+            sql: `
+                UPDATE withdrawal_requests
+                SET status = 'paid',
+                    notification_message = ?,
+                    notification_sent_at = CURRENT_TIMESTAMP,
+                    notification_sent_by = ?,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+            `,
+            args: [message, req.user.id, id]
         });
         res.json({ success: true });
     } catch (err) {
@@ -472,10 +573,11 @@ app.get('/api/super/withdrawals', authenticate, isSuperAdmin, async (req, res) =
 app.put('/api/super/withdrawals/:id', authenticate, isSuperAdmin, async (req, res) => {
     try {
         const { id } = req.params;
-        const { status } = req.body;
+        const rawStatus = String(req.body.status || '').toLowerCase();
+        const status = rawStatus === 'approved' ? 'accepted' : rawStatus;
         await db.execute({
-            sql: 'UPDATE withdrawal_requests SET status = ? WHERE id = ?',
-            args: [status, id]
+            sql: 'UPDATE withdrawal_requests SET status = ?, reviewed_by = ?, reviewed_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+            args: [status, req.user.id, id]
         });
         res.json({ success: true });
     } catch (err) {
