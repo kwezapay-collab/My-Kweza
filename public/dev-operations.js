@@ -33,7 +33,7 @@ function updateUI() {
     document.getElementById('userName').innerText = currentUser.name;
     document.getElementById('userRole').innerText = currentUser.sub_role || currentUser.role;
     document.getElementById('memberId').innerText = `ID: ${currentUser.member_id}`;
-    document.getElementById('welcomeText').innerText = `Welcome back, ${currentUser.name.split(' ')[0]}`;
+    document.getElementById('welcomeText').innerText = `Welcome back, ${currentUser.name.split(' ')[0]} \u2764\uFE0F`;
     document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-GB', {
         weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
     });
@@ -88,23 +88,42 @@ async function fetchComplaints() {
         return;
     }
 
-    allComplaints = await res.json();
+    const complaints = await res.json();
+    allComplaints = Array.isArray(complaints)
+        ? [...complaints].sort((a, b) => {
+            const parsedTimeA = Date.parse(a.created_at || '');
+            const parsedTimeB = Date.parse(b.created_at || '');
+            const timeA = Number.isFinite(parsedTimeA) ? parsedTimeA : 0;
+            const timeB = Number.isFinite(parsedTimeB) ? parsedTimeB : 0;
+            if (timeA !== timeB) return timeB - timeA;
+            return (b.id || 0) - (a.id || 0);
+        })
+        : [];
     renderComplaints();
 }
 
 function renderComplaints() {
     const tableBody = document.getElementById('complaintsInboxTable');
     const complaintCount = document.getElementById('complaintCount');
+    const showMoreWrap = document.getElementById('showMoreComplaintsWrap');
     tableBody.innerHTML = '';
+    const recentComplaints = allComplaints.slice(0, 2);
 
-    complaintCount.innerText = `${allComplaints.length} complaint${allComplaints.length === 1 ? '' : 's'}`;
+    if (complaintCount) {
+        complaintCount.innerText = allComplaints.length > 2
+            ? `Showing 2 of ${allComplaints.length} complaints`
+            : `${allComplaints.length} complaint${allComplaints.length === 1 ? '' : 's'}`;
+    }
+    if (showMoreWrap) {
+        showMoreWrap.style.display = allComplaints.length > 2 ? 'block' : 'none';
+    }
 
     if (!allComplaints.length) {
         tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">No complaints submitted yet</td></tr>';
         return;
     }
 
-    allComplaints.forEach((c) => {
+    recentComplaints.forEach((c) => {
         const statusClass = c.status === 'resolved' ? 'status-paid' : (c.status === 'in_review' ? 'status-approved' : 'status-pending');
         const row = document.createElement('tr');
         const details = String(c.message || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');

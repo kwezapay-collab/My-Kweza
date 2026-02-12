@@ -5,6 +5,7 @@ let currentUser = null;
 let founderMembers = [];
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
 const isFounderRole = (role) => role === 'Founder' || role === 'Founder Member';
+const isDevOpsAssistantRole = (role) => role === 'Dev Operations Assistant';
 
 async function loadSettings() {
     try {
@@ -28,6 +29,12 @@ async function loadSettings() {
 }
 
 function updateUI() {
+    if (isDevOpsAssistantRole(currentUser.role)) {
+        document.body.classList.add('devops-purple-theme');
+    } else {
+        document.body.classList.remove('devops-purple-theme');
+    }
+
     document.getElementById('userName').innerText = currentUser.name;
     document.getElementById('userRole').innerText = currentUser.sub_role || currentUser.role;
 

@@ -30,6 +30,113 @@ body {
     flex-direction: column;
 }
 
+/* Dev Operations purple theme (page-specific via body class) */
+body.devops-purple-theme {
+    --primary: #8f63ff;
+    --accent: #ff9ed5;
+    --gold: #ffd89e;
+    --danger: #ff6f9f;
+    --bg-dark: #171033;
+    --glass-bg: rgba(200, 178, 255, 0.14);
+    --glass-border: rgba(220, 200, 255, 0.4);
+    --text-main: #f8f3ff;
+    --text-muted: #ceb8f5;
+    background:
+        radial-gradient(circle at 15% 6%, rgba(255, 156, 212, 0.28) 0%, rgba(255, 156, 212, 0) 32%),
+        radial-gradient(circle at 88% 4%, rgba(188, 147, 255, 0.33) 0%, rgba(188, 147, 255, 0) 34%),
+        linear-gradient(158deg, #3f1d7a 0%, #2c175f 42%, #1b123e 76%, #130d2d 100%);
+    color: var(--text-main);
+}
+
+body.devops-purple-theme .dashboard-nav {
+    background: rgba(33, 20, 73, 0.8);
+    border-bottom-color: rgba(226, 203, 255, 0.42);
+}
+
+body.devops-purple-theme .glass-card {
+    box-shadow: 0 14px 36px rgba(24, 12, 55, 0.45);
+}
+
+body.devops-purple-theme .btn-primary {
+    background: linear-gradient(120deg, #8f63ff 0%, #ab78ff 62%, #f79ac9 100%);
+    box-shadow: 0 8px 24px rgba(141, 99, 255, 0.34);
+}
+
+body.devops-purple-theme .btn-primary:hover {
+    box-shadow: 0 12px 30px rgba(172, 120, 255, 0.4);
+}
+
+body.devops-purple-theme .btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(221, 199, 255, 0.45);
+}
+
+body.devops-purple-theme .btn-secondary:hover {
+    background: rgba(255, 176, 226, 0.12);
+    border-color: rgba(231, 218, 255, 0.65);
+}
+
+body.devops-purple-theme .nav-icon-btn {
+    color: var(--text-muted);
+}
+
+body.devops-purple-theme .nav-icon-btn:hover {
+    background: rgba(190, 152, 255, 0.16);
+    color: var(--text-main);
+}
+
+body.devops-purple-theme .input-group input,
+body.devops-purple-theme .input-group textarea,
+body.devops-purple-theme .input-group select,
+body.devops-purple-theme #complaintMessage,
+body.devops-purple-theme #withdrawMethod {
+    background: rgba(220, 204, 255, 0.12) !important;
+    border-color: rgba(221, 199, 255, 0.52) !important;
+    color: var(--text-main) !important;
+}
+
+body.devops-purple-theme input::placeholder,
+body.devops-purple-theme textarea::placeholder {
+    color: rgba(239, 226, 255, 0.76);
+}
+
+body.devops-purple-theme select option {
+    background: #2d1a61;
+    color: #f8f3ff;
+}
+
+body.devops-purple-theme tr {
+    border-bottom: 1px solid rgba(221, 199, 255, 0.24);
+}
+
+body.devops-purple-theme tr:hover {
+    background: rgba(186, 140, 255, 0.08);
+}
+
+body.devops-purple-theme .status-pill {
+    border: 1px solid rgba(221, 199, 255, 0.35);
+}
+
+body.devops-purple-theme .status-paid {
+    background: rgba(156, 240, 215, 0.16);
+    color: #95f2d2;
+}
+
+body.devops-purple-theme .status-approved {
+    background: rgba(188, 163, 255, 0.22);
+    color: #d9c8ff;
+}
+
+body.devops-purple-theme .status-pending {
+    background: rgba(255, 217, 160, 0.2);
+    color: #ffd9a6;
+}
+
+body.devops-purple-theme .stat-item.total .value {
+    color: #ffe5f4;
+    text-shadow: 0 0 16px rgba(247, 154, 201, 0.38);
+}
+
 h1,
 h2,
 h3,

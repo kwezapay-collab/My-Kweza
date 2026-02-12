@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
 </head>
 
-<body class="scrollable">
+<body class="scrollable devops-purple-theme">
     <nav class="dashboard-nav">
         <div class="brand-group" style="display: flex; align-items: center; gap: 1rem;">
             <img src="logo.png" alt="Logo" class="nav-logo"
@@ -34,8 +34,10 @@
 
     <main class="main-content">
         <header style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
-            <div>
-                <h1 id="welcomeText">Dev Operations Assistant Dashboard</h1>
+            <div style="min-width: 0; flex: 1;">
+                <h1 id="welcomeText"
+                    style="font-size: clamp(1rem, 1.9vw, 1.45rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    Dev Operations Assistant Dashboard</h1>
                 <p style="color: var(--text-muted);" id="currentDate"></p>
             </div>
             <button id="exportCSVBtn" class="btn btn-primary" style="font-size: 0.75rem; padding: 8px 14px;">Export
@@ -86,6 +88,11 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div id="showMoreComplaintsWrap" style="margin-top: 1rem; text-align: right; display: none;">
+                    <a href="/complaints-history.html"
+                        style="font-size: 0.85rem; color: var(--accent); text-decoration: none; font-weight: 600;">Show
+                        more</a>
                 </div>
             </section>
 
