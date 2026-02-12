@@ -16,11 +16,11 @@
             "dest": "server.js"
         },
         {
-            "src": "/(index|dashboard|settings|payouts-history|dev-operations).html",
+            "src": "/(index|dashboard|settings|payouts-history|dev-operations|complaints-history|super-admin).html",
             "dest": "/public/$1.html"
         },
         {
-            "src": "/(index.css|logo.png|.*\\.js)",
+            "src": "/(index.css|logo.png|manifest.webmanifest|icons/.*|.*\\.js)",
             "dest": "/public/$1"
         },
         {
