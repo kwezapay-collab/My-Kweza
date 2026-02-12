@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | My Kweza</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+</head>
+
+<body class="scrollable">
+    <nav class="dashboard-nav">
+        <div class="brand-group" style="display: flex; align-items: center; gap: 1rem; cursor: pointer;"
+            onclick="window.location.href='/dashboard.html'">
+            <img src="logo.png" alt="Logo" class="nav-logo"
+                onerror="this.src='https://placehold.co/40x40/1a4d6e/white?text=K'">
+            <h2 class="brand">My Kweza</h2>
+        </div>
+        <div class="user-actions" style="display: flex; align-items: center; gap: 1rem;">
+            <div class="user-info" style="text-align: right;">
+                <p id="userName" style="font-weight: 600;">Loading...</p>
+                <p id="userRole" style="font-size: 0.8rem; color: var(--text-muted);">---</p>
+            </div>
+
+            <button id="dashboardBtn" class="nav-icon-btn" onclick="window.location.href='/dashboard.html'"><i
+                    data-lucide="layout-dashboard"></i></button>
+            <button id="logoutBtn" class="nav-icon-btn" style="color: var(--danger);"><i
+                    data-lucide="log-out"></i></button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
+            <button onclick="window.location.href='/dashboard.html'" class="btn"
+                style="background: transparent; padding: 8px; color: var(--text-muted);"><i
+                    data-lucide="arrow-left"></i></button>
+            <div>
+                <h1>Account Settings</h1>
+                <p style="color: var(--text-muted);">Manage your profile and security</p>
+            </div>
+        </header>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <!-- Profile Settings -->
+            <section class="glass-card animate-fade">
+                <h2 style="margin-bottom: 1.5rem;"><i data-lucide="user"
+                        style="vertical-align: middle; margin-right: 0.5rem;"></i>Profile Preferences</h2>
+                <form id="profileForm">
+                    <div class="input-group">
+                        <label>Email for Notifications</label>
+                        <input type="email" id="profileEmail" placeholder="your@email.com">
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
+                        <input type="checkbox" id="notifyToggle" style="width: 18px; height: 18px;">
+                        <label for="notifyToggle" style="font-size: 0.9rem;">Enable Dashboard Alerts</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Save Preferences</button>
+                </form>
+            </section>
+
+            <!-- Security Settings -->
+            <section class="glass-card animate-fade">
+                <h2 style="margin-bottom: 1.5rem;"><i data-lucide="shield"
+                        style="vertical-align: middle; margin-right: 0.5rem;"></i>Security (Change PIN)</h2>
+                <form id="pinForm">
+                    <div class="input-group">
+                        <label>Current PIN</label>
+                        <input type="password" id="oldPin" placeholder="••••" maxlength="4" required>
+                    </div>
+                    <div class="input-group">
+                        <label>New PIN (4 digits)</label>
+                        <input type="password" id="newPin" placeholder="••••" maxlength="4" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Confirm New PIN</label>
+                        <input type="password" id="confirmPin" placeholder="••••" maxlength="4" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; background: var(--accent);">Update
+                        PIN</button>
+                </form>
+            </section>
+        </div>
+
+        <section id="founderCompSection" class="glass-card animate-fade" style="margin-top: 2rem; display: none;">
+            <h2 style="margin-bottom: 0.5rem;"><i data-lucide="wallet-cards"
+                    style="vertical-align: middle; margin-right: 0.5rem;"></i>Founder Compensation Management</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Set salary, bonus, and
+                dividends for all members. Updates are reflected on each member dashboard.</p>
+
+            <form id="founderCompForm" style="margin-bottom: 1.5rem;">
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1rem;">
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Member</label>
+                        <select id="founderMemberSelect" required
+                            style="width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); padding: 14px; border-radius: 12px; color: white; font-size: 0.95rem; outline: none;">
+                        </select>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Salary</label>
+                        <input type="number" id="founderSalaryInput" min="0" step="0.01" required>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Bonus</label>
+                        <input type="number" id="founderBonusInput" min="0" step="0.01" required>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Dividends</label>
+                        <input type="number" id="founderDividendsInput" min="0" step="0.01" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Save Compensation</button>
+            </form>
+
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
+                            <th style="padding-bottom: 1rem;">MEMBER</th>
+                            <th style="padding-bottom: 1rem;">ROLE</th>
+                            <th style="padding-bottom: 1rem;">SALARY</th>
+                            <th style="padding-bottom: 1rem;">BONUS</th>
+                            <th style="padding-bottom: 1rem;">DIVIDENDS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="founderCompTable">
+                        <tr>
+                            <td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">Loading
+                                members...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="glass-card animate-fade" style="margin-top: 2rem; border-top: 2px solid var(--danger);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2>Log Out</h2>
+                    <p style="color: var(--text-muted);">Sign out of your Kweza account securely</p>
+                </div>
+                <button id="contentLogoutBtn" class="btn"
+                    style="background: var(--danger); color: white; padding: 12px 30px;">Log Out</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="settings.js"></script>
+</body>
+
+</html>

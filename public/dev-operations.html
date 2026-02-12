@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Operations Assistant | My Kweza</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+</head>
+
+<body class="scrollable">
+    <nav class="dashboard-nav">
+        <div class="brand-group" style="display: flex; align-items: center; gap: 1rem;">
+            <img src="logo.png" alt="Logo" class="nav-logo"
+                onerror="this.src='https://placehold.co/40x40/1a4d6e/white?text=K'">
+            <h2 class="brand">My Kweza</h2>
+        </div>
+        <div class="user-actions" style="display: flex; align-items: center; gap: 1rem;">
+            <div class="user-info" style="text-align: right;">
+                <p id="userName" style="font-weight: 600;">Loading...</p>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <p id="userRole" style="font-size: 0.75rem; color: var(--accent); font-weight: 600;">---</p>
+                    <p id="memberId" style="font-size: 0.7rem; color: var(--text-muted); opacity: 0.8;">ID: ---</p>
+                </div>
+            </div>
+
+            <button id="settingsBtn" class="nav-icon-btn" onclick="window.location.href='/settings.html'"><i
+                    data-lucide="settings"></i></button>
+            <button id="logoutBtn" class="nav-icon-btn" style="color: var(--danger);"><i
+                    data-lucide="log-out"></i></button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+                <h1 id="welcomeText">Dev Operations Assistant Dashboard</h1>
+                <p style="color: var(--text-muted);" id="currentDate"></p>
+            </div>
+            <button id="exportCSVBtn" class="btn btn-primary" style="font-size: 0.75rem; padding: 8px 14px;">Export
+                CSV</button>
+        </header>
+
+        <div class="glass-card unified-stats-card animate-fade">
+            <div class="stat-item">
+                <h3>Salary</h3>
+                <div class="value">MWK <span id="salaryVal">0.00</span></div>
+            </div>
+            <div class="stat-item">
+                <h3>Bonus</h3>
+                <div class="value">MWK <span id="bonusVal">0.00</span></div>
+            </div>
+            <div class="stat-item">
+                <h3>Dividends</h3>
+                <div class="value">MWK <span id="dividendVal">0.00</span></div>
+            </div>
+            <div class="stat-item total">
+                <h3>Total Payout</h3>
+                <div class="value">MWK <span id="totalVal">0.00</span></div>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+            <section class="glass-card animate-fade">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2>Complaint Reports Inbox</h2>
+                    <p id="complaintCount" style="font-size: 0.8rem; color: var(--text-muted);">Loading...</p>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
+                                <th style="padding-bottom: 1rem;">REPORTER</th>
+                                <th style="padding-bottom: 1rem;">SUBJECT</th>
+                                <th style="padding-bottom: 1rem;">DETAILS</th>
+                                <th style="padding-bottom: 1rem;">STATUS</th>
+                                <th style="padding-bottom: 1rem;">ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody id="complaintsInboxTable">
+                            <tr>
+                                <td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">
+                                    Loading reports...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="glass-card animate-fade">
+                <h2>Report Complaint</h2>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Use this form to report
+                    issues to the Dev Operations queue.</p>
+                <form id="complaintForm">
+                    <div class="input-group">
+                        <label>Subject</label>
+                        <input type="text" id="complaintSubject" placeholder="Short title (optional)">
+                    </div>
+                    <div class="input-group">
+                        <label>Complaint Details</label>
+                        <textarea id="complaintMessage" required placeholder="Describe the issue..."
+                            style="width: 100%; min-height: 120px; resize: vertical; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); padding: 14px; border-radius: 12px; color: white; font-size: 1rem; outline: none;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-secondary" style="width: 100%;">Send Complaint</button>
+                </form>
+            </section>
+
+            <section class="glass-card animate-fade">
+                <h2>Request Withdrawal</h2>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Request to transfer your
+                    funds to your bank or mobile wallet.</p>
+                <form id="withdrawalForm">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <div class="input-group">
+                            <label>Amount (MWK)</label>
+                            <input type="number" id="withdrawAmount" required placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Transfer Method</label>
+                            <select id="withdrawMethod" required
+                                style="width: 100%; padding: 0.85rem; background: rgba(30, 41, 59, 0.5); border: 1px solid var(--glass-border); border-radius: 10px; color: white;">
+                                <option value="Airtel Money">Airtel Money</option>
+                                <option value="TNM Mpamba">TNM Mpamba</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 1.5rem;">
+                        <label>Receiving Details (Account No / Phone Number / Bank Name)</label>
+                        <input type="text" id="withdrawDetails" required
+                            placeholder="e.g. 099xxxxxxx or National Bank 100xxxxxxx">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Withdrawal Request</button>
+                </form>
+            </section>
+
+            <section class="glass-card animate-fade">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2>Recent Payouts</h2>
+                </div>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
+                            <th style="padding-bottom: 1rem;">DATE</th>
+                            <th style="padding-bottom: 1rem;">TYPE</th>
+                            <th style="padding-bottom: 1rem;">AMOUNT</th>
+                            <th style="padding-bottom: 1rem;">STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payoutsTable">
+                        <tr>
+                            <td colspan="4" style="text-align:center; padding: 2rem; color: var(--text-muted);">
+                                Loading...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="showMorePayoutsWrap" style="margin-top: 1rem; text-align: right; display: none;">
+                    <a href="/payouts-history.html"
+                        style="font-size: 0.85rem; color: var(--accent); text-decoration: none; font-weight: 600;">Show
+                        more</a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="dev-operations.js"></script>
+</body>
+
+</html>

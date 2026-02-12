@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | My Kweza</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+</head>
+
+<body class="scrollable">
+    <nav class="dashboard-nav">
+        <div class="brand-group" style="display: flex; align-items: center; gap: 1rem;">
+            <img src="logo.png" alt="Logo" class="nav-logo"
+                onerror="this.src='https://placehold.co/40x40/1a4d6e/white?text=K'">
+            <h2 class="brand">My Kweza</h2>
+        </div>
+        <div class="user-actions" style="display: flex; align-items: center; gap: 1rem;">
+            <div class="user-info" style="text-align: right;">
+                <p id="userName" style="font-weight: 600;">Loading...</p>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <p id="userRole" style="font-size: 0.75rem; color: var(--accent); font-weight: 600;">---</p>
+                    <p id="memberId" style="font-size: 0.7rem; color: var(--text-muted); opacity: 0.8;">ID: ---</p>
+                </div>
+            </div>
+
+            <button id="settingsBtn" class="nav-icon-btn" onclick="window.location.href='/settings.html'"><i
+                    data-lucide="settings"></i></button>
+
+            <button id="logoutBtn" class="nav-icon-btn" style="color: var(--danger);"><i
+                    data-lucide="log-out"></i></button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- Dashboard Header -->
+        <header style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+                <h1 id="welcomeText">Welcome back</h1>
+                <p style="color: var(--text-muted);" id="currentDate"></p>
+            </div>
+            <button id="superAdminBtn" class="btn btn-secondary"
+                style="display: none; border: 1px solid var(--accent); color: var(--accent);"
+                onclick="window.location.href='/super-admin.html'">
+                <i data-lucide="shield-check" style="width: 16px; height: 16px; margin-right: 8px;"></i>
+                Super Admin Access
+            </button>
+        </header>
+
+        <!-- Unified Stats Card (Visible to all) -->
+        <div class="glass-card unified-stats-card animate-fade">
+            <div class="stat-item">
+                <h3>Salary</h3>
+                <div class="value">MWK <span id="salaryVal">0.00</span></div>
+            </div>
+            <div class="stat-item">
+                <h3>Bonus</h3>
+                <div class="value">MWK <span id="bonusVal">0.00</span></div>
+            </div>
+            <div class="stat-item">
+                <h3>Dividends</h3>
+                <div class="value">MWK <span id="dividendVal">0.00</span></div>
+            </div>
+            <div class="stat-item total">
+                <h3>Total Payout</h3>
+                <div class="value">MWK <span id="totalVal">0.00</span></div>
+            </div>
+        </div>
+
+        <!-- Admin Only: System Overview -->
+        <section id="adminOverview" class="animate-fade" style="display: none; margin-bottom: 2rem;">
+            <h2 style="margin-bottom: 1rem;">Admin Operations</h2>
+            <div class="stats-grid">
+                <div class="glass-card stat-card" style="border-top: 4px solid var(--accent);">
+                    <h3>Total Company Revenue</h3>
+                    <div class="value">MWK <span id="adminTotalRev">0.00</span></div>
+                </div>
+                <div class="glass-card stat-card" style="border-top: 4px solid var(--gold);">
+                    <h3>Payout Obligations</h3>
+                    <div class="value">MWK <span id="adminTotalPay">0.00</span></div>
+                </div>
+                <div class="glass-card stat-card" style="border-top: 4px solid var(--primary);">
+                    <h3>Remaining Funds</h3>
+                    <div class="value">MWK <span id="adminRemaining">0.00</span></div>
+                </div>
+            </div>
+
+            <div class="glass-card"
+                style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3>Low Revenue Mode</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Automatically marks bonuses/dividends as
+                        pending</p>
+                </div>
+                <label id="lrmToggle" class="switch" style="font-size: 1.5rem; cursor: pointer;">
+                    <i data-lucide="shield-off" id="lrmIcon" style="color: var(--text-muted);"></i>
+                </label>
+            </div>
+        </section>
+
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+            <!-- Withdrawal Request Section -->
+            <section class="glass-card animate-fade">
+                <h2>Request Withdrawal</h2>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Request to transfer your
+                    funds to your bank or mobile wallet.</p>
+                <form id="withdrawalForm">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <div class="input-group">
+                            <label>Amount (MWK)</label>
+                            <input type="number" id="withdrawAmount" required placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Transfer Method</label>
+                            <select id="withdrawMethod" required
+                                style="width: 100%; padding: 0.85rem; background: rgba(30, 41, 59, 0.5); border: 1px solid var(--glass-border); border-radius: 10px; color: white;">
+                                <option value="Airtel Money">Airtel Money</option>
+                                <option value="TNM Mpamba">TNM Mpamba</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 1.5rem;">
+                        <label>Receiving Details (Account No / Phone Number / Bank Name)</label>
+                        <input type="text" id="withdrawDetails" required
+                            placeholder="e.g. 099xxxxxxx or National Bank 100xxxxxxx">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Withdrawal Request</button>
+                </form>
+            </section>
+
+            <!-- Complaint Report Section -->
+            <section class="glass-card animate-fade">
+                <h2>Report Complaint</h2>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Share any issue for the
+                    Dev Operations Assistant team to review.</p>
+                <form id="complaintForm">
+                    <div class="input-group">
+                        <label>Subject</label>
+                        <input type="text" id="complaintSubject" placeholder="Short title (optional)">
+                    </div>
+                    <div class="input-group">
+                        <label>Complaint Details</label>
+                        <textarea id="complaintMessage" required placeholder="Describe your complaint..."
+                            style="width: 100%; min-height: 120px; resize: vertical; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); padding: 14px; border-radius: 12px; color: white; font-size: 1rem; outline: none;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-secondary" style="width: 100%;">Send Complaint</button>
+                </form>
+            </section>
+
+            <!-- Main List -->
+            <section class="glass-card animate-fade">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2>Recent Payouts</h2>
+                    <button id="exportCSVBtn" class="btn btn-primary"
+                        style="font-size: 0.7rem; padding: 6px 12px;">Export CSV</button>
+                </div>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
+                            <th style="padding-bottom: 1rem;">DATE</th>
+                            <th style="padding-bottom: 1rem;">TYPE</th>
+                            <th style="padding-bottom: 1rem;">AMOUNT</th>
+                            <th style="padding-bottom: 1rem;">STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payoutsTable">
+                        <!-- Rows added by JS -->
+                    </tbody>
+                </table>
+                <div id="showMorePayoutsWrap" style="margin-top: 1rem; text-align: right; display: none;">
+                    <a id="showMorePayoutsLink" href="/payouts-history.html"
+                        style="font-size: 0.85rem; color: var(--accent); text-decoration: none; font-weight: 600;">Show
+                        more</a>
+                </div>
+            </section>
+
+            <div id="branchPanel" class="glass-card animate-fade" style="display: none;">
+                <h2>Branch Revenue Reporting</h2>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Official daily collection
+                    log for <span id="branchName" style="color: var(--accent); font-weight: 600;">Branch</span></p>
+                <div class="input-group">
+                    <label>Total Collection Amount (MWK)</label>
+                    <input type="number" id="revenueInput" placeholder="Enter total amount collected today">
+                </div>
+                <button id="submitBranchReport" class="btn btn-primary" style="width: 100%;">Submit Official
+                    Report</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="dashboard.js"></script>
+</body>
+
+</html>
