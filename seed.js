@@ -53,7 +53,9 @@ const seedData = async () => {
             pin = await bcrypt.hash('1234', 10);
         }
         await db.execute({
-            sql: `INSERT OR IGNORE INTO users (member_id, name, role, sub_role, pin, branch) VALUES (?, ?, ?, ?, ?, ?)`,
+            sql: `INSERT INTO users (member_id, name, role, sub_role, pin, branch)
+                  VALUES (?, ?, ?, ?, ?, ?)
+                  ON CONFLICT (member_id) DO NOTHING`,
             args: [m.mid, m.name, m.role, m.srole, pin, m.branch || 'Headquarters']
         });
     }

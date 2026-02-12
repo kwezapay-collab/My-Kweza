@@ -27,21 +27,11 @@ const allowedOrigins = process.env.CORS_ORIGIN
 
 const ensureSchema = async () => {
     await initDb();
-    const addColumnIfMissing = async (columnSql) => {
-        try {
-            await db.execute(columnSql);
-        } catch (err) {
-            if (!String(err.message || '').includes('duplicate column name')) {
-                throw err;
-            }
-        }
-    };
-
-    await addColumnIfMissing('ALTER TABLE users ADD COLUMN can_receive_dividends INTEGER DEFAULT 0');
-    await addColumnIfMissing('ALTER TABLE users ADD COLUMN dividend_fee_paid INTEGER DEFAULT 0');
-    await addColumnIfMissing('ALTER TABLE users ADD COLUMN salary REAL DEFAULT 0');
-    await addColumnIfMissing('ALTER TABLE users ADD COLUMN bonus REAL DEFAULT 0');
-    await addColumnIfMissing('ALTER TABLE users ADD COLUMN dividends REAL DEFAULT 0');
+    await db.execute('ALTER TABLE users ADD COLUMN IF NOT EXISTS can_receive_dividends INTEGER DEFAULT 0');
+    await db.execute('ALTER TABLE users ADD COLUMN IF NOT EXISTS dividend_fee_paid INTEGER DEFAULT 0');
+    await db.execute('ALTER TABLE users ADD COLUMN IF NOT EXISTS salary DOUBLE PRECISION DEFAULT 0');
+    await db.execute('ALTER TABLE users ADD COLUMN IF NOT EXISTS bonus DOUBLE PRECISION DEFAULT 0');
+    await db.execute('ALTER TABLE users ADD COLUMN IF NOT EXISTS dividends DOUBLE PRECISION DEFAULT 0');
 };
 
 app.use(express.json());
@@ -160,7 +150,7 @@ app.get('/api/admin/summary', authenticate, async (req, res) => {
         const revResult = await db.execute('SELECT SUM(amount) as total_revenue FROM revenue');
         const payResult = await db.execute('SELECT SUM(amount) as total_payouts FROM payouts');
         const userPayResult = await db.execute('SELECT SUM(salary + bonus + dividends) as total_user_payouts FROM users');
-        const paidResult = await db.execute('SELECT SUM(amount) as total_paid FROM payouts WHERE status = "paid"');
+        const paidResult = await db.execute("SELECT SUM(amount) as total_paid FROM payouts WHERE status = 'paid'");
         const modeResult = await db.execute({
             sql: 'SELECT value FROM settings WHERE key = ?',
             args: ['low_revenue_mode']
