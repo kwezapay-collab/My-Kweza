@@ -33,6 +33,12 @@ const seedData = async () => {
         // Branch
         { mid: 'BM-LW-2026-001', name: 'Matthews Kalombozi', role: 'Branch Manager', srole: 'Branch Manager', branch: 'Lilongwe' },
 
+        // Test Accounts
+        { mid: '1000', name: 'Test Admin', role: 'Admin', srole: 'Testing Admin' },
+        { mid: '2000', name: 'Test Branch', role: 'Branch Manager', srole: 'Testing Branch Manager', branch: 'Test Branch' },
+        { mid: '3000', name: 'Test Core Team', role: 'Core Team', srole: 'Testing Core Team' },
+        { mid: '4000', name: 'Test Founder', role: 'Founder', srole: 'Testing Founder' },
+
         // Dev Operations Assistant (Support)
         { mid: '5000', name: 'Dev Operations Assistant', role: 'Dev Operations Assistant', srole: 'System Support & Complaints Desk' },
 
