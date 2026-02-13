@@ -142,9 +142,33 @@ body.devops-purple-theme .status-rejected {
     color: #ffb5d1;
 }
 
-body.devops-purple-theme .unified-stats-card {
+body.devops-purple-theme .unified-stats-card,
+body.devops-purple-theme .kweza-pattern-card,
+body.devops-purple-theme .super-admin-page .glass-card,
+body.devops-purple-theme.scrollable .glass-card:not(.finance-modal-card) {
     border-color: rgba(243, 230, 255, 0.52);
+    background: linear-gradient(145deg, #8f63ff 0%, #6f4ad3 52%, #3b217f 100%);
     box-shadow: 0 18px 36px rgba(29, 14, 72, 0.5);
+}
+
+body.devops-purple-theme .unified-stats-card::before,
+body.devops-purple-theme .kweza-pattern-card::before,
+body.devops-purple-theme .super-admin-page .glass-card::before,
+body.devops-purple-theme.scrollable .glass-card:not(.finance-modal-card)::before {
+    background: radial-gradient(circle at 34% 32%,
+            rgba(255, 222, 247, 0.44) 0%,
+            rgba(255, 222, 247, 0.2) 42%,
+            rgba(255, 222, 247, 0) 74%);
+}
+
+body.devops-purple-theme .unified-stats-card::after,
+body.devops-purple-theme .kweza-pattern-card::after,
+body.devops-purple-theme .super-admin-page .glass-card::after,
+body.devops-purple-theme.scrollable .glass-card:not(.finance-modal-card)::after {
+    background: radial-gradient(circle at 42% 36%,
+            rgba(205, 174, 255, 0.46) 0%,
+            rgba(205, 174, 255, 0.22) 40%,
+            rgba(205, 174, 255, 0) 74%);
 }
 
 body.devops-purple-theme .earnings-row.total .earnings-value {
@@ -334,12 +358,11 @@ body.light-mode .unified-stats-card,
 html.light-mode .kweza-pattern-card,
 body.light-mode .kweza-pattern-card,
 html.light-mode .super-admin-page .glass-card,
-body.light-mode .super-admin-page .glass-card {
+body.light-mode .super-admin-page .glass-card,
+html.light-mode body.scrollable .glass-card:not(.finance-modal-card),
+body.light-mode.scrollable .glass-card:not(.finance-modal-card) {
     border-color: rgba(255, 255, 255, 0.68);
-    background:
-        radial-gradient(circle at 90% -12%, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0) 44%),
-        radial-gradient(circle at -8% 112%, rgba(124, 213, 255, 0.3) 0%, rgba(124, 213, 255, 0) 44%),
-        linear-gradient(140deg, #1a4d6e 0%, #2b6f9b 56%, #1a4d6e 100%);
+    background: linear-gradient(140deg, #1a4d6e 0%, #2b6f9b 56%, #1a4d6e 100%);
     box-shadow: 0 16px 30px rgba(24, 63, 101, 0.3);
 }
 
@@ -902,94 +925,83 @@ body.light-mode .finance-modal-backdrop {
     padding: 1.25rem 1.35rem 1.4rem;
     border-radius: 26px;
     border: 1px solid rgba(255, 255, 255, 0.38);
-    background:
-        radial-gradient(circle at 88% -12%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 44%),
-        radial-gradient(circle at -8% 110%, rgba(115, 232, 255, 0.22) 0%, rgba(115, 232, 255, 0) 42%),
-        linear-gradient(140deg, #1a4d6e 0%, #1f5f86 56%, #133e58 100%);
-    box-shadow: 0 16px 34px rgba(7, 44, 89, 0.45);
+    background: linear-gradient(145deg, #1e293b 0%, #172336 52%, #0f172a 100%);
+    box-shadow: 0 14px 30px rgba(3, 10, 24, 0.45);
 }
 
 .kweza-pattern-card,
-.super-admin-page .glass-card {
+.super-admin-page .glass-card,
+body.scrollable .glass-card:not(.finance-modal-card) {
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.38);
-    background:
-        radial-gradient(circle at 88% -12%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 44%),
-        radial-gradient(circle at -8% 110%, rgba(115, 232, 255, 0.22) 0%, rgba(115, 232, 255, 0) 42%),
-        linear-gradient(140deg, #1a4d6e 0%, #1f5f86 56%, #133e58 100%);
-    box-shadow: 0 16px 34px rgba(7, 44, 89, 0.45);
+    background: linear-gradient(145deg, #1e293b 0%, #172336 52%, #0f172a 100%);
+    box-shadow: 0 14px 30px rgba(3, 10, 24, 0.45);
     color: #f8fafc;
     --text-main: #f8fafc;
     --text-muted: rgba(226, 239, 255, 0.84);
 }
 
 .unified-stats-card::before,
-.unified-stats-card::after {
-    content: "";
-    position: absolute;
-    pointer-events: none;
-}
-
+.unified-stats-card::after,
 .kweza-pattern-card::before,
 .kweza-pattern-card::after,
 .super-admin-page .glass-card::before,
-.super-admin-page .glass-card::after {
+.super-admin-page .glass-card::after,
+body.scrollable .glass-card:not(.finance-modal-card)::before,
+body.scrollable .glass-card:not(.finance-modal-card)::after {
     content: "";
     position: absolute;
+    border-radius: 999px;
     pointer-events: none;
 }
 
 .unified-stats-card::before {
-    inset: -40% -18%;
-    background:
-        repeating-linear-gradient(45deg,
-            rgba(255, 255, 255, 0.08) 0 2px,
-            transparent 2px 16px),
-        repeating-linear-gradient(135deg,
-            rgba(255, 255, 255, 0.05) 0 1px,
-            transparent 1px 14px);
-    opacity: 0.45;
+    width: 168px;
+    height: 168px;
+    left: -50px;
+    bottom: -62px;
+    background: radial-gradient(circle at 34% 32%,
+            rgba(184, 198, 220, 0.28) 0%,
+            rgba(184, 198, 220, 0.12) 42%,
+            rgba(184, 198, 220, 0) 74%);
 }
 
 .kweza-pattern-card::before,
-.super-admin-page .glass-card::before {
-    inset: -40% -18%;
-    background:
-        repeating-linear-gradient(45deg,
-            rgba(255, 255, 255, 0.08) 0 2px,
-            transparent 2px 16px),
-        repeating-linear-gradient(135deg,
-            rgba(255, 255, 255, 0.05) 0 1px,
-            transparent 1px 14px);
-    opacity: 0.45;
+.super-admin-page .glass-card::before,
+body.scrollable .glass-card:not(.finance-modal-card)::before {
+    width: 168px;
+    height: 168px;
+    left: -50px;
+    bottom: -62px;
+    background: radial-gradient(circle at 34% 32%,
+            rgba(184, 198, 220, 0.28) 0%,
+            rgba(184, 198, 220, 0.12) 42%,
+            rgba(184, 198, 220, 0) 74%);
 }
 
 .unified-stats-card::after {
-    width: 240px;
-    height: 240px;
-    right: -70px;
-    top: -120px;
-    border-radius: 999px;
-    background:
-        radial-gradient(circle,
-            rgba(255, 255, 255, 0.38) 0%,
-            rgba(255, 255, 255, 0.12) 38%,
-            rgba(255, 255, 255, 0) 72%);
+    width: 220px;
+    height: 220px;
+    right: -72px;
+    top: -112px;
+    background: radial-gradient(circle at 42% 36%,
+            rgba(148, 163, 184, 0.32) 0%,
+            rgba(148, 163, 184, 0.15) 40%,
+            rgba(148, 163, 184, 0) 74%);
 }
 
 .kweza-pattern-card::after,
-.super-admin-page .glass-card::after {
-    width: 240px;
-    height: 240px;
-    right: -70px;
-    top: -120px;
-    border-radius: 999px;
-    background:
-        radial-gradient(circle,
-            rgba(255, 255, 255, 0.38) 0%,
-            rgba(255, 255, 255, 0.12) 38%,
-            rgba(255, 255, 255, 0) 72%);
+.super-admin-page .glass-card::after,
+body.scrollable .glass-card:not(.finance-modal-card)::after {
+    width: 220px;
+    height: 220px;
+    right: -72px;
+    top: -112px;
+    background: radial-gradient(circle at 42% 36%,
+            rgba(148, 163, 184, 0.32) 0%,
+            rgba(148, 163, 184, 0.15) 40%,
+            rgba(148, 163, 184, 0) 74%);
 }
 
 .unified-stats-card>* {
@@ -998,7 +1010,8 @@ body.light-mode .finance-modal-backdrop {
 }
 
 .kweza-pattern-card>*,
-.super-admin-page .glass-card>* {
+.super-admin-page .glass-card>*,
+body.scrollable .glass-card:not(.finance-modal-card)>* {
     position: relative;
     z-index: 1;
 }

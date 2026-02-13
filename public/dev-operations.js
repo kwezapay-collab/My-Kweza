@@ -179,10 +179,6 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
     window.location.href = '/';
 });
 
-document.getElementById('exportCSVBtn').addEventListener('click', () => {
-    window.location.href = '/api/export/payouts';
-});
-
 document.getElementById('withdrawalForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const amount = parseFloat(document.getElementById('withdrawAmount').value);

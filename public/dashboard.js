@@ -74,9 +74,6 @@ async function loadDashboard() {
         updateUI();
 
         const requests = [fetchPayouts(), fetchWithdrawalRequests()];
-        if (currentUser.role === 'Admin' || currentUser.role === 'Super Admin') {
-            requests.push(fetchAdminSummary());
-        }
         if (isFinancialManagerRole(currentUser.role)) {
             requests.push(fetchFinancialWithdrawals());
         }
@@ -98,11 +95,6 @@ function updateUI() {
     document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-GB', {
         weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
     });
-
-    // Role-based visibility
-    if (currentUser.role === 'Admin' || currentUser.role === 'Super Admin') {
-        document.getElementById('adminOverview').style.display = 'block';
-    }
 
     if (currentUser.role === 'Super Admin') {
         document.getElementById('superAdminBtn').style.display = 'flex';
@@ -460,27 +452,6 @@ function renderFounderWeeklyReports() {
         `;
         tableBody.appendChild(row);
     });
-}
-
-async function fetchAdminSummary() {
-    const res = await apiFetch('/api/admin/summary');
-    const data = await res.json();
-
-    document.getElementById('adminTotalRev').innerText = data.totalRevenue.toLocaleString();
-    document.getElementById('adminTotalPay').innerText = data.totalPayouts.toLocaleString();
-    document.getElementById('adminRemaining').innerText = data.remainingFunds.toLocaleString();
-
-    const lrmIcon = document.getElementById('lrmIcon');
-    if (data.lowRevenueMode) {
-        lrmIcon.setAttribute('data-lucide', 'shield-check');
-        lrmIcon.style.color = 'var(--gold)';
-        window.isLRMActive = true;
-    } else {
-        lrmIcon.setAttribute('data-lucide', 'shield-off');
-        lrmIcon.style.color = 'var(--text-muted)';
-        window.isLRMActive = false;
-    }
-    lucide.createIcons();
 }
 
 // Event Listeners

@@ -348,10 +348,6 @@
             <span>Notifications</span>
             <span id="navMenuNotificationBadge" class="nav-menu-badge" style="display: none;">0</span>
           </a>
-          <a id="navMenuComplaintsLink" class="nav-menu-link ${window.location.pathname.endsWith('/complaints-history.html') ? 'active' : ''}" role="menuitem" href="/complaints-history.html" style="display: none;">
-            <i data-lucide="inbox"></i>
-            <span>Complaint Reports Inbox</span>
-          </a>
           <a id="navMenuFinancialQueueLink" class="nav-menu-link ${window.location.pathname.endsWith('/financial-withdrawals-history.html') ? 'active' : ''}" role="menuitem" href="/financial-withdrawals-history.html" style="display: none;">
             <i data-lucide="inbox"></i>
             <span>Financial Manager Withdrawal Queue</span>
@@ -382,7 +378,6 @@
     const menuLinks = menuWrap.querySelectorAll('a.nav-menu-link');
     const notificationsLink = menuWrap.querySelector('#navMenuNotificationsLink');
     const notificationsBadge = menuWrap.querySelector('#navMenuNotificationBadge');
-    const complaintsLink = menuWrap.querySelector('#navMenuComplaintsLink');
     const financialQueueLink = menuWrap.querySelector('#navMenuFinancialQueueLink');
     const compensationLink = menuWrap.querySelector('#navMenuCompensationLink');
     const logoutBtn = menuWrap.querySelector('.nav-menu-logout');
@@ -550,10 +545,6 @@
         applyStoredProfilePhoto(user);
         applyStoredProfileHeaderBackground(user);
         const isFinancialManager = user.role === 'Financial Manager';
-        const isDevOpsAssistant = user.role === 'Dev Operations Assistant';
-        if (complaintsLink) {
-          complaintsLink.style.display = isDevOpsAssistant ? 'flex' : 'none';
-        }
         if (financialQueueLink) {
           financialQueueLink.style.display = isFinancialManager ? 'flex' : 'none';
         }
@@ -572,9 +563,6 @@
         updateProfileHeader(fallbackUser);
         applyStoredProfilePhoto(fallbackUser);
         applyStoredProfileHeaderBackground(fallbackUser);
-        if (complaintsLink) {
-          complaintsLink.style.display = 'none';
-        }
         if (financialQueueLink) {
           financialQueueLink.style.display = 'none';
         }
