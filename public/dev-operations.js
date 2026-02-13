@@ -61,7 +61,7 @@ async function fetchPayouts() {
     tableBody.innerHTML = '';
 
     if (showMoreWrap) {
-        showMoreWrap.style.display = sortedPayouts.length > 2 ? 'block' : 'none';
+        showMoreWrap.style.display = 'block';
     }
 
     if (!recentPayouts.length) {
@@ -115,7 +115,7 @@ function renderComplaints() {
             : `${allComplaints.length} complaint${allComplaints.length === 1 ? '' : 's'}`;
     }
     if (showMoreWrap) {
-        showMoreWrap.style.display = allComplaints.length > 2 ? 'block' : 'none';
+        showMoreWrap.style.display = 'block';
     }
 
     if (!allComplaints.length) {

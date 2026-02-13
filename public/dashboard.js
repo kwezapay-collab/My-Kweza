@@ -123,7 +123,7 @@ async function fetchPayouts() {
     const showMoreWrap = document.getElementById('showMorePayoutsWrap');
     tableBody.innerHTML = '';
     if (showMoreWrap) {
-        showMoreWrap.style.display = sortedPayouts.length > 2 ? 'block' : 'none';
+        showMoreWrap.style.display = 'block';
     }
 
     if (recentPayouts.length === 0) {
@@ -185,16 +185,22 @@ async function fetchWithdrawalRequests() {
 
 function renderMyWithdrawals() {
     const tableBody = document.getElementById('myWithdrawalsTable');
+    const showMoreWrap = document.getElementById('showMoreMyWithdrawalsWrap');
     if (!tableBody) return;
 
     tableBody.innerHTML = '';
+    if (showMoreWrap) {
+        showMoreWrap.style.display = 'block';
+    }
 
     if (!myWithdrawals.length) {
         tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">No withdrawal requests submitted yet</td></tr>';
         return;
     }
 
-    myWithdrawals.forEach((w) => {
+    const recentWithdrawals = myWithdrawals.slice(0, 2);
+
+    recentWithdrawals.forEach((w) => {
         const status = normalizeWithdrawalStatus(w.status);
         const managerUpdate = w.notification_message
             ? escapeHtml(w.notification_message)
@@ -242,9 +248,13 @@ async function fetchFinancialWithdrawals() {
 
 function renderFinancialWithdrawals() {
     const tableBody = document.getElementById('financialWithdrawalsTable');
+    const showMoreWrap = document.getElementById('showMoreFinancialWithdrawalsWrap');
     if (!tableBody) return;
 
     tableBody.innerHTML = '';
+    if (showMoreWrap) {
+        showMoreWrap.style.display = 'block';
+    }
     const pendingCount = financialWithdrawals.filter((w) => normalizeWithdrawalStatus(w.status) === 'pending').length;
     const pendingLabel = document.getElementById('financialPendingCount');
     if (pendingLabel) {
@@ -256,7 +266,9 @@ function renderFinancialWithdrawals() {
         return;
     }
 
-    financialWithdrawals.forEach((w) => {
+    const recentFinancialWithdrawals = financialWithdrawals.slice(0, 2);
+
+    recentFinancialWithdrawals.forEach((w) => {
         const status = normalizeWithdrawalStatus(w.status);
         const noteInputId = `financeNote-${w.id}`;
         const defaultMessage = `Your withdrawal request of MWK ${Number(w.amount || 0).toLocaleString()} has been paid.`;

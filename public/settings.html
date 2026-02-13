@@ -53,6 +53,9 @@
             <section class="glass-card animate-fade">
                 <h2 style="margin-bottom: 1.5rem;"><i data-lucide="user"
                         style="vertical-align: middle; margin-right: 0.5rem;"></i>Profile Preferences</h2>
+                <button id="toggleProfileFormBtn" type="button" class="btn btn-secondary" style="width: 100%;">Update
+                    Preferences</button>
+                <div id="profileFormWrap" style="display: none; margin-top: 1rem;">
                 <form id="profileForm">
                     <div class="input-group">
                         <label>Email for Notifications</label>
@@ -64,12 +67,16 @@
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Save Preferences</button>
                 </form>
+                </div>
             </section>
 
             <!-- Security Settings -->
             <section class="glass-card animate-fade">
                 <h2 style="margin-bottom: 1.5rem;"><i data-lucide="shield"
                         style="vertical-align: middle; margin-right: 0.5rem;"></i>Security (Change PIN)</h2>
+                <button id="togglePinFormBtn" type="button" class="btn btn-secondary" style="width: 100%;">Update
+                    PIN</button>
+                <div id="pinFormWrap" style="display: none; margin-top: 1rem;">
                 <form id="pinForm">
                     <div class="input-group">
                         <label>Current PIN</label>
@@ -86,6 +93,7 @@
                     <button type="submit" class="btn btn-primary" style="width: 100%; background: var(--accent);">Update
                         PIN</button>
                 </form>
+                </div>
             </section>
         </div>
 

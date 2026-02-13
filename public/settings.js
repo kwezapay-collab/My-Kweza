@@ -7,6 +7,39 @@ const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ..
 const isFinancialManagerRole = (role) => role === 'Financial Manager';
 const isDevOpsAssistantRole = (role) => role === 'Dev Operations Assistant';
 
+function setProfileFormVisibility(visible) {
+    const formWrap = document.getElementById('profileFormWrap');
+    const toggleBtn = document.getElementById('toggleProfileFormBtn');
+    if (!formWrap || !toggleBtn) return;
+
+    formWrap.style.display = visible ? 'block' : 'none';
+    toggleBtn.innerText = visible ? 'Hide Preferences Form' : 'Update Preferences';
+}
+
+function setPinFormVisibility(visible) {
+    const formWrap = document.getElementById('pinFormWrap');
+    const toggleBtn = document.getElementById('togglePinFormBtn');
+    if (!formWrap || !toggleBtn) return;
+
+    formWrap.style.display = visible ? 'block' : 'none';
+    toggleBtn.innerText = visible ? 'Hide PIN Form' : 'Update PIN';
+}
+
+function initSettingsFormToggles() {
+    setProfileFormVisibility(false);
+    setPinFormVisibility(false);
+
+    document.getElementById('toggleProfileFormBtn')?.addEventListener('click', () => {
+        const formWrap = document.getElementById('profileFormWrap');
+        setProfileFormVisibility(formWrap?.style.display !== 'block');
+    });
+
+    document.getElementById('togglePinFormBtn')?.addEventListener('click', () => {
+        const formWrap = document.getElementById('pinFormWrap');
+        setPinFormVisibility(formWrap?.style.display !== 'block');
+    });
+}
+
 async function loadSettings() {
     try {
         const res = await apiFetch('/api/me');
@@ -165,7 +198,10 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
         body: JSON.stringify({ email, notifications_enabled })
     });
 
-    if (res.ok) alert('Preferences updated!');
+    if (res.ok) {
+        alert('Preferences updated!');
+        setProfileFormVisibility(false);
+    }
 });
 
 document.getElementById('founderMemberSelect')?.addEventListener('change', (e) => {
@@ -228,6 +264,7 @@ document.getElementById('pinForm').addEventListener('submit', async (e) => {
         if (res.ok) {
             alert('PIN changed successfully!');
             document.getElementById('pinForm').reset();
+            setPinFormVisibility(false);
         } else {
             alert(data.error || 'Failed to change PIN');
         }
@@ -237,4 +274,5 @@ document.getElementById('pinForm').addEventListener('submit', async (e) => {
 });
 
 // Load on start
+initSettingsFormToggles();
 loadSettings();
