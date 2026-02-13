@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.mykweza.app",
+        "sha256_cert_fingerprints": ["BB:1D:8F:41:C4:B6:76:B6:AD:2C:57:E1:55:63:D3:44:CF:54:68:86:55:42:41:BA:EE:70:88:9F:F6:8E:6B:1E"]
+      }
+    }]

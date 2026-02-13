@@ -24,6 +24,10 @@
             "dest": "/public/$1"
         },
         {
+            "src": "/\\.well-known/assetlinks\\.json",
+            "dest": "/public/.well-known/assetlinks.json"
+        },
+        {
             "src": "/",
             "dest": "/public/index.html"
         },
