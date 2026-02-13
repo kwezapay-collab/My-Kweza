@@ -5,6 +5,7 @@ let founderMembers = [];
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
 const isFinancialManagerRole = (role) => role === 'Financial Manager';
 const isDevOpsAssistantRole = (role) => role === 'Dev Operations Assistant';
+const getMenuBackUrl = (fallbackPath = '/dashboard.html') => `${fallbackPath}#menu`;
 
 function syncDevOpsThemeForCurrentUser(themeMode = null) {
     const activeTheme = themeMode || (window.themeManager?.getTheme ? window.themeManager.getTheme() : 'dark');
@@ -31,7 +32,7 @@ function updateHeader() {
         window.location.href = dashboardPath;
     });
     document.getElementById('backBtn')?.addEventListener('click', () => {
-        window.location.href = dashboardPath;
+        window.location.href = getMenuBackUrl(dashboardPath);
     });
 
     const brandBtn = document.querySelector('.brand-group[onclick*="/dashboard.html"]');

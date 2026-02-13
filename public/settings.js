@@ -3,6 +3,7 @@ lucide.createIcons();
 let currentUser = null;
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
 const isDevOpsAssistantRole = (role) => role === 'Dev Operations Assistant';
+const getMenuBackUrl = (fallbackPath = '/dashboard.html') => `${fallbackPath}#menu`;
 
 function syncDevOpsThemeForCurrentUser(themeMode = null) {
     const activeTheme = themeMode || (window.themeManager?.getTheme ? window.themeManager.getTheme() : 'dark');
@@ -86,7 +87,7 @@ function updateUI() {
 
     const backBtn = document.querySelector('header button[onclick*="/dashboard.html"]');
     if (backBtn) {
-        backBtn.onclick = () => window.location.href = dashboardPath;
+        backBtn.onclick = () => window.location.href = getMenuBackUrl(dashboardPath);
     }
 }
 

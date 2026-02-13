@@ -39,6 +39,23 @@ const ensureSchema = async () => {
     await db.execute('ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS notification_sent_at TIMESTAMP');
     await db.execute('ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS notification_sent_by INTEGER');
     await db.execute('ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP');
+    await db.execute(`CREATE TABLE IF NOT EXISTS notifications (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        title TEXT NOT NULL,
+        message TEXT NOT NULL,
+        notification_type TEXT DEFAULT 'general',
+        link_url TEXT,
+        is_read INTEGER DEFAULT 0,
+        read_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`);
+    await db.execute('ALTER TABLE notifications ADD COLUMN IF NOT EXISTS notification_type TEXT DEFAULT \'general\'');
+    await db.execute('ALTER TABLE notifications ADD COLUMN IF NOT EXISTS link_url TEXT');
+    await db.execute('ALTER TABLE notifications ADD COLUMN IF NOT EXISTS is_read INTEGER DEFAULT 0');
+    await db.execute('ALTER TABLE notifications ADD COLUMN IF NOT EXISTS read_at TIMESTAMP');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_notifications_user_created ON notifications (user_id, created_at DESC)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications (user_id, is_read)');
     await db.execute('UPDATE withdrawal_requests SET updated_at = created_at WHERE updated_at IS NULL');
     await db.execute("UPDATE withdrawal_requests SET status = 'accepted' WHERE status = 'approved'");
     await db.execute("UPDATE users SET theme_mode = 'dark' WHERE theme_mode IS NULL OR theme_mode NOT IN ('dark', 'light')");
@@ -99,6 +116,75 @@ const isFounderOnly = (req, res, next) => {
     next();
 };
 
+const formatMWK = (value) => {
+    const amount = Number(value || 0);
+    if (!Number.isFinite(amount)) return '0';
+    return amount.toLocaleString('en-US');
+};
+
+const normalizeNotificationText = (value, fallback = '', maxLen = 280) => {
+    const clean = String(value || fallback || '').replace(/\s+/g, ' ').trim();
+    if (!clean) return fallback;
+    return clean.length > maxLen ? `${clean.slice(0, maxLen - 3)}...` : clean;
+};
+
+const createNotification = async ({ userId, title, message, type = 'general', linkUrl = '/notifications.html' }) => {
+    const normalizedUserId = Number(userId);
+    if (!Number.isFinite(normalizedUserId)) return;
+
+    await db.execute({
+        sql: `
+            INSERT INTO notifications (user_id, title, message, notification_type, link_url, is_read)
+            VALUES (?, ?, ?, ?, ?, 0)
+        `,
+        args: [
+            normalizedUserId,
+            normalizeNotificationText(title, 'Notification', 80),
+            normalizeNotificationText(message, 'You have a new notification.', 500),
+            normalizeNotificationText(type, 'general', 40),
+            normalizeNotificationText(linkUrl, '/notifications.html', 200)
+        ]
+    });
+};
+
+const createNotificationsForUsers = async (userIds, payload) => {
+    const normalizedIds = Array.from(new Set(
+        (Array.isArray(userIds) ? userIds : [])
+            .map((id) => Number(id))
+            .filter((id) => Number.isFinite(id))
+    ));
+    if (!normalizedIds.length) return;
+
+    for (const userId of normalizedIds) {
+        await createNotification({ userId, ...payload });
+    }
+};
+
+const getUserIdsByRole = async (role) => {
+    const result = await db.execute({
+        sql: 'SELECT id FROM users WHERE role = ?',
+        args: [role]
+    });
+    return result.rows.map((row) => Number(row.id)).filter((id) => Number.isFinite(id));
+};
+
+const createNotificationsForRole = async (role, payload, options = {}) => {
+    const excludeUserId = Number(options.excludeUserId || 0);
+    const userIds = await getUserIdsByRole(role);
+    const filteredIds = Number.isFinite(excludeUserId) && excludeUserId > 0
+        ? userIds.filter((id) => id !== excludeUserId)
+        : userIds;
+    await createNotificationsForUsers(filteredIds, payload);
+};
+
+const safeNotify = async (action) => {
+    try {
+        await action();
+    } catch (err) {
+        console.error('Notification enqueue error:', err);
+    }
+};
+
 // --- ROUTES ---
 
 // Login
@@ -140,6 +226,95 @@ app.get('/api/me', authenticate, async (req, res) => {
             args: [req.user.id]
         });
         res.json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/notifications', authenticate, async (req, res) => {
+    try {
+        const limitRaw = Number.parseInt(String(req.query.limit || '50'), 10);
+        const limit = Number.isFinite(limitRaw) ? Math.min(Math.max(limitRaw, 1), 200) : 50;
+        const sinceIdRaw = Number.parseInt(String(req.query.since_id || ''), 10);
+        const sinceId = Number.isFinite(sinceIdRaw) && sinceIdRaw > 0 ? sinceIdRaw : null;
+        const onlyUnread = String(req.query.only_unread || '') === '1';
+
+        const clauses = ['user_id = ?'];
+        const args = [req.user.id];
+
+        if (sinceId) {
+            clauses.push('id > ?');
+            args.push(sinceId);
+        }
+        if (onlyUnread) {
+            clauses.push('is_read = 0');
+        }
+
+        args.push(limit);
+
+        const orderBy = sinceId ? 'id ASC' : 'created_at DESC, id DESC';
+        const result = await db.execute({
+            sql: `
+                SELECT id, title, message, notification_type, link_url, is_read, read_at, created_at
+                FROM notifications
+                WHERE ${clauses.join(' AND ')}
+                ORDER BY ${orderBy}
+                LIMIT ?
+            `,
+            args
+        });
+
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/notifications/unread-count', authenticate, async (req, res) => {
+    try {
+        const result = await db.execute({
+            sql: 'SELECT COUNT(*)::int AS unread_count FROM notifications WHERE user_id = ? AND is_read = 0',
+            args: [req.user.id]
+        });
+        res.json({ unread_count: Number(result.rows[0]?.unread_count || 0) });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.put('/api/notifications/:id/read', authenticate, async (req, res) => {
+    try {
+        const notificationId = Number.parseInt(String(req.params.id || ''), 10);
+        if (!Number.isFinite(notificationId) || notificationId <= 0) {
+            return res.status(400).json({ error: 'Invalid notification id' });
+        }
+
+        await db.execute({
+            sql: `
+                UPDATE notifications
+                SET is_read = 1, read_at = CURRENT_TIMESTAMP
+                WHERE id = ? AND user_id = ?
+            `,
+            args: [notificationId, req.user.id]
+        });
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.put('/api/notifications/read-all', authenticate, async (req, res) => {
+    try {
+        await db.execute({
+            sql: `
+                UPDATE notifications
+                SET is_read = 1, read_at = CURRENT_TIMESTAMP
+                WHERE user_id = ? AND is_read = 0
+            `,
+            args: [req.user.id]
+        });
+        res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -314,9 +489,21 @@ app.post('/api/complaints', authenticate, async (req, res) => {
             return res.status(400).json({ error: 'Complaint message is required' });
         }
 
+        const normalizedSubject = normalizeNotificationText(subject, 'General', 80);
+        const normalizedMessage = String(message).trim();
+
         await db.execute({
             sql: 'INSERT INTO complaints (reporter_id, subject, message, status) VALUES (?, ?, ?, ?)',
-            args: [req.user.id, subject || 'General', String(message).trim(), 'open']
+            args: [req.user.id, normalizedSubject, normalizedMessage, 'open']
+        });
+
+        await safeNotify(async () => {
+            await createNotificationsForRole('Dev Operations Assistant', {
+                title: 'New Complaint Report',
+                message: `${req.user.member_id} submitted "${normalizedSubject}".`,
+                type: 'complaint_new',
+                linkUrl: '/complaints-history.html'
+            });
         });
         res.json({ success: true });
     } catch (err) {
@@ -344,10 +531,31 @@ app.put('/api/devops/complaints/:id', authenticate, isDevOpsAssistant, async (re
         const { id } = req.params;
         const { status } = req.body;
         const normalizedStatus = ['open', 'in_review', 'resolved'].includes(status) ? status : 'open';
+        const complaintResult = await db.execute({
+            sql: 'SELECT id, reporter_id, subject FROM complaints WHERE id = ?',
+            args: [id]
+        });
+        const complaint = complaintResult.rows[0];
+        if (!complaint) {
+            return res.status(404).json({ error: 'Complaint not found' });
+        }
 
         await db.execute({
             sql: 'UPDATE complaints SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
             args: [normalizedStatus, id]
+        });
+
+        const statusLabel = normalizedStatus === 'in_review'
+            ? 'in review'
+            : (normalizedStatus === 'resolved' ? 'resolved' : 'open');
+        await safeNotify(async () => {
+            await createNotification({
+                userId: complaint.reporter_id,
+                title: 'Complaint Status Updated',
+                message: `"${normalizeNotificationText(complaint.subject, 'General', 80)}" is now ${statusLabel}.`,
+                type: 'complaint_status',
+                linkUrl: '/notifications.html'
+            });
         });
         res.json({ success: true });
     } catch (err) {
@@ -439,6 +647,15 @@ app.post('/api/devops/weekly-reports', authenticate, isDevOpsAssistant, async (r
                 reviewedBy || null,
                 approvalDate
             ]
+        });
+
+        await safeNotify(async () => {
+            await createNotificationsForRole('Founder', {
+                title: 'New Weekly Report',
+                message: `${normalizeNotificationText(user.name, 'Developer', 80)} submitted "${normalizeNotificationText(projectName, 'Project', 80)}".`,
+                type: 'weekly_report',
+                linkUrl: '/founder-weekly-reports.html'
+            });
         });
 
         res.json({ success: true });
@@ -539,9 +756,21 @@ app.get('/api/super/payouts', authenticate, isSuperAdmin, async (req, res) => {
 app.post('/api/super/payouts', authenticate, isSuperAdmin, async (req, res) => {
     try {
         const { user_id, type, amount, month, year, status } = req.body;
+        const normalizedType = normalizeNotificationText(type, 'payout', 40);
+        const normalizedStatus = normalizeNotificationText(status || 'pending', 'pending', 24);
         await db.execute({
             sql: 'INSERT INTO payouts (user_id, type, amount, month, year, status) VALUES (?, ?, ?, ?, ?, ?)',
             args: [user_id, type, amount, month, year, status || 'pending']
+        });
+
+        await safeNotify(async () => {
+            await createNotification({
+                userId: user_id,
+                title: 'New Payout Added',
+                message: `${normalizedType} payout of MWK ${formatMWK(amount)} is ${normalizedStatus}.`,
+                type: 'payout_update',
+                linkUrl: '/payouts-history.html'
+            });
         });
         res.json({ success: true });
     } catch (err) {
@@ -554,9 +783,28 @@ app.put('/api/super/payouts/:id', authenticate, isSuperAdmin, async (req, res) =
     try {
         const { id } = req.params;
         const { type, amount, month, year, status } = req.body;
+        const payoutResult = await db.execute({
+            sql: 'SELECT user_id FROM payouts WHERE id = ?',
+            args: [id]
+        });
+        const payout = payoutResult.rows[0];
+        if (!payout) {
+            return res.status(404).json({ error: 'Payout record not found' });
+        }
+
         await db.execute({
             sql: 'UPDATE payouts SET type = ?, amount = ?, month = ?, year = ?, status = ? WHERE id = ?',
             args: [type, amount, month, year, status, id]
+        });
+
+        await safeNotify(async () => {
+            await createNotification({
+                userId: payout.user_id,
+                title: 'Payout Updated',
+                message: `${normalizeNotificationText(type, 'Payout', 40)} payout is now ${normalizeNotificationText(status, 'pending', 24)}.`,
+                type: 'payout_update',
+                linkUrl: '/payouts-history.html'
+            });
         });
         res.json({ success: true });
     } catch (err) {
@@ -628,9 +876,27 @@ app.get('/api/withdrawals', authenticate, async (req, res) => {
 app.post('/api/withdrawals', authenticate, async (req, res) => {
     try {
         const { amount, method, details } = req.body;
+        const normalizedAmount = Number(amount || 0);
         await db.execute({
             sql: 'INSERT INTO withdrawal_requests (user_id, amount, method, details) VALUES (?, ?, ?, ?)',
             args: [req.user.id, amount, method, details]
+        });
+
+        await safeNotify(async () => {
+            await createNotificationsForRole('Financial Manager', {
+                title: 'New Withdrawal Request',
+                message: `${req.user.member_id} requested MWK ${formatMWK(normalizedAmount)}.`,
+                type: 'withdrawal_new',
+                linkUrl: '/financial-withdrawals-history.html'
+            });
+
+            await createNotification({
+                userId: req.user.id,
+                title: 'Withdrawal Request Submitted',
+                message: `Your request for MWK ${formatMWK(normalizedAmount)} is pending review.`,
+                type: 'withdrawal_status',
+                linkUrl: '/withdrawals-history.html'
+            });
         });
         res.json({ success: true });
     } catch (err) {
@@ -660,6 +926,15 @@ app.put('/api/financial/withdrawals/:id/status', authenticate, isFinancialManage
             return res.status(400).json({ error: 'Status must be accepted or rejected' });
         }
 
+        const requestResult = await db.execute({
+            sql: 'SELECT id, user_id, amount FROM withdrawal_requests WHERE id = ?',
+            args: [id]
+        });
+        const requestRow = requestResult.rows[0];
+        if (!requestRow) {
+            return res.status(404).json({ error: 'Withdrawal request not found' });
+        }
+
         await db.execute({
             sql: `
                 UPDATE withdrawal_requests
@@ -667,6 +942,17 @@ app.put('/api/financial/withdrawals/:id/status', authenticate, isFinancialManage
                 WHERE id = ?
             `,
             args: [status, req.user.id, id]
+        });
+
+        await safeNotify(async () => {
+            const statusText = status === 'accepted' ? 'accepted' : 'rejected';
+            await createNotification({
+                userId: requestRow.user_id,
+                title: 'Withdrawal Request Updated',
+                message: `Your request for MWK ${formatMWK(requestRow.amount)} was ${statusText}.`,
+                type: 'withdrawal_status',
+                linkUrl: '/withdrawals-history.html'
+            });
         });
         res.json({ success: true });
     } catch (err) {
@@ -683,7 +969,7 @@ app.put('/api/financial/withdrawals/:id/notify', authenticate, isFinancialManage
         }
 
         const requestResult = await db.execute({
-            sql: 'SELECT status FROM withdrawal_requests WHERE id = ?',
+            sql: 'SELECT status, user_id, amount FROM withdrawal_requests WHERE id = ?',
             args: [id]
         });
         const requestRow = requestResult.rows[0];
@@ -707,6 +993,16 @@ app.put('/api/financial/withdrawals/:id/notify', authenticate, isFinancialManage
                 WHERE id = ?
             `,
             args: [message, req.user.id, id]
+        });
+
+        await safeNotify(async () => {
+            await createNotification({
+                userId: requestRow.user_id,
+                title: 'Withdrawal Paid',
+                message: normalizeNotificationText(message, `MWK ${formatMWK(requestRow.amount)} has been paid.`),
+                type: 'withdrawal_paid',
+                linkUrl: '/withdrawals-history.html'
+            });
         });
         res.json({ success: true });
     } catch (err) {
@@ -733,9 +1029,28 @@ app.put('/api/super/withdrawals/:id', authenticate, isSuperAdmin, async (req, re
         const { id } = req.params;
         const rawStatus = String(req.body.status || '').toLowerCase();
         const status = rawStatus === 'approved' ? 'accepted' : rawStatus;
+        const requestResult = await db.execute({
+            sql: 'SELECT id, user_id, amount FROM withdrawal_requests WHERE id = ?',
+            args: [id]
+        });
+        const requestRow = requestResult.rows[0];
+        if (!requestRow) {
+            return res.status(404).json({ error: 'Withdrawal request not found' });
+        }
+
         await db.execute({
             sql: 'UPDATE withdrawal_requests SET status = ?, reviewed_by = ?, reviewed_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
             args: [status, req.user.id, id]
+        });
+
+        await safeNotify(async () => {
+            await createNotification({
+                userId: requestRow.user_id,
+                title: 'Withdrawal Request Updated',
+                message: `Your request for MWK ${formatMWK(requestRow.amount)} was ${normalizeNotificationText(status, 'updated', 24)}.`,
+                type: 'withdrawal_status',
+                linkUrl: '/withdrawals-history.html'
+            });
         });
         res.json({ success: true });
     } catch (err) {

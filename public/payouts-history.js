@@ -3,6 +3,7 @@ lucide.createIcons();
 let currentUser = null;
 let dashboardPath = '/dashboard.html';
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
+const getMenuBackUrl = (fallbackPath = '/dashboard.html') => `${fallbackPath}#menu`;
 
 function updateHeader() {
     document.getElementById('userName').innerText = currentUser.name;
@@ -78,7 +79,7 @@ async function loadPayoutHistory() {
 }
 
 document.getElementById('backToDashboardBtn').addEventListener('click', () => {
-    window.location.href = dashboardPath;
+    window.location.href = getMenuBackUrl(dashboardPath);
 });
 
 document.getElementById('exportCSVBtn').addEventListener('click', () => {

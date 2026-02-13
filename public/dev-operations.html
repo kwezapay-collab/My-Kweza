@@ -73,38 +73,6 @@
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 2rem;">
-            <section class="glass-card animate-fade">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <h2>Complaint Reports Inbox</h2>
-                    <p id="complaintCount" style="font-size: 0.8rem; color: var(--text-muted);">Loading...</p>
-                </div>
-                <div class="responsive-table-wrap" style="overflow-x: auto;">
-                    <table class="mobile-stack" style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
-                                <th style="padding-bottom: 1rem;">REPORTER</th>
-                                <th style="padding-bottom: 1rem;">SUBJECT</th>
-                                <th style="padding-bottom: 1rem;">DETAILS</th>
-                                <th style="padding-bottom: 1rem;">STATUS</th>
-                                <th style="padding-bottom: 1rem;">ACTION</th>
-                            </tr>
-                        </thead>
-                        <tbody id="complaintsInboxTable">
-                            <tr>
-                                <td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">
-                                    Loading reports...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div id="showMoreComplaintsWrap" style="margin-top: 1rem; text-align: right;">
-                    <a href="/complaints-history.html"
-                        style="font-size: 0.85rem; color: var(--accent); text-decoration: none; font-weight: 600;">Show
-                        more</a>
-                </div>
-            </section>
-
             <section class="glass-card animate-fade" style="cursor: pointer;"
                 onclick="window.location.href='/weekly-report.html'">
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
@@ -165,36 +133,6 @@
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Withdrawal Request</button>
                 </form>
-            </section>
-
-            <section class="glass-card animate-fade">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <h2>Recent Payouts</h2>
-                </div>
-                <div class="responsive-table-wrap">
-                    <table class="mobile-stack" style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
-                                <th style="padding-bottom: 1rem;">DATE</th>
-                                <th style="padding-bottom: 1rem;">TYPE</th>
-                                <th style="padding-bottom: 1rem;">AMOUNT</th>
-                                <th style="padding-bottom: 1rem;">STATUS</th>
-                            </tr>
-                        </thead>
-                        <tbody id="payoutsTable">
-                            <tr>
-                                <td colspan="4" style="text-align:center; padding: 2rem; color: var(--text-muted);">
-                                    Loading...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div id="showMorePayoutsWrap" style="margin-top: 1rem; text-align: right;">
-                    <a href="/payouts-history.html"
-                        style="font-size: 0.85rem; color: var(--accent); text-decoration: none; font-weight: 600;">Show
-                        more</a>
-                </div>
             </section>
         </div>
     </main>

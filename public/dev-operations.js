@@ -23,7 +23,6 @@ async function loadDashboard() {
         }
 
         updateUI();
-        await Promise.all([fetchPayouts(), fetchComplaints()]);
     } catch (err) {
         window.location.href = '/';
     }
@@ -224,7 +223,6 @@ document.getElementById('complaintForm')?.addEventListener('submit', async (e) =
         if (res.ok) {
             alert('Complaint sent successfully.');
             document.getElementById('complaintForm').reset();
-            fetchComplaints();
         } else {
             const data = await res.json();
             alert(data.error || 'Failed to submit complaint');

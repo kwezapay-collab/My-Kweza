@@ -1,4 +1,4 @@
-const CACHE_NAME = 'my-kweza-v11';
+const CACHE_NAME = 'my-kweza-v15';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -11,6 +11,7 @@ const APP_SHELL = [
   '/withdrawals-history.html',
   '/financial-withdrawals-history.html',
   '/complaints-history.html',
+  '/notifications.html',
   '/compensation-management.html',
   '/super-admin.html',
   '/index.css',
@@ -25,6 +26,7 @@ const APP_SHELL = [
   '/withdrawals-history.js',
   '/financial-withdrawals-history.js',
   '/complaints-history.js',
+  '/notifications.js',
   '/compensation-management.js',
   '/super-admin.js',
   '/pwa.js',
@@ -117,4 +119,31 @@ self.addEventListener('fetch', (event) => {
       });
     })
   );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const targetUrl = event.notification?.data?.url || '/notifications.html';
+
+  event.waitUntil((async () => {
+    const allClients = await clients.matchAll({ type: 'window', includeUncontrolled: true });
+    const absoluteTarget = new URL(targetUrl, self.location.origin).href;
+
+    for (const client of allClients) {
+      if ('focus' in client && client.url === absoluteTarget) {
+        await client.focus();
+        return;
+      }
+    }
+
+    if (allClients.length > 0 && 'focus' in allClients[0] && 'navigate' in allClients[0]) {
+      await allClients[0].navigate(absoluteTarget);
+      await allClients[0].focus();
+      return;
+    }
+
+    if (clients.openWindow) {
+      await clients.openWindow(absoluteTarget);
+    }
+  })());
 });

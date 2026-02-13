@@ -256,8 +256,10 @@ body.light-mode .nav-menu-avatar-edit:hover {
 }
 
 html.light-mode .nav-menu-close,
+html.light-mode .nav-menu-bg-toggle,
 html.light-mode .nav-menu-theme-toggle,
 body.light-mode .nav-menu-close,
+body.light-mode .nav-menu-bg-toggle,
 body.light-mode .nav-menu-theme-toggle {
     background: rgba(255, 255, 255, 0.88);
     border-color: rgba(26, 77, 110, 0.42);
@@ -265,8 +267,10 @@ body.light-mode .nav-menu-theme-toggle {
 }
 
 html.light-mode .nav-menu-close:hover,
+html.light-mode .nav-menu-bg-toggle:hover,
 html.light-mode .nav-menu-theme-toggle:hover,
 body.light-mode .nav-menu-close:hover,
+body.light-mode .nav-menu-bg-toggle:hover,
 body.light-mode .nav-menu-theme-toggle:hover {
     background: #ffffff;
 }
@@ -620,6 +624,22 @@ body.nav-hamburger-enabled .dashboard-nav .user-actions {
     text-align: left;
 }
 
+.nav-menu-badge {
+    margin-left: auto;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #e11d48;
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
 .nav-menu-profile {
     margin: 0;
     padding: 1.15rem 0.9rem 0.9rem;
@@ -640,6 +660,7 @@ body.nav-hamburger-enabled .dashboard-nav .user-actions {
 }
 
 .nav-menu-close,
+.nav-menu-bg-toggle,
 .nav-menu-theme-toggle {
     width: 34px;
     height: 34px;
@@ -654,6 +675,7 @@ body.nav-hamburger-enabled .dashboard-nav .user-actions {
 }
 
 .nav-menu-close:hover,
+.nav-menu-bg-toggle:hover,
 .nav-menu-theme-toggle:hover {
     background: rgba(15, 23, 42, 0.5);
 }
