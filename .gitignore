@@ -4,3 +4,10 @@ node_modules
 *.sqlite
 .DS_Store
 package-lock.json
+android/.gradle/
+android/build/
+android/app/build/
+android/app-release-unsigned-aligned.apk
+android/app-release-signed.apk
+android/app-release-bundle.aab
+android/android.keystore

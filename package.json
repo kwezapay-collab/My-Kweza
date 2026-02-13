@@ -4,7 +4,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "android:doctor": "npx @bubblewrap/cli doctor",
+    "android:update": "cd android && npx @bubblewrap/cli update --skipVersionUpgrade --manifest ./twa-manifest.json --directory .",
+    "android:build": "cd android && npx @bubblewrap/cli build --skipSigning --manifest ./twa-manifest.json --directory .",
+    "android:build:signed": "cd android && npx @bubblewrap/cli build --manifest ./twa-manifest.json --directory ."
   },
   "dependencies": {
     "@libsql/client": "^0.17.0",

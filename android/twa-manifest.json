@@ -1,0 +1,41 @@
+{
+  "packageId": "com.mykweza.app",
+  "host": "mykweza.vercel.app",
+  "name": "MyKweza",
+  "launcherName": "MyKweza",
+  "display": "standalone",
+  "themeColor": "#1a4d6e",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#00000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#0f172a",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://mykweza.vercel.app/icons/kweza-512.png",
+  "maskableIconUrl": "https://mykweza.vercel.app/icons/kweza-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "android"
+  },
+  "appVersion": "1",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://mykweza.vercel.app/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://mykweza.vercel.app/",
+  "minSdkVersion": 21,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "additionalTrustedOrigins": []
+}

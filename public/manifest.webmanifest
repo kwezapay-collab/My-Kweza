@@ -1,6 +1,6 @@
 {
-  "name": "My Kweza",
-  "short_name": "Kweza",
+  "name": "MyKweza",
+  "short_name": "MyKweza",
   "description": "Secure portal for the Kweza Team",
   "start_url": "/",
   "scope": "/",
