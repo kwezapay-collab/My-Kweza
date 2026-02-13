@@ -262,6 +262,24 @@ body.light-mode .nav-menu-items .nav-menu-link {
     border-bottom-color: rgba(26, 77, 110, 0.14);
 }
 
+html.light-mode .nav-menu-theme-switch,
+body.light-mode .nav-menu-theme-switch {
+    border-color: rgba(26, 77, 110, 0.18);
+    background: #f4f6fb;
+    box-shadow: inset 0 1px 2px rgba(26, 77, 110, 0.1);
+}
+
+html.light-mode .nav-menu-theme-switch-thumb,
+body.light-mode .nav-menu-theme-switch-thumb {
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(26, 77, 110, 0.2);
+}
+
+html.light-mode .nav-menu-theme-switch-icon-wrap,
+body.light-mode .nav-menu-theme-switch-icon-wrap {
+    color: #334e68;
+}
+
 html.light-mode .nav-menu-link.active,
 body.light-mode .nav-menu-link.active {
     background: rgba(42, 157, 143, 0.14);
@@ -795,6 +813,67 @@ body.nav-hamburger-enabled .dashboard-nav .user-actions {
     border-bottom: none;
 }
 
+.nav-menu-theme-item {
+    justify-content: space-between;
+    gap: 0.85rem;
+}
+
+.nav-menu-theme-main {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.62rem;
+    min-width: 0;
+    font-weight: 600;
+}
+
+.nav-menu-theme-switch {
+    position: relative;
+    width: 72px;
+    height: 38px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(241, 245, 249, 0.92);
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.12);
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.nav-menu-theme-switch-icon-wrap {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #334155;
+    transition: left 0.22s ease, right 0.22s ease, color 0.22s ease;
+}
+
+.nav-menu-theme-switch-icon-wrap i {
+    width: 18px;
+    height: 18px;
+}
+
+.nav-menu-theme-switch-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.24);
+    transition: transform 0.22s ease, background 0.22s ease;
+}
+
+.nav-menu-theme-item[data-theme='dark'] .nav-menu-theme-switch-thumb {
+    transform: translateX(34px);
+}
+
+.nav-menu-theme-item[data-theme='dark'] .nav-menu-theme-switch-icon-wrap {
+    left: 10px;
+    right: auto;
+    color: #4f79ac;
+}
+
 .nav-menu-link.active {
     color: var(--accent);
     background: rgba(46, 204, 113, 0.12);
@@ -1017,12 +1096,77 @@ body.scrollable .glass-card:not(.finance-modal-card)>* {
 }
 
 .earnings-title {
-    margin-bottom: 0.95rem;
-    text-align: center;
+    margin-bottom: 0;
+    text-align: left;
     font-size: clamp(1.05rem, 2.2vw, 1.7rem);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: #ffffff;
+}
+
+.earnings-card {
+    cursor: pointer;
+    user-select: none;
+}
+
+.earnings-card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.earnings-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.55rem;
+}
+
+.earnings-toggle-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.38rem;
+    padding: 0.35rem 0.58rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(234, 242, 252, 0.95);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.earnings-toggle-icon {
+    width: 15px;
+    height: 15px;
+    transition: transform 0.25s ease;
+}
+
+.earnings-card.is-expanded .earnings-toggle-icon {
+    transform: rotate(180deg);
+}
+
+.earnings-breakdown {
+    display: grid;
+    max-height: 360px;
+    opacity: 1;
+    overflow: hidden;
+    margin-top: 0.3rem;
+    transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.2s ease;
+}
+
+.earnings-card.is-collapsed .earnings-breakdown {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+}
+
+.earnings-card.is-expanded .earnings-row.total {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.earnings-card.is-collapsed .earnings-row.total {
+    border-bottom: none;
 }
 
 .earnings-row {
@@ -1541,8 +1685,11 @@ tr:last-child {
         margin-bottom: 1.1rem;
     }
 
+    .earnings-card-head {
+        margin-bottom: 0.42rem;
+    }
+
     .earnings-title {
-        margin-bottom: 0.75rem;
         font-size: 1.15rem;
     }
 

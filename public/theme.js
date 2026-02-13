@@ -323,9 +323,6 @@
             <button id="navMenuBgEditBtn" class="nav-menu-bg-toggle" type="button" aria-label="Change profile header background" title="Change profile header background">
               <i data-lucide="image-plus"></i>
             </button>
-            <button id="navMenuThemeToggleBtn" class="nav-menu-theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">
-              <i id="navMenuThemeToggleIcon" data-lucide="sun-moon"></i>
-            </button>
             <button id="navMenuCloseBtn" class="nav-menu-close" type="button" aria-label="Close menu">
               <i data-lucide="x"></i>
             </button>
@@ -356,14 +353,22 @@
             <i data-lucide="wallet-cards"></i>
             <span>Compensation Management</span>
           </a>
-          <a class="nav-menu-link ${window.location.pathname.endsWith('/payouts-history.html') ? 'active' : ''}" role="menuitem" href="/payouts-history.html">
-            <i data-lucide="history"></i>
-            <span>Recent Payouts</span>
-          </a>
           <a class="nav-menu-link ${window.location.pathname.endsWith('/settings.html') ? 'active' : ''}" role="menuitem" href="/settings.html">
             <i data-lucide="settings"></i>
             <span>Settings</span>
           </a>
+          <button id="navMenuThemeSwitchBtn" class="nav-menu-link nav-menu-theme-item" role="menuitem" type="button" aria-label="Toggle theme">
+            <span class="nav-menu-theme-main">
+              <i data-lucide="moon"></i>
+              <span>Theme</span>
+            </span>
+            <span class="nav-menu-theme-switch" aria-hidden="true">
+              <span class="nav-menu-theme-switch-icon-wrap">
+                <i id="navMenuThemeSwitchIcon" data-lucide="moon"></i>
+              </span>
+              <span class="nav-menu-theme-switch-thumb"></span>
+            </span>
+          </button>
           <button class="nav-menu-link nav-menu-logout" role="menuitem" type="button">
             <i data-lucide="log-out"></i>
             <span>Log Out</span>
@@ -382,8 +387,8 @@
     const compensationLink = menuWrap.querySelector('#navMenuCompensationLink');
     const logoutBtn = menuWrap.querySelector('.nav-menu-logout');
     const closeBtn = menuWrap.querySelector('#navMenuCloseBtn');
-    const themeToggleBtn = menuWrap.querySelector('#navMenuThemeToggleBtn');
-    const themeToggleIcon = menuWrap.querySelector('#navMenuThemeToggleIcon');
+    const themeSwitchBtn = menuWrap.querySelector('#navMenuThemeSwitchBtn');
+    const themeSwitchIcon = menuWrap.querySelector('#navMenuThemeSwitchIcon');
     const profilePanel = menuWrap.querySelector('.nav-menu-profile');
     const bgEditBtn = menuWrap.querySelector('#navMenuBgEditBtn');
     const bgInput = menuWrap.querySelector('#navMenuBgInput');
@@ -403,8 +408,14 @@
 
     const refreshThemeToggleIcon = () => {
       const activeTheme = window.themeManager?.getTheme ? window.themeManager.getTheme() : 'dark';
-      if (!themeToggleIcon) return;
-      themeToggleIcon.setAttribute('data-lucide', activeTheme === 'light' ? 'moon' : 'sun');
+      if (themeSwitchBtn) {
+        themeSwitchBtn.dataset.theme = activeTheme;
+        themeSwitchBtn.setAttribute('aria-pressed', activeTheme === 'dark' ? 'true' : 'false');
+        themeSwitchBtn.title = activeTheme === 'light' ? 'Switch to dark mode' : 'Switch to light mode';
+      }
+      if (themeSwitchIcon) {
+        themeSwitchIcon.setAttribute('data-lucide', activeTheme === 'light' ? 'moon' : 'sun');
+      }
       if (window.lucide?.createIcons) {
         window.lucide.createIcons();
       }
@@ -630,7 +641,7 @@
       closeMenu();
     });
 
-    themeToggleBtn?.addEventListener('click', async () => {
+    themeSwitchBtn?.addEventListener('click', async () => {
       const activeTheme = window.themeManager?.getTheme ? window.themeManager.getTheme() : 'dark';
       const nextTheme = activeTheme === 'light' ? 'dark' : 'light';
 

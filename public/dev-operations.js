@@ -4,6 +4,39 @@ let currentUser = null;
 let allComplaints = [];
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
 
+function setupEarningsCardToggle() {
+    const card = document.getElementById('earningsCard');
+    if (!card || card.dataset.toggleBound === '1') return;
+
+    const toggleLabel = card.querySelector('.earnings-toggle-text');
+
+    const applyState = (expanded) => {
+        card.classList.toggle('is-expanded', expanded);
+        card.classList.toggle('is-collapsed', !expanded);
+        card.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        if (toggleLabel) {
+            toggleLabel.innerText = expanded ? 'Hide' : 'Details';
+        }
+    };
+
+    applyState(false);
+
+    const toggle = () => applyState(!card.classList.contains('is-expanded'));
+
+    card.addEventListener('click', (event) => {
+        if (event.target.closest('a, button, input, textarea, select, label')) return;
+        toggle();
+    });
+
+    card.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        toggle();
+    });
+
+    card.dataset.toggleBound = '1';
+}
+
 async function loadDashboard() {
     try {
         const res = await apiFetch('/api/me');
@@ -36,6 +69,7 @@ function updateUI() {
     document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-GB', {
         weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
     });
+    setupEarningsCardToggle();
 
     const salary = Number(currentUser.salary || 0);
     const bonus = Number(currentUser.bonus || 0);
