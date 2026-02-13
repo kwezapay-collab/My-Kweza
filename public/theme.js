@@ -2,13 +2,24 @@
   const STORAGE_KEY = 'my-kweza-theme';
 
   const normalizeTheme = (value) => (value === 'light' ? 'light' : 'dark');
+  const getDefaultThemeForPath = (path = '') => {
+    const normalizedPath = String(path || window.location.pathname || '').toLowerCase();
+    const isDevOpsPage = normalizedPath.endsWith('/dev-operations.html')
+      || normalizedPath.endsWith('/weekly-report.html')
+      || normalizedPath.endsWith('/complaints-history.html');
+    return isDevOpsPage ? 'dark' : 'light';
+  };
 
   const readStoredTheme = () => {
     try {
-      return normalizeTheme(localStorage.getItem(STORAGE_KEY));
+      const storedValue = localStorage.getItem(STORAGE_KEY);
+      if (storedValue === 'light' || storedValue === 'dark') {
+        return storedValue;
+      }
     } catch (err) {
-      return 'dark';
+      // Ignore storage errors and continue with route defaults.
     }
+    return getDefaultThemeForPath();
   };
 
   const setStoredTheme = (theme) => {
@@ -340,10 +351,6 @@
           <a id="navMenuComplaintsLink" class="nav-menu-link ${window.location.pathname.endsWith('/complaints-history.html') ? 'active' : ''}" role="menuitem" href="/complaints-history.html" style="display: none;">
             <i data-lucide="inbox"></i>
             <span>Complaint Reports Inbox</span>
-          </a>
-          <a class="nav-menu-link ${window.location.pathname.endsWith('/withdrawals-history.html') ? 'active' : ''}" role="menuitem" href="/withdrawals-history.html">
-            <i data-lucide="wallet"></i>
-            <span>My Withdrawal Requests</span>
           </a>
           <a id="navMenuFinancialQueueLink" class="nav-menu-link ${window.location.pathname.endsWith('/financial-withdrawals-history.html') ? 'active' : ''}" role="menuitem" href="/financial-withdrawals-history.html" style="display: none;">
             <i data-lucide="inbox"></i>

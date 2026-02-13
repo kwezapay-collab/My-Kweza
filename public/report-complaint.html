@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Complaint | My Kweza</title>
+    <script src="theme.js"></script>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#1a4d6e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="My Kweza">
+    <link rel="apple-touch-icon" href="/icons/kweza-192.png">
+</head>
+
+<body class="scrollable">
+    <nav class="dashboard-nav">
+        <div class="brand-group" style="display: flex; align-items: center; gap: 1rem;">
+            <img src="logo.png" alt="Logo" class="nav-logo"
+                onerror="this.src='https://placehold.co/40x40/1a4d6e/white?text=K'">
+            <h2 class="brand">My Kweza</h2>
+        </div>
+        <div class="user-actions" style="display: flex; align-items: center; gap: 1rem;">
+            <div class="user-info" style="text-align: right;">
+                <p id="userName" style="font-weight: 600;">Loading...</p>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <p id="userRole" style="font-size: 0.75rem; color: var(--accent); font-weight: 600;">---</p>
+                    <p id="memberId" style="font-size: 0.7rem; color: var(--text-muted); opacity: 0.8;">ID: ---</p>
+                </div>
+            </div>
+
+            <button id="dashboardBtn" class="nav-icon-btn"><i data-lucide="layout-dashboard"></i></button>
+            <button id="settingsBtn" class="nav-icon-btn" onclick="window.location.href='/settings.html'"><i
+                    data-lucide="settings"></i></button>
+            <button id="logoutBtn" class="nav-icon-btn" style="color: var(--danger);"><i
+                    data-lucide="log-out"></i></button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="dashboard-page-header"
+            style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button id="backToDashboardBtn" class="btn"
+                    style="background: transparent; padding: 8px; color: var(--text-muted);">
+                    <i data-lucide="arrow-left"></i>
+                </button>
+                <div>
+                    <h1>Report Complaint</h1>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Send an issue to Dev Operations for review.
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <section class="glass-card animate-fade">
+            <form id="complaintForm">
+                <div class="input-group">
+                    <label>Subject</label>
+                    <input type="text" id="complaintSubject" placeholder="Short title (optional)">
+                </div>
+                <div class="input-group">
+                    <label>Complaint Details</label>
+                    <textarea id="complaintMessage" required placeholder="Describe your complaint..."
+                        style="width: 100%; min-height: 160px; resize: vertical; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); padding: 14px; border-radius: 12px; color: white; font-size: 1rem; outline: none;"></textarea>
+                </div>
+                <button type="submit" class="btn btn-secondary" style="width: 100%;">Send Complaint</button>
+            </form>
+            <div id="devopsInboxHint" style="display: none; margin-top: 1rem;">
+                <a href="/complaints-history.html" class="btn btn-primary" style="width: 100%;">Open Complaint Inbox</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="report-complaint.js"></script>
+    <script src='/pwa.js'></script>
+</body>
+
+</html>

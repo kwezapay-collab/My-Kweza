@@ -123,7 +123,7 @@ function updateUI() {
 
     const founderWeeklyReportsPanel = document.getElementById('founderWeeklyReportsPanel');
     if (founderWeeklyReportsPanel) {
-        founderWeeklyReportsPanel.style.display = isFounderRole(currentUser.role) ? 'block' : 'none';
+        founderWeeklyReportsPanel.style.display = isFounderRole(currentUser.role) ? 'flex' : 'none';
     }
 
     const withdrawalsHint = document.getElementById('myWithdrawalsHint');

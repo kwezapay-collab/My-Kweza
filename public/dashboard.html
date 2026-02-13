@@ -59,21 +59,22 @@
 
         <!-- Unified Stats Card (Visible to all) -->
         <div class="glass-card unified-stats-card animate-fade">
-            <div class="stat-item">
-                <h3>Salary</h3>
-                <div class="value">MWK <span id="salaryVal">0.00</span></div>
+            <h2 class="earnings-title">My Earnings</h2>
+            <div class="earnings-row">
+                <span class="earnings-label">Salary</span>
+                <span class="earnings-value">MWK <span id="salaryVal">0.00</span></span>
             </div>
-            <div class="stat-item">
-                <h3>Bonus</h3>
-                <div class="value">MWK <span id="bonusVal">0.00</span></div>
+            <div class="earnings-row">
+                <span class="earnings-label">Bonus</span>
+                <span class="earnings-value">MWK <span id="bonusVal">0.00</span></span>
             </div>
-            <div class="stat-item">
-                <h3>Dividends</h3>
-                <div class="value">MWK <span id="dividendVal">0.00</span></div>
+            <div class="earnings-row">
+                <span class="earnings-label">Dividends</span>
+                <span class="earnings-value">MWK <span id="dividendVal">0.00</span></span>
             </div>
-            <div class="stat-item total">
-                <h3>Total Payout</h3>
-                <div class="value">MWK <span id="totalVal">0.00</span></div>
+            <div class="earnings-row total">
+                <span class="earnings-label">Total Payout</span>
+                <span class="earnings-value">MWK <span id="totalVal">0.00</span></span>
             </div>
         </div>
 
@@ -81,21 +82,21 @@
         <section id="adminOverview" class="animate-fade" style="display: none; margin-bottom: 2rem;">
             <h2 style="margin-bottom: 1rem;">Admin Operations</h2>
             <div class="stats-grid">
-                <div class="glass-card stat-card" style="border-top: 4px solid var(--accent);">
+                <div class="glass-card stat-card kweza-pattern-card" style="border-top: 4px solid var(--accent);">
                     <h3>Total Company Revenue</h3>
                     <div class="value">MWK <span id="adminTotalRev">0.00</span></div>
                 </div>
-                <div class="glass-card stat-card" style="border-top: 4px solid var(--gold);">
+                <div class="glass-card stat-card kweza-pattern-card" style="border-top: 4px solid var(--gold);">
                     <h3>Payout Obligations</h3>
                     <div class="value">MWK <span id="adminTotalPay">0.00</span></div>
                 </div>
-                <div class="glass-card stat-card" style="border-top: 4px solid var(--primary);">
+                <div class="glass-card stat-card kweza-pattern-card" style="border-top: 4px solid var(--primary);">
                     <h3>Remaining Funds</h3>
                     <div class="value">MWK <span id="adminRemaining">0.00</span></div>
                 </div>
             </div>
 
-            <div class="glass-card"
+            <div class="glass-card kweza-pattern-card"
                 style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <h3>Low Revenue Mode</h3>
@@ -108,90 +109,24 @@
             </div>
         </section>
 
-        <div style="display: flex; flex-direction: column; gap: 2rem;">
-            <!-- Withdrawals Hub -->
-            <section class="glass-card animate-fade" id="withdrawalsHubSection">
-                <h2>Request Withdrawal</h2>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Request to transfer your
-                    funds to your bank or mobile wallet.</p>
-                <form id="withdrawalForm">
-                    <div class="form-grid-two"
-                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-                        <div class="input-group">
-                            <label>Amount (MWK)</label>
-                            <input type="number" id="withdrawAmount" required placeholder="0.00" step="0.01">
-                        </div>
-                        <div class="input-group">
-                            <label>Transfer Method</label>
-                            <select id="withdrawMethod" required
-                                style="width: 100%; padding: 0.85rem; background: rgba(30, 41, 59, 0.5); border: 1px solid var(--glass-border); border-radius: 10px; color: white;">
-                                <option value="Airtel Money">Airtel Money</option>
-                                <option value="TNM Mpamba">TNM Mpamba</option>
-                                <option value="Bank Transfer">Bank Transfer</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="input-group" style="margin-bottom: 1.5rem;">
-                        <label>Receiving Details (Account No / Phone Number / Bank Name)</label>
-                        <input type="text" id="withdrawDetails" required
-                            placeholder="e.g. 099xxxxxxx or National Bank 100xxxxxxx">
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Withdrawal Request</button>
-                </form>
-            </section>
+        <div class="dashboard-icon-actions">
+            <a class="dashboard-action-btn animate-fade" id="withdrawalsHubSection" href="/withdrawals-history.html">
+                <span class="dashboard-action-btn-icon"><i data-lucide="wallet"></i></span>
+                <span class="dashboard-action-btn-label">Request Withdrawal</span>
+            </a>
 
-            <section class="glass-card animate-fade" id="founderWeeklyReportsPanel" style="display: none;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap;">
-                    <h2>Software Development Weekly Reports</h2>
-                    <p id="founderWeeklyReportsCount" style="font-size: 0.8rem; color: var(--text-muted);">Loading...</p>
-                </div>
-                <div class="responsive-table-wrap" style="overflow-x: auto;">
-                    <table class="mobile-stack" style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
-                                <th style="padding-bottom: 1rem;">REPORT DATE</th>
-                                <th style="padding-bottom: 1rem;">DEVELOPER</th>
-                                <th style="padding-bottom: 1rem;">PROJECT</th>
-                                <th style="padding-bottom: 1rem;">TARGET COMPLETION</th>
-                                <th style="padding-bottom: 1rem;">REVIEWED BY</th>
-                            </tr>
-                        </thead>
-                        <tbody id="founderWeeklyReportsTable">
-                            <tr>
-                                <td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">
-                                    Loading reports...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div id="showMoreFounderWeeklyReportsWrap" style="margin-top: 1rem; text-align: right;">
-                    <a id="showMoreFounderWeeklyReportsLink" href="/founder-weekly-reports.html"
-                        style="font-size: 0.85rem; color: var(--accent); text-decoration: none; font-weight: 600;">Show
-                        more</a>
-                </div>
-            </section>
+            <a class="dashboard-action-btn animate-fade" id="founderWeeklyReportsPanel" style="display: none;"
+                href="/founder-weekly-reports.html">
+                <span class="dashboard-action-btn-icon"><i data-lucide="file-text"></i></span>
+                <span class="dashboard-action-btn-label">Software Development Weekly Report</span>
+            </a>
 
-            <!-- Complaint Report Section -->
-            <section class="glass-card animate-fade">
-                <h2>Report Complaint</h2>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Share any issue for the
-                    Dev Operations Assistant team to review.</p>
-                <form id="complaintForm">
-                    <div class="input-group">
-                        <label>Subject</label>
-                        <input type="text" id="complaintSubject" placeholder="Short title (optional)">
-                    </div>
-                    <div class="input-group">
-                        <label>Complaint Details</label>
-                        <textarea id="complaintMessage" required placeholder="Describe your complaint..."
-                            style="width: 100%; min-height: 120px; resize: vertical; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); padding: 14px; border-radius: 12px; color: white; font-size: 1rem; outline: none;"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-secondary" style="width: 100%;">Send Complaint</button>
-                </form>
-            </section>
+            <a class="dashboard-action-btn animate-fade" href="/report-complaint.html">
+                <span class="dashboard-action-btn-icon"><i data-lucide="message-square"></i></span>
+                <span class="dashboard-action-btn-label">Report Complaint</span>
+            </a>
 
-            <div id="branchPanel" class="glass-card animate-fade" style="display: none;">
+            <div id="branchPanel" class="glass-card animate-fade kweza-pattern-card" style="display: none;">
                 <h2>Branch Revenue Reporting</h2>
                 <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Official daily collection
                     log for <span id="branchName" style="color: var(--accent); font-weight: 600;">Branch</span></p>

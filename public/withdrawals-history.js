@@ -3,7 +3,7 @@ lucide.createIcons();
 let currentUser = null;
 let dashboardPath = '/dashboard.html';
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
-const getMenuBackUrl = (fallbackPath = '/dashboard.html') => `${fallbackPath}#menu`;
+const getMenuBackUrl = (fallbackPath = '/dashboard.html') => fallbackPath;
 
 const escapeHtml = (value = '') => String(value)
     .replace(/&/g, '&amp;')
@@ -138,6 +138,39 @@ document.getElementById('backToDashboardBtn').addEventListener('click', () => {
 
 document.getElementById('dashboardBtn')?.addEventListener('click', () => {
     window.location.href = dashboardPath;
+});
+
+document.getElementById('withdrawalForm')?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const amount = parseFloat(document.getElementById('withdrawAmount').value);
+    const method = document.getElementById('withdrawMethod').value;
+    const details = document.getElementById('withdrawDetails').value;
+
+    if (Number.isNaN(amount) || amount <= 0) {
+        alert('Enter a valid amount.');
+        return;
+    }
+
+    try {
+        const res = await apiFetch('/api/withdrawals', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount, method, details })
+        });
+
+        if (res.ok) {
+            alert('Withdrawal request submitted for approval.');
+            document.getElementById('withdrawalForm').reset();
+            await loadWithdrawalHistory();
+        } else {
+            const data = await res.json();
+            alert(data.error || 'Failed to submit request.');
+        }
+    } catch (err) {
+        console.error('Withdrawal submit error:', err);
+        alert('Failed to submit request.');
+    }
 });
 
 document.getElementById('logoutBtn').addEventListener('click', async () => {

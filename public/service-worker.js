@@ -1,4 +1,4 @@
-const CACHE_NAME = 'my-kweza-v15';
+const CACHE_NAME = 'my-kweza-v16';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -11,6 +11,7 @@ const APP_SHELL = [
   '/withdrawals-history.html',
   '/financial-withdrawals-history.html',
   '/complaints-history.html',
+  '/report-complaint.html',
   '/notifications.html',
   '/compensation-management.html',
   '/super-admin.html',
@@ -26,6 +27,7 @@ const APP_SHELL = [
   '/withdrawals-history.js',
   '/financial-withdrawals-history.js',
   '/complaints-history.js',
+  '/report-complaint.js',
   '/notifications.js',
   '/compensation-management.js',
   '/super-admin.js',

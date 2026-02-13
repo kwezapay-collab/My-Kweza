@@ -3,7 +3,7 @@ lucide.createIcons();
 let currentUser = null;
 let dashboardPath = '/dashboard.html';
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
-const getMenuBackUrl = (fallbackPath = '/dashboard.html') => `${fallbackPath}#menu`;
+const getMenuBackUrl = (fallbackPath = '/dashboard.html') => fallbackPath;
 
 const escapeHtml = (value = '') => String(value)
     .replace(/&/g, '&amp;')

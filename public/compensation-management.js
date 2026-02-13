@@ -5,7 +5,7 @@ let founderMembers = [];
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
 const isFinancialManagerRole = (role) => role === 'Financial Manager';
 const isDevOpsAssistantRole = (role) => role === 'Dev Operations Assistant';
-const getMenuBackUrl = (fallbackPath = '/dashboard.html') => `${fallbackPath}#menu`;
+const getMenuBackUrl = (fallbackPath = '/dashboard.html') => fallbackPath;
 
 function syncDevOpsThemeForCurrentUser(themeMode = null) {
     const activeTheme = themeMode || (window.themeManager?.getTheme ? window.themeManager.getTheme() : 'dark');
