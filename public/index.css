@@ -275,9 +275,30 @@ body.light-mode .nav-menu-theme-switch-thumb {
     box-shadow: 0 2px 6px rgba(26, 77, 110, 0.2);
 }
 
-html.light-mode .nav-menu-theme-switch-icon-wrap,
-body.light-mode .nav-menu-theme-switch-icon-wrap {
+html.light-mode .nav-menu-theme-switch-side,
+body.light-mode .nav-menu-theme-switch-side {
     color: #334e68;
+}
+
+html.light-mode .nav-menu-earnings-panel,
+body.light-mode .nav-menu-earnings-panel {
+    border-bottom-color: rgba(26, 77, 110, 0.16);
+    background: rgba(26, 77, 110, 0.05);
+}
+
+html.light-mode .nav-menu-earnings-row,
+body.light-mode .nav-menu-earnings-row {
+    color: #334e68;
+}
+
+html.light-mode .nav-menu-earnings-row strong,
+body.light-mode .nav-menu-earnings-row strong {
+    color: #102a43;
+}
+
+html.light-mode .nav-menu-earnings-row.total,
+body.light-mode .nav-menu-earnings-row.total {
+    border-top-color: rgba(26, 77, 110, 0.2);
 }
 
 html.light-mode .nav-menu-link.active,
@@ -838,18 +859,25 @@ body.nav-hamburger-enabled .dashboard-nav .user-actions {
     overflow: hidden;
 }
 
-.nav-menu-theme-switch-icon-wrap {
+.nav-menu-theme-switch-side {
     position: absolute;
     top: 50%;
-    right: 10px;
     transform: translateY(-50%);
     color: #334155;
-    transition: left 0.22s ease, right 0.22s ease, color 0.22s ease;
+    transition: opacity 0.22s ease, color 0.22s ease;
 }
 
-.nav-menu-theme-switch-icon-wrap i {
-    width: 18px;
-    height: 18px;
+.nav-menu-theme-switch-side i {
+    width: 14px;
+    height: 14px;
+}
+
+.nav-menu-theme-switch-side-dark {
+    left: 10px;
+}
+
+.nav-menu-theme-switch-side-light {
+    right: 10px;
 }
 
 .nav-menu-theme-switch-thumb {
@@ -868,10 +896,22 @@ body.nav-hamburger-enabled .dashboard-nav .user-actions {
     transform: translateX(34px);
 }
 
-.nav-menu-theme-item[data-theme='dark'] .nav-menu-theme-switch-icon-wrap {
-    left: 10px;
-    right: auto;
+.nav-menu-theme-item[data-theme='dark'] .nav-menu-theme-switch-side-dark {
     color: #4f79ac;
+    opacity: 1;
+}
+
+.nav-menu-theme-item[data-theme='dark'] .nav-menu-theme-switch-side-light {
+    opacity: 0.45;
+}
+
+.nav-menu-theme-item[data-theme='light'] .nav-menu-theme-switch-side-dark {
+    opacity: 0.45;
+}
+
+.nav-menu-theme-item[data-theme='light'] .nav-menu-theme-switch-side-light {
+    color: #f59e0b;
+    opacity: 1;
 }
 
 .nav-menu-link.active {
@@ -885,6 +925,50 @@ body.nav-hamburger-enabled .dashboard-nav .user-actions {
 
 .nav-menu-logout:hover {
     background: rgba(231, 76, 60, 0.15);
+}
+
+.nav-menu-earnings-chevron {
+    margin-left: auto;
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+}
+
+.nav-menu-link.is-open .nav-menu-earnings-chevron {
+    transform: rotate(180deg);
+}
+
+.nav-menu-earnings-panel {
+    display: none;
+    padding: 0.65rem 1rem 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.nav-menu-earnings-panel.is-open {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.nav-menu-earnings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.7rem;
+    font-size: 0.85rem;
+    color: rgba(241, 246, 255, 0.9);
+}
+
+.nav-menu-earnings-row strong {
+    font-size: 0.86rem;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.nav-menu-earnings-row.total {
+    margin-top: 0.15rem;
+    padding-top: 0.4rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .finance-modal-backdrop {
@@ -1104,107 +1188,290 @@ body.scrollable .glass-card:not(.finance-modal-card)>* {
     color: #ffffff;
 }
 
-.earnings-card {
-    cursor: pointer;
-    user-select: none;
-}
-
-.earnings-card:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
-}
-
-.earnings-card-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 0.55rem;
-}
-
-.earnings-toggle-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.38rem;
-    padding: 0.35rem 0.58rem;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(234, 242, 252, 0.95);
-    font-size: 0.68rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
-
-.earnings-toggle-icon {
-    width: 15px;
-    height: 15px;
-    transition: transform 0.25s ease;
-}
-
-.earnings-card.is-expanded .earnings-toggle-icon {
-    transform: rotate(180deg);
-}
-
-.earnings-breakdown {
-    display: grid;
-    max-height: 360px;
-    opacity: 1;
+body.scrollable .glass-card.earnings-card,
+body.light-mode.scrollable .glass-card.earnings-card,
+body.devops-purple-theme.scrollable .glass-card.earnings-card {
+    --earnings-grad-start: #0f8ad2;
+    --earnings-grad-mid: #1aa1d6;
+    --earnings-grad-end: #6fc4eb;
+    --earnings-accent: rgba(211, 239, 255, 0.92);
+    --earnings-ink: #f8fcff;
+    --earnings-muted: rgba(228, 242, 252, 0.86);
     overflow: hidden;
-    margin-top: 0.3rem;
-    transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.2s ease;
+    border-radius: 22px;
+    border: 1px solid rgba(173, 228, 255, 0.42);
+    background: linear-gradient(135deg, var(--earnings-grad-start) 0%, var(--earnings-grad-mid) 56%, var(--earnings-grad-end) 100%);
+    box-shadow: 0 18px 34px rgba(6, 31, 60, 0.38);
+    color: var(--earnings-ink);
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.2rem 1.25rem 1.1rem;
 }
 
-.earnings-card.is-collapsed .earnings-breakdown {
-    max-height: 0;
-    opacity: 0;
-    margin-top: 0;
+body.scrollable .glass-card.earnings-card::before,
+body.scrollable .glass-card.earnings-card::after,
+body.light-mode.scrollable .glass-card.earnings-card::before,
+body.light-mode.scrollable .glass-card.earnings-card::after,
+body.devops-purple-theme.scrollable .glass-card.earnings-card::before,
+body.devops-purple-theme.scrollable .glass-card.earnings-card::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    border-radius: 999px;
 }
 
-.earnings-card.is-expanded .earnings-row.total {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+body.scrollable .glass-card.earnings-card::before,
+body.light-mode.scrollable .glass-card.earnings-card::before,
+body.devops-purple-theme.scrollable .glass-card.earnings-card::before {
+    width: 220px;
+    height: 220px;
+    right: -88px;
+    top: -126px;
+    background: radial-gradient(circle at 35% 34%,
+            rgba(235, 247, 255, 0.42) 0%,
+            rgba(235, 247, 255, 0.18) 44%,
+            rgba(235, 247, 255, 0) 78%);
 }
 
-.earnings-card.is-collapsed .earnings-row.total {
-    border-bottom: none;
+body.scrollable .glass-card.earnings-card::after,
+body.light-mode.scrollable .glass-card.earnings-card::after,
+body.devops-purple-theme.scrollable .glass-card.earnings-card::after {
+    width: 240px;
+    height: 240px;
+    right: -110px;
+    bottom: -148px;
+    border: 2px solid rgba(233, 247, 255, 0.26);
+    border-left-color: transparent;
+    border-bottom-color: transparent;
 }
 
-.earnings-row {
+body.devops-purple-theme.scrollable .glass-card.earnings-card {
+    --earnings-grad-start: #7b3fd2;
+    --earnings-grad-mid: #a84fd9;
+    --earnings-grad-end: #f58acb;
+    --earnings-accent: rgba(255, 231, 247, 0.95);
+    --earnings-ink: #fff8fd;
+    --earnings-muted: rgba(255, 218, 241, 0.9);
+    border-color: rgba(255, 195, 233, 0.52);
+    box-shadow: 0 18px 34px rgba(58, 20, 84, 0.46);
+}
+
+body.devops-purple-theme.scrollable .glass-card.earnings-card::before {
+    background: radial-gradient(circle at 35% 34%,
+            rgba(255, 232, 246, 0.5) 0%,
+            rgba(255, 232, 246, 0.2) 44%,
+            rgba(255, 232, 246, 0) 78%);
+}
+
+body.devops-purple-theme.scrollable .glass-card.earnings-card::after {
+    border-color: rgba(255, 222, 243, 0.38);
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+}
+
+.earnings-card-top,
+.earnings-card-chip-row,
+.earnings-card-footer {
+    position: relative;
+    z-index: 1;
+}
+
+.earnings-card-top {
+    display: flex;
+    flex-direction: column;
+    gap: 0.32rem;
+}
+
+.earnings-card-kicker {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--earnings-accent);
+}
+
+.earnings-card-balance {
+    margin: 0;
+    font-size: clamp(1.55rem, 4vw, 2.15rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    color: var(--earnings-ink);
+}
+
+.earnings-card-chip-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
-    padding: 0.52rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    gap: 0.85rem;
 }
 
-.earnings-row:last-child {
-    border-bottom: none;
+.earnings-card-chip,
+.earnings-card-chip-dot {
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.36);
 }
 
-.earnings-label {
-    flex: 1;
+.earnings-card-chip {
+    width: 36px;
+    height: 36px;
+}
+
+.earnings-card-chip-dot {
+    width: 26px;
+    height: 26px;
+    margin-left: -26px;
+    opacity: 0.8;
+}
+
+.earnings-card-number {
+    margin-left: auto;
     font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: rgba(242, 250, 255, 0.96);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: rgba(255, 255, 255, 0.95);
 }
 
-.earnings-value {
-    font-size: 0.94rem;
+.earnings-card-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    align-items: end;
+}
+
+.earnings-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+}
+
+.earnings-card-meta-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--earnings-muted);
+}
+
+.earnings-card-meta strong {
+    font-size: 0.98rem;
     font-weight: 700;
-    text-align: right;
-    white-space: nowrap;
-    color: #ffffff;
-    text-shadow: 0 1px 5px rgba(8, 34, 70, 0.35);
+    color: var(--earnings-ink);
 }
 
-.earnings-row.total .earnings-label {
-    font-weight: 700;
+.glass-card.earnings-card.earnings-role-admin {
+    --earnings-grad-start: #12756f;
+    --earnings-grad-mid: #1f8d7e;
+    --earnings-grad-end: #53b499;
 }
 
-.earnings-row.total .earnings-value {
-    color: #d8ffe5;
+.glass-card.earnings-card.earnings-role-finance {
+    --earnings-grad-start: #2e5984;
+    --earnings-grad-mid: #3976a6;
+    --earnings-grad-end: #62a4cc;
+}
+
+.glass-card.earnings-card.earnings-role-branch {
+    --earnings-grad-start: #906220;
+    --earnings-grad-mid: #b57a24;
+    --earnings-grad-end: #d9a24f;
+}
+
+.glass-card.earnings-card.earnings-role-core {
+    --earnings-grad-start: #8c3f24;
+    --earnings-grad-mid: #b25a30;
+    --earnings-grad-end: #da8a5f;
+}
+
+.glass-card.earnings-card.earnings-role-founder {
+    --earnings-grad-start: #3e3f8f;
+    --earnings-grad-mid: #5558b8;
+    --earnings-grad-end: #7f85e4;
+}
+
+.glass-card.earnings-card.earnings-role-devops {
+    --earnings-grad-start: #7b3fd2;
+    --earnings-grad-mid: #a84fd9;
+    --earnings-grad-end: #f58acb;
+    --earnings-accent: rgba(255, 231, 247, 0.95);
+    --earnings-ink: #fff8fd;
+    --earnings-muted: rgba(255, 218, 241, 0.9);
+}
+
+.glass-card.earnings-card.earnings-role-member {
+    --earnings-grad-start: #0f8ad2;
+    --earnings-grad-mid: #1aa1d6;
+    --earnings-grad-end: #6fc4eb;
+}
+
+body.scrollable:not(.light-mode) .glass-card.earnings-card {
+    --earnings-grad-start: #17273b;
+    --earnings-grad-mid: #1d3149;
+    --earnings-grad-end: #29405d;
+    --earnings-accent: rgba(204, 222, 244, 0.92);
+    --earnings-ink: #ecf4ff;
+    --earnings-muted: rgba(188, 209, 232, 0.84);
+    border-color: rgba(112, 145, 184, 0.44);
+    box-shadow: 0 18px 34px rgba(4, 12, 26, 0.54);
+}
+
+body.scrollable:not(.light-mode) .glass-card.earnings-card::before {
+    background: radial-gradient(circle at 35% 34%,
+            rgba(220, 234, 248, 0.2) 0%,
+            rgba(220, 234, 248, 0.08) 44%,
+            rgba(220, 234, 248, 0) 78%);
+}
+
+body.scrollable:not(.light-mode) .glass-card.earnings-card::after {
+    border-color: rgba(194, 217, 242, 0.2);
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+}
+
+body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-admin {
+    --earnings-grad-start: #0f3a38;
+    --earnings-grad-mid: #14514b;
+    --earnings-grad-end: #1d6860;
+}
+
+body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-finance {
+    --earnings-grad-start: #1a3554;
+    --earnings-grad-mid: #23476e;
+    --earnings-grad-end: #2f628b;
+}
+
+body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-branch {
+    --earnings-grad-start: #4d3415;
+    --earnings-grad-mid: #684719;
+    --earnings-grad-end: #876026;
+}
+
+body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-core {
+    --earnings-grad-start: #5a2916;
+    --earnings-grad-mid: #743720;
+    --earnings-grad-end: #915033;
+}
+
+body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-founder {
+    --earnings-grad-start: #292a63;
+    --earnings-grad-mid: #33387e;
+    --earnings-grad-end: #4753a0;
+}
+
+body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-devops {
+    --earnings-grad-start: #43226f;
+    --earnings-grad-mid: #5c2d8f;
+    --earnings-grad-end: #7a3da8;
+    --earnings-accent: rgba(245, 222, 252, 0.92);
+    --earnings-ink: #fcf6ff;
+    --earnings-muted: rgba(236, 204, 248, 0.84);
+}
+
+body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-member {
+    --earnings-grad-start: #163d63;
+    --earnings-grad-mid: #1d4f7e;
+    --earnings-grad-end: #2a669e;
 }
 
 .dashboard-icon-actions {
@@ -1665,15 +1932,6 @@ tr:last-child {
         flex-wrap: wrap;
     }
 
-    #welcomeText {
-        font-size: clamp(0.95rem, 4.4vw, 1.15rem) !important;
-        line-height: 1.25;
-        max-width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
     .stats-grid {
         grid-template-columns: 1fr;
     }
@@ -1685,21 +1943,29 @@ tr:last-child {
         margin-bottom: 1.1rem;
     }
 
-    .earnings-card-head {
-        margin-bottom: 0.42rem;
+    body.scrollable .glass-card.earnings-card {
+        min-height: 196px;
+        padding: 0.95rem 0.95rem 0.9rem;
     }
 
-    .earnings-title {
-        font-size: 1.15rem;
+    .earnings-card-kicker {
+        font-size: 0.88rem;
     }
 
-    .earnings-row {
-        padding: 0.48rem 0;
+    .earnings-card-balance {
+        font-size: clamp(1.22rem, 5vw, 1.65rem);
     }
 
-    .earnings-label,
-    .earnings-value {
+    .earnings-card-number {
         font-size: 0.78rem;
+    }
+
+    .earnings-card-meta-label {
+        font-size: 0.64rem;
+    }
+
+    .earnings-card-meta strong {
+        font-size: 0.84rem;
     }
 
     .dashboard-action-btn {

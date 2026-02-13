@@ -43,39 +43,27 @@
     <main class="main-content">
         <header class="dashboard-page-header"
             style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
-            <div style="min-width: 0; flex: 1;">
-                <h1 id="welcomeText"
-                    style="font-size: clamp(1rem, 1.9vw, 1.45rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                    Dev Operations Assistant Dashboard</h1>
-                <p style="color: var(--text-muted);" id="currentDate"></p>
-            </div>
+            <div></div>
         </header>
 
-        <div id="earningsCard" class="glass-card unified-stats-card earnings-card is-collapsed animate-fade" role="button"
-            tabindex="0" aria-expanded="false" aria-controls="earningsBreakdown">
-            <div class="earnings-card-head">
-                <h2 class="earnings-title">My Earnings</h2>
-                <span class="earnings-toggle-pill">
-                    <span class="earnings-toggle-text">Details</span>
-                    <i data-lucide="chevron-down" class="earnings-toggle-icon" aria-hidden="true"></i>
-                </span>
+        <div id="earningsCard" class="glass-card unified-stats-card earnings-card animate-fade">
+            <div class="earnings-card-top">
+                <p class="earnings-card-kicker">Main Balance</p>
+                <p class="earnings-card-balance">MWK <span id="totalVal">0.00</span></p>
             </div>
-            <div class="earnings-row total">
-                <span class="earnings-label">Total Payout</span>
-                <span class="earnings-value">MWK <span id="totalVal">0.00</span></span>
+            <div class="earnings-card-chip-row">
+                <span class="earnings-card-chip" aria-hidden="true"></span>
+                <span class="earnings-card-chip-dot" aria-hidden="true"></span>
+                <p class="earnings-card-number" id="earningsCardNumber">----</p>
             </div>
-            <div id="earningsBreakdown" class="earnings-breakdown">
-                <div class="earnings-row">
-                    <span class="earnings-label">Salary</span>
-                    <span class="earnings-value">MWK <span id="salaryVal">0.00</span></span>
+            <div class="earnings-card-footer">
+                <div class="earnings-card-meta">
+                    <span class="earnings-card-meta-label">Date</span>
+                    <strong id="earningsValidThru">--/--/--</strong>
                 </div>
-                <div class="earnings-row">
-                    <span class="earnings-label">Bonus</span>
-                    <span class="earnings-value">MWK <span id="bonusVal">0.00</span></span>
-                </div>
-                <div class="earnings-row">
-                    <span class="earnings-label">Dividends</span>
-                    <span class="earnings-value">MWK <span id="dividendVal">0.00</span></span>
+                <div class="earnings-card-meta">
+                    <span class="earnings-card-meta-label">Card Holder</span>
+                    <strong id="earningsCardHolder">--</strong>
                 </div>
             </div>
         </div>

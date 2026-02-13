@@ -4,37 +4,53 @@ let currentUser = null;
 let allComplaints = [];
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
 
-function setupEarningsCardToggle() {
+function getEarningsRoleTheme(role) {
+    const normalized = String(role || '').toLowerCase();
+    if (normalized.includes('admin')) return 'admin';
+    if (normalized.includes('financial') || normalized.includes('finance')) return 'finance';
+    if (normalized.includes('branch')) return 'branch';
+    if (normalized.includes('core')) return 'core';
+    if (normalized.includes('founder')) return 'founder';
+    if (normalized.includes('dev operations') || normalized.includes('devops')) return 'devops';
+    return 'member';
+}
+
+function applyEarningsCardTheme(role) {
     const card = document.getElementById('earningsCard');
-    if (!card || card.dataset.toggleBound === '1') return;
+    if (!card) return;
+    const roleTheme = getEarningsRoleTheme(role);
+    card.classList.remove(
+        'earnings-role-admin',
+        'earnings-role-finance',
+        'earnings-role-branch',
+        'earnings-role-core',
+        'earnings-role-founder',
+        'earnings-role-devops',
+        'earnings-role-member'
+    );
+    card.classList.add(`earnings-role-${roleTheme}`);
+}
 
-    const toggleLabel = card.querySelector('.earnings-toggle-text');
+function updateEarningsCardMeta() {
+    const memberIdEl = document.getElementById('earningsCardNumber');
+    if (memberIdEl) {
+        memberIdEl.innerText = String(currentUser?.member_id || '--');
+    }
 
-    const applyState = (expanded) => {
-        card.classList.toggle('is-expanded', expanded);
-        card.classList.toggle('is-collapsed', !expanded);
-        card.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-        if (toggleLabel) {
-            toggleLabel.innerText = expanded ? 'Hide' : 'Details';
-        }
-    };
+    const validThruEl = document.getElementById('earningsValidThru');
+    if (validThruEl) {
+        const now = new Date();
+        validThruEl.innerText = now.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit'
+        });
+    }
 
-    applyState(false);
-
-    const toggle = () => applyState(!card.classList.contains('is-expanded'));
-
-    card.addEventListener('click', (event) => {
-        if (event.target.closest('a, button, input, textarea, select, label')) return;
-        toggle();
-    });
-
-    card.addEventListener('keydown', (event) => {
-        if (event.key !== 'Enter' && event.key !== ' ') return;
-        event.preventDefault();
-        toggle();
-    });
-
-    card.dataset.toggleBound = '1';
+    const holderEl = document.getElementById('earningsCardHolder');
+    if (holderEl) {
+        holderEl.innerText = String(currentUser?.name || '--');
+    }
 }
 
 async function loadDashboard() {
@@ -65,18 +81,12 @@ function updateUI() {
     document.getElementById('userName').innerText = currentUser.name;
     document.getElementById('userRole').innerText = currentUser.sub_role || currentUser.role;
     document.getElementById('memberId').innerText = `ID: ${currentUser.member_id}`;
-    document.getElementById('welcomeText').innerText = `Welcome back, ${currentUser.name.split(' ')[0]} \u2764\uFE0F`;
-    document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-GB', {
-        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-    });
-    setupEarningsCardToggle();
+    updateEarningsCardMeta();
+    applyEarningsCardTheme(currentUser.role);
 
     const salary = Number(currentUser.salary || 0);
     const bonus = Number(currentUser.bonus || 0);
     const dividends = Number(currentUser.dividends || 0);
-    document.getElementById('salaryVal').innerText = salary.toLocaleString();
-    document.getElementById('bonusVal').innerText = bonus.toLocaleString();
-    document.getElementById('dividendVal').innerText = dividends.toLocaleString();
     document.getElementById('totalVal').innerText = (salary + bonus + dividends).toLocaleString();
 }
 

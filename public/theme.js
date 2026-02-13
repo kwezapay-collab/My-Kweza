@@ -353,6 +353,29 @@
             <i data-lucide="wallet-cards"></i>
             <span>Compensation Management</span>
           </a>
+          <button id="navMenuEarningsToggleBtn" class="nav-menu-link" role="menuitem" type="button">
+            <i data-lucide="wallet"></i>
+            <span>Earnings Breakdown</span>
+            <i data-lucide="chevron-down" class="nav-menu-earnings-chevron" aria-hidden="true"></i>
+          </button>
+          <div id="navMenuEarningsPanel" class="nav-menu-earnings-panel">
+            <div class="nav-menu-earnings-row">
+              <span>Salary</span>
+              <strong id="navMenuEarningsSalary">MWK 0</strong>
+            </div>
+            <div class="nav-menu-earnings-row">
+              <span>Bonus</span>
+              <strong id="navMenuEarningsBonus">MWK 0</strong>
+            </div>
+            <div class="nav-menu-earnings-row">
+              <span>Dividends</span>
+              <strong id="navMenuEarningsDividends">MWK 0</strong>
+            </div>
+            <div class="nav-menu-earnings-row total">
+              <span>Total</span>
+              <strong id="navMenuEarningsTotal">MWK 0</strong>
+            </div>
+          </div>
           <a class="nav-menu-link ${window.location.pathname.endsWith('/settings.html') ? 'active' : ''}" role="menuitem" href="/settings.html">
             <i data-lucide="settings"></i>
             <span>Settings</span>
@@ -363,8 +386,11 @@
               <span>Theme</span>
             </span>
             <span class="nav-menu-theme-switch" aria-hidden="true">
-              <span class="nav-menu-theme-switch-icon-wrap">
-                <i id="navMenuThemeSwitchIcon" data-lucide="moon"></i>
+              <span class="nav-menu-theme-switch-side nav-menu-theme-switch-side-dark">
+                <i data-lucide="moon"></i>
+              </span>
+              <span class="nav-menu-theme-switch-side nav-menu-theme-switch-side-light">
+                <i data-lucide="sun"></i>
               </span>
               <span class="nav-menu-theme-switch-thumb"></span>
             </span>
@@ -385,10 +411,15 @@
     const notificationsBadge = menuWrap.querySelector('#navMenuNotificationBadge');
     const financialQueueLink = menuWrap.querySelector('#navMenuFinancialQueueLink');
     const compensationLink = menuWrap.querySelector('#navMenuCompensationLink');
+    const earningsToggleBtn = menuWrap.querySelector('#navMenuEarningsToggleBtn');
+    const earningsPanel = menuWrap.querySelector('#navMenuEarningsPanel');
+    const earningsSalary = menuWrap.querySelector('#navMenuEarningsSalary');
+    const earningsBonus = menuWrap.querySelector('#navMenuEarningsBonus');
+    const earningsDividends = menuWrap.querySelector('#navMenuEarningsDividends');
+    const earningsTotal = menuWrap.querySelector('#navMenuEarningsTotal');
     const logoutBtn = menuWrap.querySelector('.nav-menu-logout');
     const closeBtn = menuWrap.querySelector('#navMenuCloseBtn');
     const themeSwitchBtn = menuWrap.querySelector('#navMenuThemeSwitchBtn');
-    const themeSwitchIcon = menuWrap.querySelector('#navMenuThemeSwitchIcon');
     const profilePanel = menuWrap.querySelector('.nav-menu-profile');
     const bgEditBtn = menuWrap.querySelector('#navMenuBgEditBtn');
     const bgInput = menuWrap.querySelector('#navMenuBgInput');
@@ -413,9 +444,6 @@
         themeSwitchBtn.setAttribute('aria-pressed', activeTheme === 'dark' ? 'true' : 'false');
         themeSwitchBtn.title = activeTheme === 'light' ? 'Switch to dark mode' : 'Switch to light mode';
       }
-      if (themeSwitchIcon) {
-        themeSwitchIcon.setAttribute('data-lucide', activeTheme === 'light' ? 'moon' : 'sun');
-      }
       if (window.lucide?.createIcons) {
         window.lucide.createIcons();
       }
@@ -431,6 +459,18 @@
       profileName.textContent = userName;
       profileMember.textContent = `Member ID: ${memberId}`;
       profileDetails.textContent = `Role: ${userRole} | Branch: ${userBranch}`;
+    };
+
+    const updateMenuEarnings = (user) => {
+      const salary = Number(user?.salary || 0);
+      const bonus = Number(user?.bonus || 0);
+      const dividends = Number(user?.dividends || 0);
+      const total = salary + bonus + dividends;
+
+      if (earningsSalary) earningsSalary.textContent = `MWK ${salary.toLocaleString()}`;
+      if (earningsBonus) earningsBonus.textContent = `MWK ${bonus.toLocaleString()}`;
+      if (earningsDividends) earningsDividends.textContent = `MWK ${dividends.toLocaleString()}`;
+      if (earningsTotal) earningsTotal.textContent = `MWK ${total.toLocaleString()}`;
     };
 
     const applyStoredProfilePhoto = (user) => {
@@ -553,6 +593,7 @@
         menuHomePath = resolveMenuHomePathByRole(user.role);
         setStoredMenuHomePath(menuHomePath);
         updateProfileHeader(user);
+        updateMenuEarnings(user);
         applyStoredProfilePhoto(user);
         applyStoredProfileHeaderBackground(user);
         const isFinancialManager = user.role === 'Financial Manager';
@@ -572,6 +613,7 @@
         menuHomePath = getStoredMenuHomePath(inferMenuHomePathFromLocation());
         setStoredMenuHomePath(menuHomePath);
         updateProfileHeader(fallbackUser);
+        updateMenuEarnings(fallbackUser);
         applyStoredProfilePhoto(fallbackUser);
         applyStoredProfileHeaderBackground(fallbackUser);
         if (financialQueueLink) {
@@ -607,10 +649,16 @@
       }
     };
 
+    const collapseEarningsPanel = () => {
+      earningsPanel?.classList.remove('is-open');
+      earningsToggleBtn?.classList.remove('is-open');
+    };
+
     const closeMenu = ({ preserveHash = false } = {}) => {
       menuWrap.classList.remove('is-open');
       toggleBtn?.setAttribute('aria-expanded', 'false');
       document.body.classList.remove('nav-menu-open');
+      collapseEarningsPanel();
       if (!preserveHash) {
         clearMenuHashFromCurrentEntry();
       }
@@ -667,6 +715,11 @@
       } catch (err) {
         // Keep local theme change even if server sync fails.
       }
+    });
+
+    earningsToggleBtn?.addEventListener('click', () => {
+      const isOpen = earningsPanel?.classList.toggle('is-open');
+      earningsToggleBtn.classList.toggle('is-open', Boolean(isOpen));
     });
 
     menuLinks.forEach((link) => {
