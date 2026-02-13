@@ -7,6 +7,55 @@ const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ..
 const isFinancialManagerRole = (role) => role === 'Financial Manager';
 const isDevOpsAssistantRole = (role) => role === 'Dev Operations Assistant';
 
+async function readApiPayload(res) {
+    const contentType = String(res.headers.get('content-type') || '').toLowerCase();
+    if (contentType.includes('application/json')) {
+        try {
+            return await res.json();
+        } catch (err) {
+            return {};
+        }
+    }
+
+    try {
+        const text = await res.text();
+        if (!text) return {};
+        try {
+            return JSON.parse(text);
+        } catch (parseErr) {
+            return { error: text };
+        }
+    } catch (err) {
+        return {};
+    }
+}
+
+function getAccountThemeMode() {
+    const serverThemeMode = String(currentUser?.theme_mode || '').toLowerCase();
+    if (serverThemeMode === 'light' || serverThemeMode === 'dark') {
+        return serverThemeMode;
+    }
+    if (window.themeManager?.getTheme) {
+        return window.themeManager.getTheme();
+    }
+    return 'dark';
+}
+
+function updateThemeStatusLabel(themeMode) {
+    const themeStatus = document.getElementById('themeStatusText');
+    if (themeStatus) {
+        themeStatus.innerText = `Current: ${themeMode === 'light' ? 'Light Mode' : 'Dark Mode'}`;
+    }
+}
+
+function syncAppearanceUI(themeMode) {
+    const lightModeToggle = document.getElementById('lightModeToggle');
+    if (lightModeToggle) {
+        lightModeToggle.checked = themeMode === 'light';
+    }
+    updateThemeStatusLabel(themeMode);
+}
+
 function setProfileFormVisibility(visible) {
     const formWrap = document.getElementById('profileFormWrap');
     const toggleBtn = document.getElementById('toggleProfileFormBtn');
@@ -74,6 +123,12 @@ function updateUI() {
     // Profile Settings
     document.getElementById('profileEmail').value = currentUser.email || '';
     document.getElementById('notifyToggle').checked = currentUser.notifications_enabled === 1;
+
+    const themeMode = getAccountThemeMode();
+    if (window.themeManager?.syncFromServer) {
+        window.themeManager.syncFromServer(themeMode);
+    }
+    syncAppearanceUI(themeMode);
 
     const getDashboardPath = () => {
         if (currentUser.role === 'Super Admin') return '/super-admin.html';
@@ -270,6 +325,54 @@ document.getElementById('pinForm').addEventListener('submit', async (e) => {
         }
     } catch (err) {
         alert('An error occurred. Please try again.');
+    }
+});
+
+document.getElementById('lightModeToggle')?.addEventListener('change', (e) => {
+    const selectedTheme = e.target.checked ? 'light' : 'dark';
+    if (window.themeManager?.setTheme) {
+        window.themeManager.setTheme(selectedTheme, false);
+    }
+    updateThemeStatusLabel(selectedTheme);
+});
+
+document.getElementById('appearanceForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const selectedTheme = document.getElementById('lightModeToggle')?.checked ? 'light' : 'dark';
+
+    try {
+        const email = document.getElementById('profileEmail')?.value || currentUser.email || '';
+        const notificationsEnabled = document.getElementById('notifyToggle')?.checked ?? (currentUser.notifications_enabled === 1);
+
+        const res = await apiFetch('/api/profile/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email,
+                notifications_enabled: notificationsEnabled,
+                theme_mode: selectedTheme
+            })
+        });
+
+        const data = await readApiPayload(res);
+        if (res.ok) {
+            const savedTheme = selectedTheme === 'light' ? 'light' : 'dark';
+            currentUser.theme_mode = savedTheme;
+            if (window.themeManager?.syncFromServer) {
+                window.themeManager.syncFromServer(savedTheme);
+            }
+            syncAppearanceUI(savedTheme);
+            alert('Theme saved successfully.');
+        } else {
+            alert(data.error || 'Failed to save theme setting on server.');
+            syncAppearanceUI(getAccountThemeMode());
+        }
+    } catch (err) {
+        if (window.themeManager?.setTheme) {
+            window.themeManager.setTheme(selectedTheme, true);
+        }
+        syncAppearanceUI(selectedTheme);
+        alert('Server was unreachable. Theme was saved on this device only.');
     }
 });
 

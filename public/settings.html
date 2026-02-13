@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings | My Kweza</title>
+    <script src="theme.js"></script>
     <link rel="stylesheet" href="index.css">
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
     <link rel="manifest" href="/manifest.webmanifest">
@@ -94,6 +95,22 @@
                         PIN</button>
                 </form>
                 </div>
+            </section>
+
+            <section class="glass-card animate-fade">
+                <h2 style="margin-bottom: 1rem;"><i data-lucide="sun-moon"
+                        style="vertical-align: middle; margin-right: 0.5rem;"></i>Appearance</h2>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Choose a global dashboard
+                    theme for your account.</p>
+                <form id="appearanceForm">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem;">
+                        <input type="checkbox" id="lightModeToggle" style="width: 18px; height: 18px;">
+                        <label for="lightModeToggle" style="font-size: 0.95rem;">Enable Light Mode</label>
+                    </div>
+                    <p id="themeStatusText" style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem;">
+                        Current: Dark Mode</p>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Save Theme</button>
+                </form>
             </section>
         </div>
 

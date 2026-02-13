@@ -16,6 +16,20 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
         const data = await res.json();
 
         if (res.ok) {
+            const serverThemeMode = String(data?.user?.theme_mode || '').toLowerCase();
+            const themeMode = (serverThemeMode === 'light' || serverThemeMode === 'dark')
+                ? serverThemeMode
+                : (window.themeManager?.getTheme ? window.themeManager.getTheme() : 'dark');
+            if (window.themeManager?.syncFromServer) {
+                window.themeManager.syncFromServer(themeMode);
+            } else {
+                try {
+                    localStorage.setItem('my-kweza-theme', themeMode);
+                } catch (err) {
+                    // Ignore storage errors and continue login flow.
+                }
+            }
+
             if (data.user.role === 'Super Admin') {
                 window.location.href = '/super-admin.html';
             } else if (data.user.role === 'Dev Operations Assistant') {

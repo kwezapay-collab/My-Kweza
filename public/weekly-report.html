@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weekly Report | My Kweza</title>
+    <script src="theme.js"></script>
     <link rel="stylesheet" href="index.css">
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
     <link rel="manifest" href="/manifest.webmanifest">
@@ -90,24 +91,22 @@
                 </div>
 
                 <h3 style="margin: 1.4rem 0 0.8rem;">WORK COMPLETED</h3>
-                <div style="display: grid; gap: 0.7rem; margin-bottom: 1rem;">
-                    <input id="workCompleted1" type="text" placeholder="Work item 1" required>
-                    <input id="workCompleted2" type="text" placeholder="Work item 2">
-                    <input id="workCompleted3" type="text" placeholder="Work item 3">
-                    <input id="workCompleted4" type="text" placeholder="Work item 4">
-                    <input id="workCompleted5" type="text" placeholder="Work item 5">
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <textarea id="workCompleted" class="report-long-text" required
+                        placeholder="• Completed authentication flow improvements&#10;• Fixed dashboard rendering issues&#10;• Optimized API response handling"></textarea>
+                    <p class="report-list-hint">Use one line per item. Bullet points are optional.</p>
                 </div>
 
                 <h3 style="margin: 1.4rem 0 0.8rem;">CHALLENGES / BLOCKERS</h3>
-                <div style="display: grid; gap: 0.7rem; margin-bottom: 1rem;">
-                    <input id="challenge1" type="text" placeholder="Challenge/Blocker 1">
-                    <input id="challenge2" type="text" placeholder="Challenge/Blocker 2">
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <textarea id="challenges" class="report-long-text" placeholder="• Pending API dependency from finance module&#10;• Need final copy for settings UI"></textarea>
+                    <p class="report-list-hint">Describe blockers clearly so founders can follow up.</p>
                 </div>
 
                 <h3 style="margin: 1.4rem 0 0.8rem;">PLAN FOR NEXT WEEK</h3>
-                <div style="display: grid; gap: 0.7rem; margin-bottom: 1rem;">
-                    <input id="plan1" type="text" placeholder="Next week plan 1">
-                    <input id="plan2" type="text" placeholder="Next week plan 2">
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <textarea id="nextWeekPlan" class="report-long-text" placeholder="• Implement weekly report export feature&#10;• Complete dashboard QA and regression fixes"></textarea>
+                    <p class="report-list-hint">Add the expected deliverables for the coming week.</p>
                 </div>
 
                 <h3 style="margin: 1.4rem 0 0.8rem;">APPROVAL</h3>

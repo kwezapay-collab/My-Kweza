@@ -26,9 +26,10 @@ function resetFormDefaults() {
     document.getElementById('developerName').value = currentUser.name;
 }
 
-function collectList(ids) {
-    return ids
-        .map((id) => String(document.getElementById(id)?.value || '').trim())
+function collectTextareaLines(id) {
+    return String(document.getElementById(id)?.value || '')
+        .split('\n')
+        .map((line) => line.trim())
         .filter(Boolean);
 }
 
@@ -64,9 +65,9 @@ document.getElementById('weeklyReportForm')?.addEventListener('submit', async (e
     const project_name = String(document.getElementById('projectName').value || '').trim();
     const date_time_started = document.getElementById('dateTimeStarted').value;
     const target_completion_date = document.getElementById('targetCompletionDate').value;
-    const work_completed = collectList(['workCompleted1', 'workCompleted2', 'workCompleted3', 'workCompleted4', 'workCompleted5']);
-    const challenges_blockers = collectList(['challenge1', 'challenge2']);
-    const plan_next_week = collectList(['plan1', 'plan2']);
+    const work_completed = collectTextareaLines('workCompleted');
+    const challenges_blockers = collectTextareaLines('challenges');
+    const plan_next_week = collectTextareaLines('nextWeekPlan');
     const reviewed_by = String(document.getElementById('reviewedBy').value || '').trim();
     const approval_date = document.getElementById('approvalDate').value;
 

@@ -55,6 +55,7 @@ const initDb = async () => {
         email TEXT,
         branch TEXT,
         notifications_enabled INTEGER DEFAULT 1,
+        theme_mode TEXT DEFAULT 'dark',
         can_receive_dividends INTEGER DEFAULT 0,
         dividend_fee_paid INTEGER DEFAULT 0,
         salary DOUBLE PRECISION DEFAULT 0,

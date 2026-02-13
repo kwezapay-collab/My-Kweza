@@ -147,6 +147,121 @@ body.devops-purple-theme .stat-item.total .value {
     text-shadow: 0 0 16px rgba(247, 154, 201, 0.38);
 }
 
+/* Light mode (global dashboard theme) */
+html.light-mode body,
+body.light-mode {
+    --primary: #1a4d6e;
+    --accent: #2a9d8f;
+    --gold: #c18f00;
+    --danger: #c0392b;
+    --bg-dark: #f3f7fd;
+    --glass-bg: rgba(26, 77, 110, 0.09);
+    --glass-border: rgba(26, 77, 110, 0.2);
+    --text-main: #102a43;
+    --text-muted: #486581;
+    background: #ffffff;
+    color: var(--text-main);
+}
+
+html.light-mode .dashboard-nav,
+body.light-mode .dashboard-nav {
+    background: rgba(26, 77, 110, 0.96);
+    border-bottom-color: rgba(255, 255, 255, 0.25);
+}
+
+html.light-mode .glass-card,
+body.light-mode .glass-card {
+    background: var(--glass-bg);
+    border-color: var(--glass-border);
+    box-shadow: 0 10px 28px rgba(26, 77, 110, 0.12);
+}
+
+html.light-mode .brand,
+body.light-mode .brand,
+html.light-mode .user-info p,
+body.light-mode .user-info p,
+html.light-mode .dashboard-nav .nav-icon-btn,
+body.light-mode .dashboard-nav .nav-icon-btn {
+    color: #f4f9ff;
+}
+
+html.light-mode .dashboard-nav #userName,
+html.light-mode .dashboard-nav #userRole,
+html.light-mode .dashboard-nav #memberId,
+body.light-mode .dashboard-nav #userName,
+body.light-mode .dashboard-nav #userRole,
+body.light-mode .dashboard-nav #memberId {
+    color: #f4f9ff !important;
+}
+
+html.light-mode .nav-icon-btn:hover,
+body.light-mode .nav-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+}
+
+html.light-mode .btn-primary,
+body.light-mode .btn-primary {
+    background: linear-gradient(120deg, #1a4d6e 0%, #2b6f9b 100%);
+    color: #ffffff;
+}
+
+html.light-mode .btn-primary:hover,
+body.light-mode .btn-primary:hover {
+    box-shadow: 0 8px 20px rgba(26, 77, 110, 0.25);
+}
+
+html.light-mode .btn-secondary,
+body.light-mode .btn-secondary {
+    color: var(--text-main);
+    border-color: rgba(26, 77, 110, 0.3);
+    background: rgba(255, 255, 255, 0.55);
+}
+
+html.light-mode .btn-secondary:hover,
+body.light-mode .btn-secondary:hover {
+    background: rgba(26, 77, 110, 0.12);
+    border-color: rgba(26, 77, 110, 0.4);
+}
+
+html.light-mode tr:hover,
+body.light-mode tr:hover {
+    background: rgba(26, 77, 110, 0.06);
+}
+
+html.light-mode table.mobile-stack tr,
+body.light-mode table.mobile-stack tr {
+    background: rgba(26, 77, 110, 0.05);
+}
+
+html.light-mode .input-group input,
+html.light-mode .input-group textarea,
+html.light-mode .input-group select,
+html.light-mode #complaintMessage,
+html.light-mode #withdrawMethod,
+body.light-mode .input-group input,
+body.light-mode .input-group textarea,
+body.light-mode .input-group select,
+body.light-mode #complaintMessage,
+body.light-mode #withdrawMethod {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(26, 77, 110, 0.3) !important;
+    color: var(--text-main) !important;
+}
+
+html.light-mode input::placeholder,
+html.light-mode textarea::placeholder,
+body.light-mode input::placeholder,
+body.light-mode textarea::placeholder {
+    color: #7b8794;
+}
+
+html.light-mode select option,
+body.light-mode select option {
+    background: #ffffff;
+    color: #102a43;
+}
+
 h1,
 h2,
 h3,
@@ -279,25 +394,46 @@ h3,
     font-size: 0.9rem;
 }
 
-.input-group input {
+.input-group input,
+.input-group textarea,
+.input-group select {
     width: 100%;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--glass-border);
     padding: 14px;
     border-radius: 12px;
-    color: white;
+    color: var(--text-main);
     font-size: 1rem;
     outline: none;
     transition: border-color 0.3s;
 }
 
-.input-group input:focus {
+.input-group textarea {
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.55;
+}
+
+.input-group input:focus,
+.input-group textarea:focus,
+.input-group select:focus {
     border-color: var(--primary);
 }
 
+.report-long-text {
+    min-height: 170px;
+    font-size: 0.95rem;
+}
+
+.report-list-hint {
+    margin-top: 0.45rem;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+}
+
 option {
-    background-color: #1e293b;
-    color: white;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
 }
 
 /* Dashboard Layout */

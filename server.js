@@ -27,6 +27,7 @@ const allowedOrigins = process.env.CORS_ORIGIN
 
 const ensureSchema = async () => {
     await initDb();
+    await db.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS theme_mode TEXT DEFAULT 'dark'");
     await db.execute('ALTER TABLE users ADD COLUMN IF NOT EXISTS can_receive_dividends INTEGER DEFAULT 0');
     await db.execute('ALTER TABLE users ADD COLUMN IF NOT EXISTS dividend_fee_paid INTEGER DEFAULT 0');
     await db.execute('ALTER TABLE users ADD COLUMN IF NOT EXISTS salary DOUBLE PRECISION DEFAULT 0');
@@ -40,6 +41,7 @@ const ensureSchema = async () => {
     await db.execute('ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP');
     await db.execute('UPDATE withdrawal_requests SET updated_at = created_at WHERE updated_at IS NULL');
     await db.execute("UPDATE withdrawal_requests SET status = 'accepted' WHERE status = 'approved'");
+    await db.execute("UPDATE users SET theme_mode = 'dark' WHERE theme_mode IS NULL OR theme_mode NOT IN ('dark', 'light')");
 };
 
 app.use(express.json());
@@ -109,7 +111,15 @@ app.post('/api/login', async (req, res) => {
 
         const token = jwt.sign({ id: user.id, member_id: user.member_id, role: user.role }, SECRET, { expiresIn: '1d' });
         res.cookie('token', token, COOKIE_OPTIONS);
-        res.json({ user: { id: user.id, name: user.name, role: user.role, member_id: user.member_id } });
+        res.json({
+            user: {
+                id: user.id,
+                name: user.name,
+                role: user.role,
+                member_id: user.member_id,
+                theme_mode: user.theme_mode === 'light' ? 'light' : 'dark'
+            }
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -119,7 +129,7 @@ app.post('/api/login', async (req, res) => {
 app.get('/api/me', authenticate, async (req, res) => {
     try {
         const result = await db.execute({
-            sql: 'SELECT id, member_id, name, role, sub_role, branch, email, notifications_enabled, salary, bonus, dividends FROM users WHERE id = ?',
+            sql: 'SELECT id, member_id, name, role, sub_role, branch, email, notifications_enabled, theme_mode, salary, bonus, dividends FROM users WHERE id = ?',
             args: [req.user.id]
         });
         res.json(result.rows[0]);
@@ -191,11 +201,36 @@ app.get('/api/admin/summary', authenticate, async (req, res) => {
 app.post('/api/profile/update', authenticate, async (req, res) => {
     try {
         const { email, notifications_enabled } = req.body;
-        await db.execute({
-            sql: 'UPDATE users SET email = ?, notifications_enabled = ? WHERE id = ?',
-            args: [email, notifications_enabled ? 1 : 0, req.user.id]
-        });
+        const themeModeRaw = String(req.body.theme_mode || '').toLowerCase();
+        const themeMode = themeModeRaw === 'light' || themeModeRaw === 'dark' ? themeModeRaw : null;
+
+        if (themeMode) {
+            await db.execute({
+                sql: 'UPDATE users SET email = ?, notifications_enabled = ?, theme_mode = ? WHERE id = ?',
+                args: [email, notifications_enabled ? 1 : 0, themeMode, req.user.id]
+            });
+        } else {
+            await db.execute({
+                sql: 'UPDATE users SET email = ?, notifications_enabled = ? WHERE id = ?',
+                args: [email, notifications_enabled ? 1 : 0, req.user.id]
+            });
+        }
         res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/profile/theme', authenticate, async (req, res) => {
+    try {
+        const themeModeRaw = String(req.body.theme_mode || '').toLowerCase();
+        const themeMode = themeModeRaw === 'light' ? 'light' : 'dark';
+
+        await db.execute({
+            sql: 'UPDATE users SET theme_mode = ? WHERE id = ?',
+            args: [themeMode, req.user.id]
+        });
+        res.json({ success: true, theme_mode: themeMode });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -325,13 +360,14 @@ const normalizeDateInput = (value) => {
 };
 
 const normalizeList = (value) => {
+    const cleanLine = (item) => String(item || '').trim().replace(/^[\u2022\-]+\s*/, '');
     if (Array.isArray(value)) {
-        return value.map((item) => String(item || '').trim()).filter(Boolean);
+        return value.map(cleanLine).filter(Boolean);
     }
     if (typeof value === 'string') {
         return value
             .split('\n')
-            .map((item) => item.trim())
+            .map(cleanLine)
             .filter(Boolean);
     }
     return [];
