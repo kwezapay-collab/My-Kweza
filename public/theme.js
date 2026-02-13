@@ -19,12 +19,27 @@
     }
   };
 
+  const syncDevOpsClassForTheme = (theme) => {
+    if (!document.body) return;
+
+    if (!document.body.dataset.devopsThemeInitialized) {
+      document.body.dataset.devopsThemeInitialized = '1';
+      document.body.dataset.useDevopsTheme = document.body.classList.contains('devops-purple-theme') ? '1' : '0';
+    }
+
+    if (document.body.dataset.useDevopsTheme === '1') {
+      // DevOps pages keep purple in dark mode and switch to global light styling in light mode.
+      document.body.classList.toggle('devops-purple-theme', theme !== 'light');
+    }
+  };
+
   const applyThemeClass = (theme) => {
     const isLight = theme === 'light';
     document.documentElement.classList.toggle('light-mode', isLight);
     document.documentElement.setAttribute('data-theme', theme);
     if (document.body) {
       document.body.classList.toggle('light-mode', isLight);
+      syncDevOpsClassForTheme(theme);
     }
   };
 

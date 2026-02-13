@@ -1,4 +1,4 @@
-const CACHE_NAME = 'my-kweza-v6';
+const CACHE_NAME = 'my-kweza-v8';
 const APP_SHELL = [
   '/',
   '/index.html',

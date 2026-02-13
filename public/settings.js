@@ -7,6 +7,14 @@ const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ..
 const isFinancialManagerRole = (role) => role === 'Financial Manager';
 const isDevOpsAssistantRole = (role) => role === 'Dev Operations Assistant';
 
+function syncDevOpsThemeForCurrentUser(themeMode = null) {
+    const activeTheme = themeMode || (window.themeManager?.getTheme ? window.themeManager.getTheme() : 'dark');
+    const usePurpleTheme = isDevOpsAssistantRole(currentUser?.role) && activeTheme !== 'light';
+    document.body.classList.toggle('devops-purple-theme', usePurpleTheme);
+    document.body.dataset.useDevopsTheme = isDevOpsAssistantRole(currentUser?.role) ? '1' : '0';
+    document.body.dataset.devopsThemeInitialized = '1';
+}
+
 async function readApiPayload(res) {
     const contentType = String(res.headers.get('content-type') || '').toLowerCase();
     if (contentType.includes('application/json')) {
@@ -111,12 +119,6 @@ async function loadSettings() {
 }
 
 function updateUI() {
-    if (isDevOpsAssistantRole(currentUser.role)) {
-        document.body.classList.add('devops-purple-theme');
-    } else {
-        document.body.classList.remove('devops-purple-theme');
-    }
-
     document.getElementById('userName').innerText = currentUser.name;
     document.getElementById('userRole').innerText = currentUser.sub_role || currentUser.role;
 
@@ -128,6 +130,7 @@ function updateUI() {
     if (window.themeManager?.syncFromServer) {
         window.themeManager.syncFromServer(themeMode);
     }
+    syncDevOpsThemeForCurrentUser(themeMode);
     syncAppearanceUI(themeMode);
 
     const getDashboardPath = () => {
@@ -333,6 +336,7 @@ document.getElementById('lightModeToggle')?.addEventListener('change', (e) => {
     if (window.themeManager?.setTheme) {
         window.themeManager.setTheme(selectedTheme, false);
     }
+    syncDevOpsThemeForCurrentUser(selectedTheme);
     updateThemeStatusLabel(selectedTheme);
 });
 
@@ -361,16 +365,19 @@ document.getElementById('appearanceForm')?.addEventListener('submit', async (e) 
             if (window.themeManager?.syncFromServer) {
                 window.themeManager.syncFromServer(savedTheme);
             }
+            syncDevOpsThemeForCurrentUser(savedTheme);
             syncAppearanceUI(savedTheme);
             alert('Theme saved successfully.');
         } else {
             alert(data.error || 'Failed to save theme setting on server.');
+            syncDevOpsThemeForCurrentUser(getAccountThemeMode());
             syncAppearanceUI(getAccountThemeMode());
         }
     } catch (err) {
         if (window.themeManager?.setTheme) {
             window.themeManager.setTheme(selectedTheme, true);
         }
+        syncDevOpsThemeForCurrentUser(selectedTheme);
         syncAppearanceUI(selectedTheme);
         alert('Server was unreachable. Theme was saved on this device only.');
     }
