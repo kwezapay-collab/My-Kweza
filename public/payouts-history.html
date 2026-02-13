@@ -42,7 +42,8 @@
     </nav>
 
     <main class="main-content">
-        <header style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <header class="dashboard-page-header"
+            style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <button id="backToDashboardBtn" class="btn"
                     style="background: transparent; padding: 8px; color: var(--text-muted);">
@@ -58,25 +59,28 @@
         </header>
 
         <section class="glass-card animate-fade">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
-                        <th style="padding-bottom: 1rem;">DATE</th>
-                        <th style="padding-bottom: 1rem;">TYPE</th>
-                        <th style="padding-bottom: 1rem;">AMOUNT</th>
-                        <th style="padding-bottom: 1rem;">STATUS</th>
-                    </tr>
-                </thead>
-                <tbody id="historyPayoutsTable">
-                    <tr>
-                        <td colspan="4" style="text-align:center; padding: 2rem; color: var(--text-muted);">Loading...
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="responsive-table-wrap">
+                <table class="mobile-stack" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
+                            <th style="padding-bottom: 1rem;">DATE</th>
+                            <th style="padding-bottom: 1rem;">TYPE</th>
+                            <th style="padding-bottom: 1rem;">AMOUNT</th>
+                            <th style="padding-bottom: 1rem;">STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyPayoutsTable">
+                        <tr>
+                            <td colspan="4" style="text-align:center; padding: 2rem; color: var(--text-muted);">Loading...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
     </main>
 
+    <script src="responsive-tables.js"></script>
     <script src="payouts-history.js"></script>
 
     <script src='/pwa.js'></script>
