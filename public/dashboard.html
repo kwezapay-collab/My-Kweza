@@ -18,34 +18,10 @@
 </head>
 
 <body class="scrollable">
-    <nav class="dashboard-nav">
-        <div class="brand-group" style="display: flex; align-items: center; gap: 1rem;">
-            <img src="logo.png" alt="Logo" class="nav-logo"
-                onerror="this.src='https://placehold.co/40x40/1a4d6e/white?text=K'">
-            <h2 class="brand">My Kweza</h2>
-        </div>
-        <div class="user-actions" style="display: flex; align-items: center; gap: 1rem;">
-            <div class="user-info" style="text-align: right;">
-                <p id="userName" style="font-weight: 600;">Loading...</p>
-                <div style="display: flex; flex-direction: column; gap: 2px;">
-                    <p id="userRole" style="font-size: 0.75rem; color: var(--accent); font-weight: 600;">---</p>
-                    <p id="memberId" style="font-size: 0.7rem; color: var(--text-muted); opacity: 0.8;">ID: ---</p>
-                </div>
-            </div>
-
-            <button id="settingsBtn" class="nav-icon-btn" onclick="window.location.href='/settings.html'"><i
-                    data-lucide="settings"></i></button>
-
-            <button id="logoutBtn" class="nav-icon-btn" style="color: var(--danger);"><i
-                    data-lucide="log-out"></i></button>
-        </div>
-    </nav>
-
     <main class="main-content">
         <!-- Dashboard Header -->
         <header class="dashboard-page-header"
-            style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
-            <div></div>
+            style="margin-bottom: 1rem; display: flex; justify-content: flex-end; align-items: flex-end;">
             <button id="superAdminBtn" class="btn btn-secondary"
                 style="display: none; border: 1px solid var(--accent); color: var(--accent);"
                 onclick="window.location.href='/super-admin.html'">
@@ -78,6 +54,8 @@
         </div>
 
         <div class="dashboard-icon-actions">
+            <div id="dashboardMenuMount" class="nav-menu-action-mount animate-fade"></div>
+
             <a class="dashboard-action-btn animate-fade" id="withdrawalsHubSection" href="/withdrawals-history.html">
                 <span class="dashboard-action-btn-icon"><i data-lucide="wallet"></i></span>
                 <span class="dashboard-action-btn-label">Request Withdrawal</span>

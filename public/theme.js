@@ -64,6 +64,7 @@
   const initialTheme = readStoredTheme();
   applyThemeClass(initialTheme);
   const MENU_HASH = '#menu';
+  const MENU_PAGE_PATH = '/menu.html';
   const MENU_HOME_STORAGE_KEY = 'my-kweza-menu-home-path';
   const NOTIFICATION_LAST_SEEN_KEY_PREFIX = 'my-kweza-notification-last-seen:';
   const NOTIFICATION_PERMISSION_PROMPT_KEY = 'my-kweza-notification-permission-requested';
@@ -294,9 +295,10 @@
 
   const setupDashboardNavMenu = () => {
     const nav = document.querySelector('.dashboard-nav');
-    if (!nav || !document.body) return;
+    const menuActionMount = document.querySelector('#dashboardMenuMount');
+    if (!document.body) return;
 
-    const userActions = nav.querySelector('.user-actions') || (() => {
+    const menuHost = menuActionMount || (nav ? (nav.querySelector('.user-actions') || (() => {
       const wrap = document.createElement('div');
       wrap.className = 'user-actions';
       wrap.style.display = 'flex';
@@ -304,18 +306,22 @@
       wrap.style.gap = '1rem';
       nav.appendChild(wrap);
       return wrap;
-    })();
+    })()) : null);
+    if (!menuHost) return;
 
-    if (userActions.querySelector('#navMenuToggleBtn')) {
+    if (menuHost.querySelector('#navMenuToggleBtn')) {
       document.body.classList.add('nav-hamburger-enabled');
       return;
     }
 
+    const isActionMount = Boolean(menuActionMount);
+    const isDedicatedMenuPage = String(window.location.pathname || '').toLowerCase().endsWith(MENU_PAGE_PATH);
+
     const menuWrap = document.createElement('div');
     menuWrap.className = 'nav-hamburger-wrap';
     menuWrap.innerHTML = `
-      <button id="navMenuToggleBtn" type="button" class="nav-icon-btn nav-hamburger-btn" aria-label="Open menu" aria-expanded="false" aria-haspopup="true">
-        <i data-lucide="menu"></i>
+      <button id="navMenuToggleBtn" type="button" class="${isActionMount ? 'dashboard-action-btn nav-menu-launcher' : 'nav-icon-btn nav-hamburger-btn'}" aria-label="Open menu" aria-expanded="false" aria-haspopup="true">
+        ${isActionMount ? '<span class="dashboard-action-btn-icon"><i data-lucide="menu"></i></span><span class="dashboard-action-btn-label">Menu</span>' : '<i data-lucide="menu"></i>'}
       </button>
       <div class="nav-hamburger-menu" role="menu" aria-label="Navigation menu">
         <div class="nav-menu-profile">
@@ -402,7 +408,10 @@
         </div>
       </div>
     `;
-    userActions.appendChild(menuWrap);
+    if (isActionMount) {
+      menuWrap.classList.add('nav-hamburger-wrap--action');
+    }
+    menuHost.appendChild(menuWrap);
 
     const toggleBtn = menuWrap.querySelector('#navMenuToggleBtn');
     const menu = menuWrap.querySelector('.nav-hamburger-menu');
@@ -423,7 +432,7 @@
     const profilePanel = menuWrap.querySelector('.nav-menu-profile');
     const bgEditBtn = menuWrap.querySelector('#navMenuBgEditBtn');
     const bgInput = menuWrap.querySelector('#navMenuBgInput');
-    const legacyLogoutBtn = nav.querySelector('#logoutBtn');
+    const legacyLogoutBtn = nav?.querySelector('#logoutBtn') || document.querySelector('#logoutBtn');
     const profileName = menuWrap.querySelector('#navMenuProfileName');
     const profileMember = menuWrap.querySelector('#navMenuProfileMember');
     const profileDetails = menuWrap.querySelector('#navMenuProfileDetails');
@@ -606,9 +615,9 @@
         await startNotificationPolling(user);
       } catch (err) {
         const fallbackUser = {
-          name: nav.querySelector('#userName')?.textContent || 'Employee',
-          role: nav.querySelector('#userRole')?.textContent || '--',
-          member_id: nav.querySelector('#memberId')?.textContent?.replace(/^ID:\s*/i, '') || '--'
+          name: document.querySelector('#userName')?.textContent || 'Employee',
+          role: document.querySelector('#userRole')?.textContent || '--',
+          member_id: document.querySelector('#memberId')?.textContent?.replace(/^ID:\s*/i, '') || '--'
         };
         menuHomePath = getStoredMenuHomePath(inferMenuHomePathFromLocation());
         setStoredMenuHomePath(menuHomePath);
@@ -659,6 +668,10 @@
       toggleBtn?.setAttribute('aria-expanded', 'false');
       document.body.classList.remove('nav-menu-open');
       collapseEarningsPanel();
+      if (isDedicatedMenuPage && !preserveHash) {
+        window.location.href = getStoredMenuHomePath(menuHomePath);
+        return;
+      }
       if (!preserveHash) {
         clearMenuHashFromCurrentEntry();
       }
@@ -674,6 +687,11 @@
 
     toggleBtn?.addEventListener('click', (event) => {
       event.stopPropagation();
+      if (isActionMount && !isDedicatedMenuPage) {
+        setStoredMenuHomePath(menuHomePath);
+        window.location.href = `${MENU_PAGE_PATH}${MENU_HASH}`;
+        return;
+      }
       if (menuWrap.classList.contains('is-open')) {
         closeMenu();
       } else {
@@ -823,7 +841,7 @@
     });
 
     logoutBtn?.addEventListener('click', async () => {
-      closeMenu();
+      closeMenu({ preserveHash: true });
       if (notificationsPollTimer) {
         clearInterval(notificationsPollTimer);
         notificationsPollTimer = null;
@@ -846,7 +864,7 @@
     refreshThemeToggleIcon();
     applyStoredProfileHeaderBackground(currentMenuUser);
     hydrateProfileHeader();
-    if (window.location.hash === MENU_HASH) {
+    if (window.location.hash === MENU_HASH || isDedicatedMenuPage) {
       openMenu();
     }
   };
