@@ -83,6 +83,13 @@ const isFinancialManager = (req, res, next) => {
     next();
 };
 
+const isFounderAccess = (req, res, next) => {
+    if (req.user.role !== 'Founder' && req.user.role !== 'Financial Manager') {
+        return res.status(403).json({ error: 'Founder access required' });
+    }
+    next();
+};
+
 // --- ROUTES ---
 
 // Login
@@ -301,6 +308,114 @@ app.put('/api/devops/complaints/:id', authenticate, isDevOpsAssistant, async (re
             args: [normalizedStatus, id]
         });
         res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+const normalizeDateInput = (value) => {
+    const raw = String(value || '').trim();
+    if (!raw) return null;
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+
+    const parsed = Date.parse(raw);
+    if (!Number.isFinite(parsed)) return null;
+    return new Date(parsed).toISOString().slice(0, 10);
+};
+
+const normalizeList = (value) => {
+    if (Array.isArray(value)) {
+        return value.map((item) => String(item || '').trim()).filter(Boolean);
+    }
+    if (typeof value === 'string') {
+        return value
+            .split('\n')
+            .map((item) => item.trim())
+            .filter(Boolean);
+    }
+    return [];
+};
+
+app.post('/api/devops/weekly-reports', authenticate, isDevOpsAssistant, async (req, res) => {
+    try {
+        const projectName = String(req.body.project_name || '').trim();
+        const reportDate = normalizeDateInput(req.body.report_date) || new Date().toISOString().slice(0, 10);
+        const dateTimeStarted = String(req.body.date_time_started || '').trim();
+        const targetCompletionDate = normalizeDateInput(req.body.target_completion_date);
+        const workCompletedItems = normalizeList(req.body.work_completed);
+        const challengeItems = normalizeList(req.body.challenges_blockers);
+        const planItems = normalizeList(req.body.plan_next_week);
+        const reviewedBy = String(req.body.reviewed_by || '').trim();
+        const approvalDate = normalizeDateInput(req.body.approval_date);
+
+        if (!projectName) {
+            return res.status(400).json({ error: 'Project name is required' });
+        }
+        if (!workCompletedItems.length) {
+            return res.status(400).json({ error: 'At least one completed work item is required' });
+        }
+
+        const userResult = await db.execute({
+            sql: 'SELECT name, member_id FROM users WHERE id = ?',
+            args: [req.user.id]
+        });
+        const user = userResult.rows[0];
+        if (!user) {
+            return res.status(404).json({ error: 'Developer account not found' });
+        }
+
+        await db.execute({
+            sql: `
+                INSERT INTO weekly_reports (
+                    developer_id,
+                    developer_name,
+                    developer_member_id,
+                    project_name,
+                    report_date,
+                    date_time_started,
+                    target_completion_date,
+                    work_completed,
+                    challenges_blockers,
+                    plan_next_week,
+                    reviewed_by,
+                    approval_date
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `,
+            args: [
+                req.user.id,
+                user.name,
+                user.member_id,
+                projectName,
+                reportDate,
+                dateTimeStarted || null,
+                targetCompletionDate,
+                workCompletedItems.join('\n'),
+                challengeItems.join('\n'),
+                planItems.join('\n'),
+                reviewedBy || null,
+                approvalDate
+            ]
+        });
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/founder/weekly-reports', authenticate, isFounderAccess, async (req, res) => {
+    try {
+        const result = await db.execute(`
+            SELECT
+                wr.*,
+                u.name as current_developer_name,
+                u.member_id as current_developer_member_id
+            FROM weekly_reports wr
+            LEFT JOIN users u ON wr.developer_id = u.id
+            ORDER BY wr.report_date DESC NULLS LAST, wr.id DESC
+        `);
+        res.json(result.rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

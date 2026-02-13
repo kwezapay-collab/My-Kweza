@@ -110,6 +110,23 @@ const initDb = async () => {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`);
 
+    await db.execute(`CREATE TABLE IF NOT EXISTS weekly_reports (
+        id SERIAL PRIMARY KEY,
+        developer_id INTEGER NOT NULL REFERENCES users(id),
+        developer_name TEXT NOT NULL,
+        developer_member_id TEXT,
+        project_name TEXT NOT NULL,
+        report_date DATE,
+        date_time_started TEXT,
+        target_completion_date DATE,
+        work_completed TEXT,
+        challenges_blockers TEXT,
+        plan_next_week TEXT,
+        reviewed_by TEXT,
+        approval_date DATE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`);
+
     await db.execute(`CREATE TABLE IF NOT EXISTS settings (
         key TEXT PRIMARY KEY,
         value TEXT

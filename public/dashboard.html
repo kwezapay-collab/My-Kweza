@@ -202,6 +202,38 @@
                 </div>
             </section>
 
+            <section class="glass-card animate-fade" id="founderWeeklyReportsPanel" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap;">
+                    <h2>Software Development Weekly Reports</h2>
+                    <p id="founderWeeklyReportsCount" style="font-size: 0.8rem; color: var(--text-muted);">Loading...</p>
+                </div>
+                <div class="responsive-table-wrap" style="overflow-x: auto;">
+                    <table class="mobile-stack" style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
+                                <th style="padding-bottom: 1rem;">REPORT DATE</th>
+                                <th style="padding-bottom: 1rem;">DEVELOPER</th>
+                                <th style="padding-bottom: 1rem;">PROJECT</th>
+                                <th style="padding-bottom: 1rem;">TARGET COMPLETION</th>
+                                <th style="padding-bottom: 1rem;">REVIEWED BY</th>
+                            </tr>
+                        </thead>
+                        <tbody id="founderWeeklyReportsTable">
+                            <tr>
+                                <td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">
+                                    Loading reports...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="showMoreFounderWeeklyReportsWrap" style="margin-top: 1rem; text-align: right;">
+                    <a id="showMoreFounderWeeklyReportsLink" href="/founder-weekly-reports.html"
+                        style="font-size: 0.85rem; color: var(--accent); text-decoration: none; font-weight: 600;">Show
+                        more</a>
+                </div>
+            </section>
+
             <!-- Complaint Report Section -->
             <section class="glass-card animate-fade">
                 <h2>Report Complaint</h2>

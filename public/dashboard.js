@@ -4,8 +4,10 @@ lucide.createIcons();
 let currentUser = null;
 let myWithdrawals = [];
 let financialWithdrawals = [];
+let founderWeeklyReports = [];
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
 const isFinancialManagerRole = (role) => role === 'Financial Manager';
+const isFounderAccessRole = (role) => role === 'Founder' || role === 'Financial Manager';
 
 const escapeHtml = (value = '') => String(value)
     .replace(/&/g, '&amp;')
@@ -41,6 +43,16 @@ const formatDateTime = (value) => {
     });
 };
 
+const formatDate = (value) => {
+    const parsed = Date.parse(value || '');
+    if (!Number.isFinite(parsed)) return '--';
+    return new Date(parsed).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+    });
+};
+
 async function loadDashboard() {
     try {
         const res = await apiFetch('/api/me');
@@ -67,6 +79,9 @@ async function loadDashboard() {
         }
         if (isFinancialManagerRole(currentUser.role)) {
             requests.push(fetchFinancialWithdrawals());
+        }
+        if (isFounderAccessRole(currentUser.role)) {
+            requests.push(fetchFounderWeeklyReports());
         }
 
         await Promise.all(requests);
@@ -104,6 +119,11 @@ function updateUI() {
     const financialPanel = document.getElementById('financialManagerPanel');
     if (financialPanel) {
         financialPanel.style.display = isFinancialManagerRole(currentUser.role) ? 'block' : 'none';
+    }
+
+    const founderWeeklyReportsPanel = document.getElementById('founderWeeklyReportsPanel');
+    if (founderWeeklyReportsPanel) {
+        founderWeeklyReportsPanel.style.display = isFounderAccessRole(currentUser.role) ? 'block' : 'none';
     }
 
     const withdrawalsHint = document.getElementById('myWithdrawalsHint');
@@ -359,6 +379,83 @@ async function sendFinancialWithdrawalNotification(id) {
     } catch (err) {
         console.error('Withdrawal notification error:', err);
     }
+}
+
+async function fetchFounderWeeklyReports() {
+    if (!isFounderAccessRole(currentUser?.role)) return;
+
+    const tableBody = document.getElementById('founderWeeklyReportsTable');
+    const countLabel = document.getElementById('founderWeeklyReportsCount');
+    if (!tableBody) return;
+
+    try {
+        const res = await apiFetch('/api/founder/weekly-reports');
+        if (!res.ok) {
+            tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 2rem; color: var(--danger);">Unable to load weekly reports</td></tr>';
+            if (countLabel) countLabel.innerText = 'Unable to load reports';
+            return;
+        }
+
+        const rows = await res.json();
+        founderWeeklyReports = Array.isArray(rows)
+            ? [...rows].sort((a, b) => {
+                const parsedTimeA = Date.parse(a.report_date || '');
+                const parsedTimeB = Date.parse(b.report_date || '');
+                const timeA = Number.isFinite(parsedTimeA) ? parsedTimeA : 0;
+                const timeB = Number.isFinite(parsedTimeB) ? parsedTimeB : 0;
+                if (timeA !== timeB) return timeB - timeA;
+                return (b.id || 0) - (a.id || 0);
+            })
+            : [];
+        renderFounderWeeklyReports();
+    } catch (err) {
+        tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 2rem; color: var(--danger);">Unable to load weekly reports</td></tr>';
+        if (countLabel) countLabel.innerText = 'Unable to load reports';
+    }
+}
+
+function renderFounderWeeklyReports() {
+    const tableBody = document.getElementById('founderWeeklyReportsTable');
+    const countLabel = document.getElementById('founderWeeklyReportsCount');
+    const showMoreWrap = document.getElementById('showMoreFounderWeeklyReportsWrap');
+    if (!tableBody) return;
+
+    tableBody.innerHTML = '';
+    if (showMoreWrap) {
+        showMoreWrap.style.display = 'block';
+    }
+
+    if (countLabel) {
+        countLabel.innerText = founderWeeklyReports.length > 2
+            ? `Showing 2 of ${founderWeeklyReports.length} reports`
+            : `${founderWeeklyReports.length} report${founderWeeklyReports.length === 1 ? '' : 's'}`;
+    }
+
+    if (!founderWeeklyReports.length) {
+        tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">No weekly reports submitted yet</td></tr>';
+        return;
+    }
+
+    const recentReports = founderWeeklyReports.slice(0, 2);
+
+    recentReports.forEach((report) => {
+        const developerName = escapeHtml(report.developer_name || report.current_developer_name || '--');
+        const memberId = escapeHtml(report.developer_member_id || report.current_developer_member_id || '--');
+        const reviewedBy = escapeHtml(report.reviewed_by || '--');
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td style="padding: 1rem 0;">${formatDate(report.report_date)}</td>
+            <td>
+                <div style="font-weight: 600;">${developerName}</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">${memberId}</div>
+            </td>
+            <td style="font-weight: 600;">${escapeHtml(report.project_name || '--')}</td>
+            <td>${formatDate(report.target_completion_date)}</td>
+            <td>${reviewedBy}</td>
+        `;
+        tableBody.appendChild(row);
+    });
 }
 
 async function fetchAdminSummary() {
