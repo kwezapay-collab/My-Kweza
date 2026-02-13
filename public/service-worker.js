@@ -1,4 +1,4 @@
-const CACHE_NAME = 'my-kweza-v8';
+const CACHE_NAME = 'my-kweza-v11';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -11,6 +11,7 @@ const APP_SHELL = [
   '/withdrawals-history.html',
   '/financial-withdrawals-history.html',
   '/complaints-history.html',
+  '/compensation-management.html',
   '/super-admin.html',
   '/index.css',
   '/theme.js',
@@ -24,6 +25,7 @@ const APP_SHELL = [
   '/withdrawals-history.js',
   '/financial-withdrawals-history.js',
   '/complaints-history.js',
+  '/compensation-management.js',
   '/super-admin.js',
   '/pwa.js',
   '/manifest.webmanifest',
@@ -71,6 +73,30 @@ self.addEventListener('fetch', (event) => {
           const cached = await caches.match(event.request);
           if (cached) return cached;
           return caches.match('/index.html');
+        })
+    );
+    return;
+  }
+
+  const requestPath = url.pathname.toLowerCase();
+  const isFreshAsset = ['script', 'style'].includes(event.request.destination)
+    || requestPath.endsWith('.js')
+    || requestPath.endsWith('.css');
+
+  if (isFreshAsset) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200 && response.type === 'basic') {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return response;
+        })
+        .catch(async () => {
+          const cached = await caches.match(event.request);
+          if (cached) return cached;
+          throw new Error('Network unavailable and no cached asset');
         })
     );
     return;

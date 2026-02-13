@@ -7,7 +7,7 @@ let financialWithdrawals = [];
 let founderWeeklyReports = [];
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
 const isFinancialManagerRole = (role) => role === 'Financial Manager';
-const isFounderAccessRole = (role) => role === 'Founder' || role === 'Financial Manager';
+const isFounderRole = (role) => role === 'Founder';
 
 const escapeHtml = (value = '') => String(value)
     .replace(/&/g, '&amp;')
@@ -80,7 +80,7 @@ async function loadDashboard() {
         if (isFinancialManagerRole(currentUser.role)) {
             requests.push(fetchFinancialWithdrawals());
         }
-        if (isFounderAccessRole(currentUser.role)) {
+        if (isFounderRole(currentUser.role)) {
             requests.push(fetchFounderWeeklyReports());
         }
 
@@ -123,7 +123,7 @@ function updateUI() {
 
     const founderWeeklyReportsPanel = document.getElementById('founderWeeklyReportsPanel');
     if (founderWeeklyReportsPanel) {
-        founderWeeklyReportsPanel.style.display = isFounderAccessRole(currentUser.role) ? 'block' : 'none';
+        founderWeeklyReportsPanel.style.display = isFounderRole(currentUser.role) ? 'block' : 'none';
     }
 
     const withdrawalsHint = document.getElementById('myWithdrawalsHint');
@@ -133,33 +133,37 @@ function updateUI() {
 }
 
 async function fetchPayouts() {
-    const res = await apiFetch('/api/payouts');
-    const payouts = await res.json();
-    const sortedPayouts = Array.isArray(payouts)
-        ? [...payouts].sort((a, b) => (b.id || 0) - (a.id || 0))
-        : [];
-    const recentPayouts = sortedPayouts.slice(0, 2);
     const tableBody = document.getElementById('payoutsTable');
     const showMoreWrap = document.getElementById('showMorePayoutsWrap');
-    tableBody.innerHTML = '';
-    if (showMoreWrap) {
-        showMoreWrap.style.display = 'block';
-    }
 
-    if (recentPayouts.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 2rem; color: var(--text-muted);">No records found</td></tr>';
-    }
+    if (tableBody) {
+        const res = await apiFetch('/api/payouts');
+        const payouts = await res.json();
+        const sortedPayouts = Array.isArray(payouts)
+            ? [...payouts].sort((a, b) => (b.id || 0) - (a.id || 0))
+            : [];
+        const recentPayouts = sortedPayouts.slice(0, 2);
 
-    recentPayouts.forEach(p => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td style="padding: 1rem 0;">${p.month} ${p.year}</td>
-            <td style="text-transform: capitalize;">${p.type}</td>
-            <td>MWK ${Number(p.amount || 0).toLocaleString()}</td>
-            <td><span class="status-pill status-${p.status}">${p.status}</span></td>
-        `;
-        tableBody.appendChild(row);
-    });
+        tableBody.innerHTML = '';
+        if (showMoreWrap) {
+            showMoreWrap.style.display = 'block';
+        }
+
+        if (recentPayouts.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 2rem; color: var(--text-muted);">No records found</td></tr>';
+        }
+
+        recentPayouts.forEach(p => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td style="padding: 1rem 0;">${p.month} ${p.year}</td>
+                <td style="text-transform: capitalize;">${p.type}</td>
+                <td>MWK ${Number(p.amount || 0).toLocaleString()}</td>
+                <td><span class="status-pill status-${p.status}">${p.status}</span></td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
 
     // Update stats cards from user record
     const salary = Number(currentUser.salary || 0);
@@ -382,7 +386,7 @@ async function sendFinancialWithdrawalNotification(id) {
 }
 
 async function fetchFounderWeeklyReports() {
-    if (!isFounderAccessRole(currentUser?.role)) return;
+    if (!isFounderRole(currentUser?.role)) return;
 
     const tableBody = document.getElementById('founderWeeklyReportsTable');
     const countLabel = document.getElementById('founderWeeklyReportsCount');

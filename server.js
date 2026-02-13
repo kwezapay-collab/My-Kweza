@@ -92,6 +92,13 @@ const isFounderAccess = (req, res, next) => {
     next();
 };
 
+const isFounderOnly = (req, res, next) => {
+    if (req.user.role !== 'Founder') {
+        return res.status(403).json({ error: 'Founder access required' });
+    }
+    next();
+};
+
 // --- ROUTES ---
 
 // Login
@@ -440,7 +447,7 @@ app.post('/api/devops/weekly-reports', authenticate, isDevOpsAssistant, async (r
     }
 });
 
-app.get('/api/founder/weekly-reports', authenticate, isFounderAccess, async (req, res) => {
+app.get('/api/founder/weekly-reports', authenticate, isFounderOnly, async (req, res) => {
     try {
         const result = await db.execute(`
             SELECT

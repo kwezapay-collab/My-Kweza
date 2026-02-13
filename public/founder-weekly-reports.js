@@ -4,7 +4,7 @@ let currentUser = null;
 let allWeeklyReports = [];
 const dashboardPath = '/dashboard.html';
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
-const isFounderAccessRole = (role) => role === 'Founder' || role === 'Financial Manager';
+const isFounderRole = (role) => role === 'Founder';
 
 function escapeHtml(value = '') {
     return String(value)
@@ -155,7 +155,7 @@ async function loadFounderWeeklyReportsHistory() {
         }
         currentUser = await meRes.json();
 
-        if (!isFounderAccessRole(currentUser.role)) {
+        if (!isFounderRole(currentUser.role)) {
             if (currentUser.role === 'Super Admin') {
                 window.location.href = '/super-admin.html';
             } else if (currentUser.role === 'Dev Operations Assistant') {

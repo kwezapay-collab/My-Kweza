@@ -109,8 +109,8 @@
         </section>
 
         <div style="display: flex; flex-direction: column; gap: 2rem;">
-            <!-- Withdrawal Request Section -->
-            <section class="glass-card animate-fade">
+            <!-- Withdrawals Hub -->
+            <section class="glass-card animate-fade" id="withdrawalsHubSection">
                 <h2>Request Withdrawal</h2>
                 <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Request to transfer your
                     funds to your bank or mobile wallet.</p>
@@ -138,69 +138,6 @@
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Withdrawal Request</button>
                 </form>
-            </section>
-
-            <section class="glass-card animate-fade" id="myWithdrawalsSection">
-                <h2>My Withdrawal Requests</h2>
-                <p id="myWithdrawalsHint" style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
-                    Track request status and payment notifications from the Financial Manager.</p>
-                <div class="responsive-table-wrap" style="overflow-x: auto;">
-                    <table class="mobile-stack" style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
-                                <th style="padding-bottom: 1rem;">SUBMITTED</th>
-                                <th style="padding-bottom: 1rem;">AMOUNT</th>
-                                <th style="padding-bottom: 1rem;">METHOD</th>
-                                <th style="padding-bottom: 1rem;">STATUS</th>
-                                <th style="padding-bottom: 1rem;">MANAGER UPDATE</th>
-                            </tr>
-                        </thead>
-                        <tbody id="myWithdrawalsTable">
-                            <tr>
-                                <td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">
-                                    Loading requests...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div id="showMoreMyWithdrawalsWrap" style="margin-top: 1rem; text-align: right;">
-                    <a id="showMoreMyWithdrawalsLink" href="/withdrawals-history.html"
-                        style="font-size: 0.85rem; color: var(--accent); text-decoration: none; font-weight: 600;">Show
-                        more</a>
-                </div>
-            </section>
-
-            <section class="glass-card animate-fade" id="financialManagerPanel" style="display: none;">
-                <div style="display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
-                    <h2>Financial Manager Withdrawal Queue</h2>
-                    <p id="financialPendingCount" style="font-size: 0.8rem; color: var(--text-muted);">Pending: 0</p>
-                </div>
-                <div class="responsive-table-wrap" style="overflow-x: auto;">
-                    <table class="mobile-stack" style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
-                                <th style="padding-bottom: 1rem;">MEMBER</th>
-                                <th style="padding-bottom: 1rem;">AMOUNT</th>
-                                <th style="padding-bottom: 1rem;">METHOD & DETAILS</th>
-                                <th style="padding-bottom: 1rem;">STATUS</th>
-                                <th style="padding-bottom: 1rem;">ACTIONS</th>
-                            </tr>
-                        </thead>
-                        <tbody id="financialWithdrawalsTable">
-                            <tr>
-                                <td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">
-                                    Loading queue...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div id="showMoreFinancialWithdrawalsWrap" style="margin-top: 1rem; text-align: right;">
-                    <a id="showMoreFinancialWithdrawalsLink" href="/financial-withdrawals-history.html"
-                        style="font-size: 0.85rem; color: var(--accent); text-decoration: none; font-weight: 600;">Show
-                        more</a>
-                </div>
             </section>
 
             <section class="glass-card animate-fade" id="founderWeeklyReportsPanel" style="display: none;">
@@ -254,35 +191,6 @@
                 </form>
             </section>
 
-            <!-- Main List -->
-            <section class="glass-card animate-fade">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <h2>Recent Payouts</h2>
-                    <button id="exportCSVBtn" class="btn btn-primary"
-                        style="font-size: 0.7rem; padding: 6px 12px;">Export CSV</button>
-                </div>
-                <div class="responsive-table-wrap">
-                    <table class="mobile-stack" style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="text-align: left; color: var(--text-muted); font-size: 0.8rem;">
-                                <th style="padding-bottom: 1rem;">DATE</th>
-                                <th style="padding-bottom: 1rem;">TYPE</th>
-                                <th style="padding-bottom: 1rem;">AMOUNT</th>
-                                <th style="padding-bottom: 1rem;">STATUS</th>
-                            </tr>
-                        </thead>
-                        <tbody id="payoutsTable">
-                            <!-- Rows added by JS -->
-                        </tbody>
-                    </table>
-                </div>
-                <div id="showMorePayoutsWrap" style="margin-top: 1rem; text-align: right;">
-                    <a id="showMorePayoutsLink" href="/payouts-history.html"
-                        style="font-size: 0.85rem; color: var(--accent); text-decoration: none; font-weight: 600;">Show
-                        more</a>
-                </div>
-            </section>
-
             <div id="branchPanel" class="glass-card animate-fade" style="display: none;">
                 <h2>Branch Revenue Reporting</h2>
                 <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Official daily collection
@@ -293,6 +201,26 @@
                 </div>
                 <button id="submitBranchReport" class="btn btn-primary" style="width: 100%;">Submit Official
                     Report</button>
+            </div>
+        </div>
+
+        <div id="financialNotifyModal" class="finance-modal-backdrop" style="display: none;">
+            <div class="glass-card finance-modal-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.8rem;">
+                    <h3 style="margin: 0;">Mark Paid + Notify</h3>
+                    <button id="financialNotifyCloseBtn" class="nav-icon-btn" type="button" aria-label="Close notification modal">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <p id="financialNotifyTarget" style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">--</p>
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <label>Notification Message</label>
+                    <textarea id="financialNotifyMessage" placeholder="Enter payment notification message"></textarea>
+                </div>
+                <div class="finance-modal-actions" style="display: flex; justify-content: flex-end; gap: 0.7rem; flex-wrap: wrap;">
+                    <button id="financialNotifyCancelBtn" class="btn btn-secondary" type="button">Cancel</button>
+                    <button id="financialNotifySendBtn" class="btn btn-primary" type="button">Send</button>
+                </div>
             </div>
         </div>
     </main>
