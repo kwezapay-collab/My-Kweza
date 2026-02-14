@@ -1291,6 +1291,22 @@ body.devops-purple-theme.scrollable .glass-card.earnings-card::after {
     z-index: 1;
 }
 
+body.scrollable .glass-card.earnings-card>.earnings-card-chip-image {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    left: auto !important;
+    inset-inline-start: auto;
+    inset-inline-end: 1rem;
+    width: 72px;
+    height: auto;
+    z-index: 3;
+    margin: 0;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 6px 14px rgba(5, 16, 34, 0.28));
+}
+
 .earnings-card-top {
     display: flex;
     flex-direction: column;
@@ -1492,10 +1508,6 @@ body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-member 
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 1rem;
     align-items: stretch;
-}
-
-.dashboard-icon-actions #branchPanel {
-    grid-column: 1 / -1;
 }
 
 .dashboard-action-btn {
@@ -1819,6 +1831,15 @@ tr:last-child {
     .dashboard-action-btn-label {
         font-size: 0.84rem;
         max-width: 12ch;
+    }
+
+    body.scrollable .glass-card.earnings-card>.earnings-card-chip-image {
+        top: 0.8rem;
+        right: 0.8rem;
+        left: auto !important;
+        inset-inline-start: auto;
+        inset-inline-end: 0.8rem;
+        width: 58px;
     }
 
     .main-content {

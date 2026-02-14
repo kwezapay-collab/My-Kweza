@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch Revenue Report | My Kweza</title>
+    <script src="theme.js"></script>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#1a4d6e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="My Kweza">
+    <link rel="apple-touch-icon" href="/icons/kweza-192.png">
+</head>
+
+<body class="scrollable">
+    <nav class="dashboard-nav">
+        <div class="brand-group" style="display: flex; align-items: center; gap: 1rem; cursor: pointer;"
+            onclick="window.location.href='/dashboard.html'">
+            <img src="logo.png" alt="Logo" class="nav-logo"
+                onerror="this.src='https://placehold.co/40x40/1a4d6e/white?text=K'">
+            <h2 class="brand">My Kweza</h2>
+        </div>
+        <div class="user-actions" style="display: flex; align-items: center; gap: 1rem;">
+            <div class="user-info" style="text-align: right;">
+                <p id="userName" style="font-weight: 600;">Loading...</p>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <p id="userRole" style="font-size: 0.75rem; color: var(--accent); font-weight: 600;">---</p>
+                    <p id="memberId" style="font-size: 0.7rem; color: var(--text-muted); opacity: 0.8;">ID: ---</p>
+                </div>
+            </div>
+
+            <button id="dashboardBtn" class="nav-icon-btn" onclick="window.location.href='/dashboard.html'"><i
+                    data-lucide="layout-dashboard"></i></button>
+            <button id="settingsBtn" class="nav-icon-btn" onclick="window.location.href='/settings.html'"><i
+                    data-lucide="settings"></i></button>
+            <button id="logoutBtn" class="nav-icon-btn" style="color: var(--danger);"><i
+                    data-lucide="log-out"></i></button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="dashboard-page-header"
+            style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button id="backToDashboardBtn" class="btn"
+                    style="background: transparent; padding: 8px; color: var(--text-muted);">
+                    <i data-lucide="arrow-left"></i>
+                </button>
+                <div>
+                    <h1>Branch Revenue Reporting</h1>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Detailed report submission for founders</p>
+                </div>
+            </div>
+        </header>
+
+        <section class="glass-card animate-fade">
+            <h2 style="margin-bottom: 0.35rem;">Detailed Branch Revenue Report</h2>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">
+                Founders receive this report as a notification once you submit.
+            </p>
+
+            <form id="branchRevenueReportForm">
+                <div class="form-grid-two"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Report Date</label>
+                        <input id="reportDate" type="date" required>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Total Collection (MWK)</label>
+                        <input id="totalCollection" type="number" min="0" step="0.01" placeholder="e.g. 46000" required>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Branch</label>
+                        <input id="branchName" type="text" readonly>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Branch Manager</label>
+                        <input id="managerName" type="text" readonly>
+                    </div>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <label>Report Title</label>
+                    <input id="reportTitle" type="text" placeholder="e.g. Lilongwe weekly revenue status update" required>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <label>Highlights</label>
+                    <textarea id="highlights" class="report-long-text"
+                        placeholder="- Daily collections stabilized&#10;- Client repayments improved&#10;- Strong field collections"></textarea>
+                    <p class="report-list-hint">Use one line per highlight.</p>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <label>Detailed Report</label>
+                    <textarea id="detailedReport" class="report-long-text" required
+                        placeholder="Provide full operational and revenue details for the founders."></textarea>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <label>Challenges / Risks</label>
+                    <textarea id="challenges" class="report-long-text"
+                        placeholder="- Field agent transport constraints&#10;- Delayed repayment confirmations"></textarea>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 1.2rem;">
+                    <label>Support Needed From Founders</label>
+                    <textarea id="supportNeeded" class="report-long-text"
+                        placeholder="Describe any approvals/resources needed from founders."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Branch Revenue Report</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="branch-revenue-report.js"></script>
+    <script src='/pwa.js'></script>
+</body>
+
+</html>

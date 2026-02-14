@@ -1,9 +1,11 @@
-const CACHE_NAME = 'my-kweza-v17';
+const CACHE_NAME = 'my-kweza-v18';
 const APP_SHELL = [
   '/',
   '/index.html',
   '/dashboard.html',
   '/menu.html',
+  '/branch-revenue-report.html',
+  '/branch-reports-history.html',
   '/settings.html',
   '/weekly-report.html',
   '/founder-weekly-reports.html',
@@ -20,6 +22,8 @@ const APP_SHELL = [
   '/theme.js',
   '/auth.js',
   '/dashboard.js',
+  '/branch-revenue-report.js',
+  '/branch-reports-history.js',
   '/settings.js',
   '/weekly-report.js',
   '/founder-weekly-reports.js',
@@ -35,6 +39,7 @@ const APP_SHELL = [
   '/pwa.js',
   '/manifest.webmanifest',
   '/logo.png',
+  '/cardchip.png',
   '/icons/kweza-192.png',
   '/icons/kweza-512.png'
 ];

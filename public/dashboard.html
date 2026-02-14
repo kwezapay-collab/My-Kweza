@@ -32,6 +32,7 @@
 
         <!-- Unified Stats Card (Visible to all) -->
         <div id="earningsCard" class="glass-card unified-stats-card earnings-card animate-fade">
+            <img src="/cardchip.png" alt="" class="earnings-card-chip-image" aria-hidden="true">
             <div class="earnings-card-top">
                 <p class="earnings-card-kicker">Main Balance</p>
                 <p class="earnings-card-balance">MWK <span id="totalVal">0.00</span></p>
@@ -77,17 +78,11 @@
                 <span class="dashboard-action-btn-label">Recent Payouts</span>
             </a>
 
-            <div id="branchPanel" class="glass-card animate-fade kweza-pattern-card" style="display: none;">
-                <h2>Branch Revenue Reporting</h2>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Official daily collection
-                    log for <span id="branchName" style="color: var(--accent); font-weight: 600;">Branch</span></p>
-                <div class="input-group">
-                    <label>Total Collection Amount (MWK)</label>
-                    <input type="number" id="revenueInput" placeholder="Enter total amount collected today">
-                </div>
-                <button id="submitBranchReport" class="btn btn-primary" style="width: 100%;">Submit Official
-                    Report</button>
-            </div>
+            <a id="branchRevenueReportBtn" class="dashboard-action-btn animate-fade" style="display: none;"
+                href="/branch-revenue-report.html">
+                <span class="dashboard-action-btn-icon"><i data-lucide="building-2"></i></span>
+                <span id="branchRevenueReportBtnLabel" class="dashboard-action-btn-label">Branch Revenue Reporting</span>
+            </a>
         </div>
 
         <div id="financialNotifyModal" class="finance-modal-backdrop" style="display: none;">

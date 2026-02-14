@@ -116,6 +116,13 @@ const isFounderOnly = (req, res, next) => {
     next();
 };
 
+const isBranchManager = (req, res, next) => {
+    if (req.user.role !== 'Branch Manager') {
+        return res.status(403).json({ error: 'Branch Manager access required' });
+    }
+    next();
+};
+
 const formatMWK = (value) => {
     const amount = Number(value || 0);
     if (!Number.isFinite(amount)) return '0';
@@ -674,6 +681,117 @@ app.get('/api/founder/weekly-reports', authenticate, isFounderOnly, async (req, 
             FROM weekly_reports wr
             LEFT JOIN users u ON wr.developer_id = u.id
             ORDER BY wr.report_date DESC NULLS LAST, wr.id DESC
+        `);
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/branch/detailed-reports', authenticate, isBranchManager, async (req, res) => {
+    try {
+        const reportTitle = String(req.body.report_title || '').trim();
+        const reportDate = normalizeDateInput(req.body.report_date) || new Date().toISOString().slice(0, 10);
+        const totalCollection = Number(req.body.total_collection || 0);
+        const highlightsItems = normalizeList(req.body.highlights);
+        const detailedReport = String(req.body.detailed_report || '').trim();
+        const challengesItems = normalizeList(req.body.challenges);
+        const supportNeeded = String(req.body.support_needed || '').trim();
+
+        if (!reportTitle) {
+            return res.status(400).json({ error: 'Report title is required' });
+        }
+        if (!Number.isFinite(totalCollection) || totalCollection <= 0) {
+            return res.status(400).json({ error: 'Valid total collection is required' });
+        }
+        if (!detailedReport) {
+            return res.status(400).json({ error: 'Detailed report is required' });
+        }
+
+        const userResult = await db.execute({
+            sql: 'SELECT id, name, member_id, branch, role FROM users WHERE id = ?',
+            args: [req.user.id]
+        });
+        const user = userResult.rows[0];
+        if (!user) {
+            return res.status(404).json({ error: 'Branch manager account not found' });
+        }
+        if (user.role !== 'Branch Manager') {
+            return res.status(403).json({ error: 'Branch Manager access required' });
+        }
+
+        const branchName = String(user.branch || 'Assigned Branch').trim() || 'Assigned Branch';
+        await db.execute({
+            sql: `
+                INSERT INTO branch_detailed_reports (
+                    branch,
+                    submitted_by,
+                    submitted_by_name,
+                    submitted_by_member_id,
+                    report_title,
+                    report_date,
+                    total_collection,
+                    highlights,
+                    detailed_report,
+                    challenges,
+                    support_needed
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `,
+            args: [
+                branchName,
+                req.user.id,
+                user.name,
+                user.member_id,
+                reportTitle,
+                reportDate,
+                totalCollection,
+                highlightsItems.join('\n'),
+                detailedReport,
+                challengesItems.join('\n'),
+                supportNeeded || null
+            ]
+        });
+
+        const [reportYear, reportMonthRaw] = String(reportDate).split('-');
+        const reportMonthIndex = Number.parseInt(String(reportMonthRaw || ''), 10);
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const reportMonth = Number.isFinite(reportMonthIndex) && reportMonthIndex >= 1 && reportMonthIndex <= 12
+            ? monthNames[reportMonthIndex - 1]
+            : 'Unknown';
+        const safeYear = /^\d{4}$/.test(String(reportYear || '').trim())
+            ? String(reportYear).trim()
+            : String(new Date().getFullYear());
+
+        await db.execute({
+            sql: 'INSERT INTO revenue (branch, amount, month, year, submitted_by) VALUES (?, ?, ?, ?, ?)',
+            args: [branchName, totalCollection, reportMonth, safeYear, req.user.id]
+        });
+
+        await safeNotify(async () => {
+            await createNotificationsForRole('Founder', {
+                title: 'New Branch Revenue Report',
+                message: `${normalizeNotificationText(user.name, 'Branch Manager', 80)} submitted "${normalizeNotificationText(reportTitle, 'Branch revenue report', 90)}" for ${normalizeNotificationText(branchName, 'Branch', 60)} (MWK ${formatMWK(totalCollection)}).`,
+                type: 'branch_report',
+                linkUrl: '/branch-reports-history.html'
+            });
+        });
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/founder/branch-reports', authenticate, isFounderOnly, async (req, res) => {
+    try {
+        const result = await db.execute(`
+            SELECT
+                br.*,
+                u.name as current_manager_name,
+                u.member_id as current_manager_member_id
+            FROM branch_detailed_reports br
+            LEFT JOIN users u ON br.submitted_by = u.id
+            ORDER BY br.report_date DESC NULLS LAST, br.id DESC
         `);
         res.json(result.rows);
     } catch (err) {

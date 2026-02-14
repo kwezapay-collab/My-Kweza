@@ -36,6 +36,7 @@ const resetForProduction = async () => {
 
     console.log('Clearing transactional data and existing users...');
     await db.execute('TRUNCATE TABLE weekly_reports RESTART IDENTITY CASCADE');
+    await db.execute('TRUNCATE TABLE branch_detailed_reports RESTART IDENTITY CASCADE');
     await db.execute('TRUNCATE TABLE complaints RESTART IDENTITY CASCADE');
     await db.execute('TRUNCATE TABLE revenue RESTART IDENTITY CASCADE');
     await db.execute('TRUNCATE TABLE withdrawal_requests RESTART IDENTITY CASCADE');

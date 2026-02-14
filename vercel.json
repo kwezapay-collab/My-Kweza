@@ -16,7 +16,7 @@
             "dest": "server.js"
         },
         {
-            "src": "/(index|dashboard|settings|weekly-report|founder-weekly-reports|payouts-history|withdrawals-history|financial-withdrawals-history|dev-operations|complaints-history|super-admin).html",
+            "src": "/(index|dashboard|menu|settings|weekly-report|founder-weekly-reports|branch-revenue-report|branch-reports-history|payouts-history|withdrawals-history|financial-withdrawals-history|dev-operations|complaints-history|report-complaint|notifications|compensation-management|super-admin).html",
             "dest": "/public/$1.html"
         },
         {

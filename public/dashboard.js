@@ -156,9 +156,17 @@ function updateUI() {
         if (statsCard) statsCard.style.display = 'none';
     }
 
-    if (currentUser.role === 'Branch Member' || currentUser.role === 'Branch Manager') {
-        document.getElementById('branchPanel').style.display = 'block';
-        document.getElementById('branchName').innerText = currentUser.branch || 'Assigned Branch';
+    const branchRevenueReportBtn = document.getElementById('branchRevenueReportBtn');
+    const branchRevenueReportBtnLabel = document.getElementById('branchRevenueReportBtnLabel');
+    if (branchRevenueReportBtn) {
+        const isBranchManager = currentUser.role === 'Branch Manager';
+        branchRevenueReportBtn.style.display = isBranchManager ? 'flex' : 'none';
+        if (isBranchManager && branchRevenueReportBtnLabel) {
+            const branchName = String(currentUser.branch || '').trim();
+            branchRevenueReportBtnLabel.innerText = branchName
+                ? `${branchName} Revenue Reporting`
+                : 'Branch Revenue Reporting';
+        }
     }
 
     const financialPanel = document.getElementById('financialManagerPanel');
@@ -511,35 +519,6 @@ document.getElementById('logoutBtn')?.addEventListener('click', async () => {
 
 document.getElementById('exportCSVBtn')?.addEventListener('click', () => {
     window.location.href = '/api/export/payouts';
-});
-
-document.getElementById('submitBranchReport')?.addEventListener('click', async () => {
-    const amount = parseFloat(document.getElementById('revenueInput').value);
-    if (isNaN(amount) || amount <= 0) return alert('Please enter a valid collection amount.');
-
-    const date = new Date();
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-    try {
-        const res = await apiFetch('/api/branch/report', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                amount,
-                month: months[date.getMonth()],
-                year: String(date.getFullYear())
-            })
-        });
-
-        if (res.ok) {
-            alert('Official revenue report submitted successfully!');
-            document.getElementById('revenueInput').value = '';
-        } else {
-            alert('Failed to submit report.');
-        }
-    } catch (err) {
-        console.error('Report error:', err);
-    }
 });
 
 document.getElementById('withdrawalForm')?.addEventListener('submit', async (e) => {

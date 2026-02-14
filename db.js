@@ -128,6 +128,22 @@ const initDb = async () => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`);
 
+    await db.execute(`CREATE TABLE IF NOT EXISTS branch_detailed_reports (
+        id SERIAL PRIMARY KEY,
+        branch TEXT NOT NULL,
+        submitted_by INTEGER NOT NULL REFERENCES users(id),
+        submitted_by_name TEXT NOT NULL,
+        submitted_by_member_id TEXT,
+        report_title TEXT NOT NULL,
+        report_date DATE NOT NULL,
+        total_collection DOUBLE PRECISION NOT NULL,
+        highlights TEXT,
+        detailed_report TEXT NOT NULL,
+        challenges TEXT,
+        support_needed TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`);
+
     await db.execute(`CREATE TABLE IF NOT EXISTS notifications (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id),
