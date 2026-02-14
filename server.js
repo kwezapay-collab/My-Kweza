@@ -116,6 +116,16 @@ const isFounderOnly = (req, res, next) => {
     next();
 };
 
+const isAdminOrFounder = (req, res, next) => {
+    const allowedIds = ['CTM-2025-002', 'MEM-2025-004'];
+    if (req.user.role !== 'Super Admin' && req.user.role !== 'Founder' && !allowedIds.includes(req.user.member_id)) {
+        return res.status(403).json({ error: 'Admin or Founder access required' });
+    }
+    next();
+};
+
+
+
 const isBranchManager = (req, res, next) => {
     if (req.user.role !== 'Branch Manager') {
         return res.status(403).json({ error: 'Branch Manager access required' });
@@ -385,6 +395,38 @@ app.get('/api/admin/summary', authenticate, async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+app.post('/api/admin/broadcast-notification', authenticate, isAdminOrFounder, async (req, res) => {
+    try {
+        const { recipient, title, message, type } = req.body;
+        if (!title || !message) return res.status(400).json({ error: 'Title and message are required' });
+
+        let userQuery = 'SELECT id FROM users';
+        let args = [];
+        if (recipient && recipient !== 'all') {
+            userQuery += ' WHERE role = ?';
+            args.push(recipient);
+        }
+
+        const usersResult = await db.execute({ sql: userQuery, args });
+        const users = usersResult.rows;
+
+        for (const user of users) {
+            await createNotification({
+                userId: user.id,
+                title,
+                message,
+                type: type || 'general',
+                linkUrl: '/notifications.html'
+            });
+        }
+
+        res.json({ success: true, count: users.length });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 
 // Update Profile (Email/Notifications)
 app.post('/api/profile/update', authenticate, async (req, res) => {

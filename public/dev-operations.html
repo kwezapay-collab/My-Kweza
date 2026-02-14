@@ -19,6 +19,11 @@
 
 <body class="scrollable devops-purple-theme">
     <main class="main-content">
+        <!-- Brand Label -->
+        <div class="dashboard-section-label animate-fade"
+            style="text-align: center; margin-top: 0.2rem; margin-bottom: 0.5rem; font-weight: 700; font-size: 1.2rem; color: var(--text);">
+            MyKweza</div>
+
         <div id="earningsCard" class="glass-card unified-stats-card earnings-card animate-fade">
             <div class="earnings-card-top">
                 <div class="earnings-card-headline">
@@ -46,6 +51,11 @@
                 </div>
             </div>
         </div>
+
+        <!-- Quick Actions Label -->
+        <div class="dashboard-section-label animate-fade"
+            style="text-align: center; margin-top: 2rem; margin-bottom: 1rem; font-weight: 600; font-size: 1rem; color: var(--text-muted); text-transform: lowercase;">
+            quick actions</div>
 
         <div class="dashboard-icon-actions">
             <div id="dashboardMenuMount" class="nav-menu-action-mount animate-fade"></div>
@@ -75,6 +85,16 @@
                 <span class="dashboard-action-btn-label">Open Complaint Box</span>
             </a>
         </div>
+
+        <!-- Notification Center -->
+        <div class="notification-center-section animate-fade">
+            <h2 class="notification-center-title" style="text-align: center;">Notification Centre</h2>
+            <div id="notificationCenterList" class="notification-center-list">
+                <!-- Notifications will be injected here -->
+                <div class="notification-center-empty">No new notifications</div>
+            </div>
+        </div>
+
     </main>
 
     <script src="responsive-tables.js"></script>
@@ -84,4 +104,3 @@
 </body>
 
 </html>
-

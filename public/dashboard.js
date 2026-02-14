@@ -183,7 +183,16 @@ function updateUI() {
     if (withdrawalsHint && isFinancialManagerRole(currentUser.role)) {
         withdrawalsHint.innerText = 'Track your own requests and payout notifications while managing the full queue below.';
     }
+
+    const writeNotificationBtn = document.getElementById('writeNotificationBtn');
+    if (writeNotificationBtn) {
+        const allowedIds = ['CTM-2025-002', 'MEM-2025-004'];
+        const isAllowed = isFounderRole(currentUser.role) || allowedIds.includes(currentUser.member_id);
+        writeNotificationBtn.style.display = isAllowed ? 'flex' : 'none';
+    }
 }
+
+
 
 async function fetchPayouts() {
     const tableBody = document.getElementById('payoutsTable');
@@ -527,55 +536,13 @@ async function fetchNotifications() {
         if (res.ok) {
             rows = await res.json();
         }
-
-        // FOR DEMO: If no notifications exist, add some samples
-        if (!rows || rows.length === 0) {
-            rows = [
-                {
-                    id: 'demo1',
-                    title: 'Payout Received',
-                    message: 'Your salary for February 2026 (MWK 450,000.00) has been processed and is now available in your balance.',
-                    created_at: new Date().toISOString(),
-                    is_read: 0
-                },
-                {
-                    id: 'demo2',
-                    title: 'Withdrawal Approved',
-                    message: 'Your withdrawal request of MWK 50,000 has been approved by the Financial Manager.',
-                    created_at: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-                    is_read: 0
-                },
-                {
-                    id: 'demo3',
-                    title: 'Security Alert',
-                    message: 'Your account PIN was successfully updated. If this wasn\'t you, please contact support immediately.',
-                    created_at: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-                    is_read: 0
-                },
-                {
-                    id: 'demo4',
-                    title: 'New Feature Available',
-                    message: 'We\'ve added a new Notification Center to help you stay updated on your payouts and requests!',
-                    created_at: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
-                    is_read: 0
-                },
-                {
-                    id: 'demo5',
-                    title: 'Dividend Distribution',
-                    message: 'Quarterly dividends have been distributed to all share members. Check your earnings card for the update.',
-                    created_at: new Date(Date.now() - 259200000).toISOString(), // 3 days ago
-                    is_read: 0
-                }
-            ];
-        }
-
-        // Once read the notification should be removed from the notification centre
         const unreadRows = Array.isArray(rows) ? rows.filter(r => Number(r.is_read) !== 1) : [];
         renderNotificationCenter(unreadRows);
     } catch (err) {
         console.error('Failed to fetch notifications:', err);
     }
 }
+
 
 let currentNotifIndex = 0;
 let isScrollingNotifs = false;

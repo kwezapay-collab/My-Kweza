@@ -32,7 +32,7 @@
 
         <!-- Brand Label -->
         <div class="dashboard-section-label animate-fade"
-            style="text-align: center; margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 700; font-size: 1.2rem; color: var(--text);">
+            style="text-align: center; margin-top: 0.2rem; margin-bottom: 0.5rem; font-weight: 700; font-size: 1.2rem; color: var(--text);">
             MyKweza</div>
 
         <!-- Unified Stats Card (Visible to all) -->
@@ -99,11 +99,18 @@
                 <span id="branchRevenueReportBtnLabel" class="dashboard-action-btn-label">Branch Revenue
                     Reporting</span>
             </a>
+
+            <a id="writeNotificationBtn" class="dashboard-action-btn animate-fade" style="display: none;"
+                href="/write-notification.html">
+                <span class="dashboard-action-btn-icon"><i data-lucide="bell-plus"></i></span>
+                <span class="dashboard-action-btn-label">Write Notification</span>
+            </a>
         </div>
+
 
         <!-- Notification Center -->
         <div class="notification-center-section animate-fade">
-            <h2 class="notification-center-title">Notification Centre</h2>
+            <h2 class="notification-center-title" style="text-align: center;">Notification Centre</h2>
             <div id="notificationCenterList" class="notification-center-list">
                 <!-- Notifications will be injected here -->
                 <div class="notification-center-empty">No new notifications</div>

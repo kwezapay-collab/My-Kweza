@@ -4,6 +4,26 @@ let currentUser = null;
 let allComplaints = [];
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
 
+const escapeHtml = (value = '') => String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const formatDateTime = (value) => {
+    const parsed = Date.parse(value || '');
+    if (!Number.isFinite(parsed)) return '--';
+    return new Date(parsed).toLocaleString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+};
+
+
 function getEarningsRoleTheme(role) {
     const normalized = String(role || '').toLowerCase();
     if (normalized.includes('admin')) return 'admin';
@@ -72,6 +92,8 @@ async function loadDashboard() {
         }
 
         updateUI();
+        fetchNotifications();
+
     } catch (err) {
         window.myKwezaPageTransition.go('/');
     }
@@ -284,4 +306,148 @@ document.getElementById('complaintForm')?.addEventListener('submit', async (e) =
     }
 });
 
+async function fetchNotifications() {
+    const listEl = document.getElementById('notificationCenterList');
+    if (!listEl) return;
+
+    try {
+        const res = await apiFetch('/api/notifications?limit=20');
+        let rows = [];
+        if (res.ok) {
+            rows = await res.json();
+        }
+
+        const unreadRows = Array.isArray(rows) ? rows.filter(r => Number(r.is_read) !== 1) : [];
+        renderNotificationCenter(unreadRows);
+    } catch (err) {
+        console.error('Failed to fetch notifications:', err);
+    }
+}
+
+
+let currentNotifIndex = 0;
+let isScrollingNotifs = false;
+
+function renderNotificationCenter(notifications) {
+    const listEl = document.getElementById('notificationCenterList');
+    if (!listEl) return;
+
+    if (!notifications.length) {
+        listEl.innerHTML = '<div class="notification-center-empty">No new notifications</div>';
+        return;
+    }
+
+    listEl.innerHTML = '';
+    notifications.forEach((n, index) => {
+        const card = document.createElement('div');
+        card.className = 'notification-card';
+        card.dataset.id = n.id;
+        card.dataset.index = index;
+
+        const offset = index * 8;
+        const scale = Math.max(0.7, 1 - (index * 0.05));
+        const opacity = Math.max(0, 1 - (index * 0.3));
+
+        card.style.transform = `translateY(${offset}px) scale(${scale})`;
+        card.style.opacity = opacity;
+        card.style.zIndex = 100 - index;
+
+        card.innerHTML = `
+            <div class="notification-icon-wrap">
+                <i data-lucide="bell" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="notification-content">
+                <div class="notification-card-header">
+                    <span class="notification-app-name">MYKWEZA</span>
+                    <span class="notification-time">${formatDateTime(n.created_at)}</span>
+                </div>
+                <div class="notification-card-title">${escapeHtml(n.title || 'Notification')}</div>
+                <div class="notification-card-message">${escapeHtml(n.message || '')}</div>
+            </div>
+        `;
+
+        card.onclick = () => {
+            window.myKwezaPageTransition.go(`/notifications.html?id=${n.id}`);
+        };
+
+        listEl.appendChild(card);
+    });
+    lucide.createIcons();
+
+    listEl.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        if (isScrollingNotifs) return;
+        if (e.deltaY > 0) {
+            if (currentNotifIndex < notifications.length - 1) {
+                currentNotifIndex++;
+                updateNotifStack();
+            }
+        } else {
+            if (currentNotifIndex > 0) {
+                currentNotifIndex--;
+                updateNotifStack();
+            }
+        }
+        isScrollingNotifs = true;
+        setTimeout(() => isScrollingNotifs = false, 400);
+    }, { passive: false });
+
+    let touchStartY = 0;
+    listEl.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
+    listEl.addEventListener('touchmove', (e) => {
+        if (isScrollingNotifs) return;
+        const touchY = e.touches[0].clientY;
+        const diff = touchStartY - touchY;
+        if (Math.abs(diff) > 30) {
+            if (diff > 0) {
+                if (currentNotifIndex < notifications.length - 1) {
+                    currentNotifIndex++;
+                    updateNotifStack();
+                }
+            } else {
+                if (currentNotifIndex > 0) {
+                    currentNotifIndex--;
+                    updateNotifStack();
+                }
+            }
+            isScrollingNotifs = true;
+            setTimeout(() => isScrollingNotifs = false, 400);
+        }
+    }, { passive: true });
+}
+
+function updateNotifStack() {
+    const cards = document.querySelectorAll('.notification-card');
+    cards.forEach((card) => {
+        const index = parseInt(card.dataset.index);
+        const relativeIndex = index - currentNotifIndex;
+        let translateY = 0;
+        let scale = 1;
+        let opacity = 1;
+        let pointerEvents = 'auto';
+
+        if (relativeIndex < 0) {
+            translateY = -120;
+            scale = 0.8;
+            opacity = 0;
+            pointerEvents = 'none';
+        } else if (relativeIndex === 0) {
+            translateY = 0;
+            scale = 1;
+            opacity = 1;
+        } else {
+            translateY = relativeIndex * 12;
+            scale = Math.max(0.7, 1 - (relativeIndex * 0.05));
+            opacity = Math.max(0, 1 - (relativeIndex * 0.3));
+        }
+
+        card.style.transform = `translateY(${translateY}px) scale(${scale})`;
+        card.style.opacity = opacity;
+        card.style.pointerEvents = pointerEvents;
+        card.style.zIndex = 100 - relativeIndex;
+        card.style.filter = relativeIndex > 0 ? `blur(${relativeIndex * 2}px)` : 'none';
+    });
+}
+
 loadDashboard();
+

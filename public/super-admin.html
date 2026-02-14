@@ -163,10 +163,16 @@
                 <p style="color: var(--text-muted);" id="pageSubtitle">Financial oversight & system-wide adjustments</p>
             </div>
             <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-secondary btn-flex"
+                    onclick="window.myKwezaPageTransition.go('/write-notification.html')">
+                    <i data-lucide="bell-plus" style="width: 16px; height: 16px;"></i>
+                    <span>Write Notification</span>
+                </button>
                 <button class="btn btn-secondary btn-flex" onclick="exportCSV()">
                     <i data-lucide="download" style="width: 16px; height: 16px;"></i>
                     <span>Export CSV</span>
                 </button>
+
                 <button id="mainActionBtn" class="btn btn-primary btn-flex" onclick="openModal('add')">
                     <i data-lucide="plus" style="width: 20px; height: 20px;"></i>
                     <span>New Record</span>
@@ -598,5 +604,3 @@
 </body>
 
 </html>
-
-

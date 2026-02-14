@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write Notification | My Kweza</title>
+    <script src="theme.js"></script>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#1a4d6e">
+</head>
+
+<body class="scrollable">
+    <main class="main-content">
+        <header class="dashboard-page-header"
+            style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
+            <button id="backBtn" class="btn" style="background: transparent; padding: 8px; color: var(--text-muted);">
+                <i data-lucide="arrow-left"></i>
+            </button>
+            <div>
+                <h1>Write Notification</h1>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Send a broadcast notification to all users or
+                    specific roles.</p>
+            </div>
+        </header>
+
+        <section class="glass-card animate-fade" style="max-width: 600px; margin: 0 auto;">
+            <form id="notificationForm" style="display: grid; gap: 1.5rem;">
+                <div class="input-group">
+                    <label for="notifRecipient">Recipient Group</label>
+                    <select id="notifRecipient" required
+                        style="width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; color: white;">
+                        <option value="all">All Users</option>
+                        <option value="Founder">Founders only</option>
+                        <option value="Branch Manager">Branch Managers only</option>
+                        <option value="Core Team">Core Team only</option>
+                        <option value="Dev Operations Assistant">Dev Ops only</option>
+                        <option value="Financial Manager">Financial Managers only</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="notifTitle">Title</label>
+                    <input type="text" id="notifTitle" placeholder="e.g. System Maintenance" required
+                        style="width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; color: white;">
+                </div>
+
+                <div class="input-group">
+                    <label for="notifMessage">Message Delivery</label>
+                    <textarea id="notifMessage" placeholder="Compose your detailed notification here..." required
+                        style="width: 100%; min-height: 180px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; color: white; resize: vertical;"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="notifType">Notification Type</label>
+                    <select id="notifType"
+                        style="width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; color: white;">
+                        <option value="general">General</option>
+                        <option value="announcement">Announcement</option>
+                        <option value="alert">Security Alert</option>
+                        <option value="update">System Update</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem;">
+                    <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="padding-left: 2rem; padding-right: 2rem;">Send
+                        Notification</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
+
+        document.getElementById('backBtn').onclick = () => window.history.back();
+        document.getElementById('cancelBtn').onclick = () => window.history.back();
+
+        document.getElementById('notificationForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = 'Sending...';
+
+            const payload = {
+                recipient: document.getElementById('notifRecipient').value,
+                title: document.getElementById('notifTitle').value.trim(),
+                message: document.getElementById('notifMessage').value.trim(),
+                type: document.getElementById('notifType').value
+            };
+
+            try {
+                const res = await apiFetch('/api/admin/broadcast-notification', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    alert('Notification broadcasted successfully!');
+                    window.history.back();
+                } else {
+                    const data = await res.json();
+                    alert(data.error || 'Failed to send notification');
+                }
+            } catch (err) {
+                alert('An error occurred. Please try again.');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
+        };
+    </script>
+</body>
+
+</html>
