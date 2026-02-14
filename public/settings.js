@@ -114,8 +114,34 @@ document.getElementById('logoutBtn')?.addEventListener('click', logoutLogic);
 
 document.getElementById('profileForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    alert('User preferences are managed by administration.');
-    setProfileFormVisibility(false);
+    const nameField = document.getElementById('profileName');
+    const updatedName = String(nameField?.value || '').trim();
+
+    if (!updatedName) {
+        alert('Name is required.');
+        return;
+    }
+
+    try {
+        const res = await apiFetch('/api/profile/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: updatedName })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.error || 'Failed to update profile preferences.');
+            return;
+        }
+
+        currentUser.name = updatedName;
+        updateUI();
+        alert('Profile preferences updated successfully.');
+        setProfileFormVisibility(false);
+    } catch (err) {
+        alert('An error occurred. Please try again.');
+    }
 });
 
 document.getElementById('pinForm')?.addEventListener('submit', async (e) => {

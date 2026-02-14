@@ -428,24 +428,57 @@ app.post('/api/admin/broadcast-notification', authenticate, isAdminOrFounder, as
 });
 
 
-// Update Profile (Email/Notifications)
+// Update Profile (Partial update: name/email/notifications/theme)
 app.post('/api/profile/update', authenticate, async (req, res) => {
     try {
-        const { email, notifications_enabled } = req.body;
-        const themeModeRaw = String(req.body.theme_mode || '').toLowerCase();
-        const themeMode = themeModeRaw === 'light' || themeModeRaw === 'dark' ? themeModeRaw : null;
+        const payload = req.body || {};
+        const hasName = Object.prototype.hasOwnProperty.call(payload, 'name');
+        const hasEmail = Object.prototype.hasOwnProperty.call(payload, 'email');
+        const hasNotifications = Object.prototype.hasOwnProperty.call(payload, 'notifications_enabled');
+        const hasThemeMode = Object.prototype.hasOwnProperty.call(payload, 'theme_mode');
 
-        if (themeMode) {
-            await db.execute({
-                sql: 'UPDATE users SET email = ?, notifications_enabled = ?, theme_mode = ? WHERE id = ?',
-                args: [email, notifications_enabled ? 1 : 0, themeMode, req.user.id]
-            });
-        } else {
-            await db.execute({
-                sql: 'UPDATE users SET email = ?, notifications_enabled = ? WHERE id = ?',
-                args: [email, notifications_enabled ? 1 : 0, req.user.id]
-            });
+        const updates = [];
+        const args = [];
+
+        if (hasName) {
+            const normalizedName = String(payload.name || '').trim();
+            if (!normalizedName) {
+                return res.status(400).json({ error: 'Name is required' });
+            }
+            updates.push('name = ?');
+            args.push(normalizedName);
         }
+
+        if (hasEmail) {
+            const normalizedEmail = String(payload.email || '').trim();
+            updates.push('email = ?');
+            args.push(normalizedEmail || null);
+        }
+
+        if (hasNotifications) {
+            updates.push('notifications_enabled = ?');
+            args.push(payload.notifications_enabled ? 1 : 0);
+        }
+
+        if (hasThemeMode) {
+            const themeModeRaw = String(payload.theme_mode || '').toLowerCase();
+            if (themeModeRaw !== 'light' && themeModeRaw !== 'dark') {
+                return res.status(400).json({ error: 'Invalid theme mode' });
+            }
+            updates.push('theme_mode = ?');
+            args.push(themeModeRaw);
+        }
+
+        if (!updates.length) {
+            return res.status(400).json({ error: 'No profile fields provided' });
+        }
+
+        args.push(req.user.id);
+        await db.execute({
+            sql: `UPDATE users SET ${updates.join(', ')} WHERE id = ?`,
+            args
+        });
+
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: err.message });

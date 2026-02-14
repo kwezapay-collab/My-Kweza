@@ -429,6 +429,13 @@ body.light-mode #withdrawMethod {
     color: var(--text-main) !important;
 }
 
+html.light-mode #profileForm #profileName,
+body.light-mode #profileForm #profileName {
+    color: #102a43 !important;
+    -webkit-text-fill-color: #102a43 !important;
+    font-weight: 500;
+}
+
 html.light-mode .unified-stats-card,
 body.light-mode .unified-stats-card,
 html.light-mode .kweza-pattern-card,
@@ -624,10 +631,29 @@ h3,
     font-size: 0.78rem;
 }
 
+#weeklyReportForm {
+    max-width: 920px;
+    margin: 0 auto;
+}
+
+#weeklyReportForm .input-group,
+#weeklyReportForm .form-grid-two {
+    width: 100%;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+#weeklyReportForm .form-grid-two {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+    justify-content: center;
+}
+
 /* Normalize native date controls so they align with other report inputs */
 #weeklyReportForm input[type="date"],
 #weeklyReportForm input[type="datetime-local"] {
+    direction: ltr;
     text-align: left;
+    text-align-last: left;
     padding-left: 14px;
     padding-right: 14px;
 }
@@ -635,6 +661,11 @@ h3,
 #weeklyReportForm input[type="date"]::-webkit-datetime-edit,
 #weeklyReportForm input[type="datetime-local"]::-webkit-datetime-edit {
     padding: 0;
+}
+
+#weeklyReportForm input[type="date"]::-webkit-date-and-time-value,
+#weeklyReportForm input[type="datetime-local"]::-webkit-date-and-time-value {
+    text-align: left;
 }
 
 option {
