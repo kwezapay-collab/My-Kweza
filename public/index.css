@@ -1270,7 +1270,7 @@ body.devops-purple-theme.scrollable .glass-card.earnings-card {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 1.8rem 2rem 1.6rem;
+    padding: 1.6rem 2rem 1.5rem;
 }
 
 body.scrollable .glass-card.earnings-card::before,
@@ -1342,7 +1342,7 @@ body.devops-purple-theme.scrollable .glass-card.earnings-card::after {
 
 body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
     position: static;
-    width: 62px;
+    width: 54px;
     height: auto;
     z-index: 1;
     margin: 0;
@@ -1369,7 +1369,7 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
 }
 
 .earnings-card-kicker {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 600;
     letter-spacing: 0.01em;
     color: var(--earnings-accent);
@@ -1382,7 +1382,7 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
     letter-spacing: 0.14em;
     color: rgba(236, 248, 255, 0.92);
     position: relative;
-    top: -3.4rem;
+    top: -2.8rem;
 }
 
 .earnings-card-balance-row {
@@ -1394,7 +1394,7 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
 .earnings-card-balance {
     margin: 0;
     flex: 1;
-    font-size: clamp(2.4rem, 6.5vw, 3.6rem);
+    font-size: clamp(2.1rem, 5.5vw, 2.9rem);
     font-weight: 800;
     line-height: 1.1;
     letter-spacing: 0.01em;
@@ -1422,7 +1422,7 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
 
 .earnings-card-number {
     margin-top: 0.3rem;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 700;
     letter-spacing: 0.05em;
     color: rgba(242, 250, 255, 0.96);
@@ -1443,20 +1443,20 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
 }
 
 .earnings-card-meta-label {
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--earnings-muted);
 }
 
 .earnings-card-meta strong {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--earnings-ink);
 }
 
 .earnings-card-footer .earnings-card-meta:last-child .earnings-card-meta-label {
-    font-size: 0.85rem;
+    font-size: 0.78rem;
 }
 
 
@@ -1770,34 +1770,34 @@ tr:last-child {
     body.scrollable .glass-card.earnings-card,
     body.scrollable:not(.light-mode) .glass-card.earnings-card,
     body.devops-purple-theme .glass-card.earnings-card {
-        min-height: 240px !important;
-        padding: 1.4rem 1.4rem 1.2rem !important;
+        min-height: 200px !important;
+        padding: 1.2rem 1.4rem 1.1rem !important;
     }
 
     .earnings-card-kicker {
-        font-size: 1.25rem;
+        font-size: 1rem;
     }
 
     .earnings-card-balance {
-        font-size: clamp(1.8rem, 6.5vw, 2.5rem);
+        font-size: clamp(1.4rem, 5vw, 1.95rem);
     }
 
     .earnings-card-number {
-        font-size: 1.2rem;
+        font-size: 0.95rem;
     }
 
     .earnings-card-meta-label {
-        font-size: 0.75rem;
+        font-size: 0.64rem;
     }
 
     .earnings-card-meta strong {
-        font-size: 1.05rem;
+        font-size: 0.92rem;
     }
 
     .dashboard-action-btn {
-        min-height: 110px;
-        padding: 0.75rem 0.5rem 0.75rem;
-        gap: 0.5rem;
+        min-height: 94px;
+        padding: 0.5rem 0.4rem 0.5rem;
+        gap: 0.35rem;
     }
 
     .dashboard-icon-actions {
@@ -1816,12 +1816,13 @@ tr:last-child {
     }
 
     .dashboard-action-btn-label {
-        font-size: 0.84rem;
-        max-width: 12ch;
+        font-size: 0.78rem;
+        max-width: 14ch;
+        line-height: 1.2;
     }
 
     body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
-        width: 52px;
+        width: 48px;
     }
 
     .earnings-card-headline {
@@ -1830,13 +1831,13 @@ tr:last-child {
 
     .earnings-card-top {
         margin-top: auto;
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.1rem;
     }
 
     .earnings-card-type {
         font-size: 0.76rem;
         letter-spacing: 0.1em;
-        top: -2.3rem;
+        top: -1.7rem;
     }
 
     .earnings-card-mark-circle {
@@ -1845,13 +1846,13 @@ tr:last-child {
     }
 
     .earnings-card-footer .earnings-card-meta:last-child .earnings-card-meta-label {
-        font-size: 0.64rem;
+        font-size: 0.62rem;
     }
 
 
 
     .main-content {
-        padding: 0.75rem;
+        padding: 0.4rem 0.5rem;
     }
 
     .form-grid-two {
@@ -1949,15 +1950,15 @@ tr:last-child {
 
 /* Notification Center & Dynamic Cards */
 .notification-center-section {
-    margin: 1rem 0;
-    padding: 0 5% 1.5rem;
+    margin: 0.5rem 0;
+    padding: 0 5% 1rem;
     /* bottom padding for scroll space */
 }
 
 .notification-center-title {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
     color: var(--text-main);
     text-align: left;
 }
