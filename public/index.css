@@ -1638,7 +1638,7 @@ body.light-mode .dashboard-action-btn-label {
 }
 
 .mobile-splash-logo-wrap {
-    width: clamp(190px, 56vw, 300px);
+    width: clamp(500px, auto, auto);
     display: grid;
     place-items: center;
 }
