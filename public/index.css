@@ -1261,16 +1261,16 @@ body.devops-purple-theme.scrollable .glass-card.earnings-card {
     --earnings-ink: #f8fcff;
     --earnings-muted: rgba(228, 242, 252, 0.86);
     overflow: hidden;
-    border-radius: 22px;
+    border-radius: 28px;
     border: 1px solid rgba(173, 228, 255, 0.42);
     background: linear-gradient(135deg, var(--earnings-grad-start) 0%, var(--earnings-grad-mid) 56%, var(--earnings-grad-end) 100%);
-    box-shadow: 0 18px 34px rgba(6, 31, 60, 0.38);
+    box-shadow: 0 22px 50px rgba(6, 31, 60, 0.45);
     color: var(--earnings-ink);
-    min-height: 220px;
+    min-height: 280px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 1.2rem 1.25rem 1.1rem;
+    padding: 1.8rem 2rem 1.6rem;
 }
 
 body.scrollable .glass-card.earnings-card::before,
@@ -1369,20 +1369,20 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
 }
 
 .earnings-card-kicker {
-    font-size: 1.24rem;
+    font-size: 1.5rem;
     font-weight: 600;
     letter-spacing: 0.01em;
     color: var(--earnings-accent);
 }
 
 .earnings-card-type {
-    font-size: 0.92rem;
+    font-size: 1.1rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     color: rgba(236, 248, 255, 0.92);
     position: relative;
-    top: -2.8rem;
+    top: -3.4rem;
 }
 
 .earnings-card-balance-row {
@@ -1394,7 +1394,7 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
 .earnings-card-balance {
     margin: 0;
     flex: 1;
-    font-size: clamp(2rem, 4.8vw, 2.7rem);
+    font-size: clamp(2.4rem, 6.5vw, 3.6rem);
     font-weight: 800;
     line-height: 1.1;
     letter-spacing: 0.01em;
@@ -1421,8 +1421,8 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
 }
 
 .earnings-card-number {
-    margin-top: 0.16rem;
-    font-size: 1.16rem;
+    margin-top: 0.3rem;
+    font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: 0.05em;
     color: rgba(242, 250, 255, 0.96);
@@ -1443,55 +1443,25 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
 }
 
 .earnings-card-meta-label {
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--earnings-muted);
 }
 
 .earnings-card-meta strong {
-    font-size: 0.98rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: var(--earnings-ink);
 }
 
 .earnings-card-footer .earnings-card-meta:last-child .earnings-card-meta-label {
-    font-size: 0.72rem;
+    font-size: 0.85rem;
 }
 
-.earnings-card-footer .earnings-card-meta:last-child strong {
-    font-size: 0.98rem;
-}
 
-.glass-card.earnings-card.earnings-role-admin {
-    --earnings-grad-start: #12756f;
-    --earnings-grad-mid: #1f8d7e;
-    --earnings-grad-end: #53b499;
-}
 
-.glass-card.earnings-card.earnings-role-finance {
-    --earnings-grad-start: #2e5984;
-    --earnings-grad-mid: #3976a6;
-    --earnings-grad-end: #62a4cc;
-}
 
-.glass-card.earnings-card.earnings-role-branch {
-    --earnings-grad-start: #906220;
-    --earnings-grad-mid: #b57a24;
-    --earnings-grad-end: #d9a24f;
-}
-
-.glass-card.earnings-card.earnings-role-core {
-    --earnings-grad-start: #8c3f24;
-    --earnings-grad-mid: #b25a30;
-    --earnings-grad-end: #da8a5f;
-}
-
-.glass-card.earnings-card.earnings-role-founder {
-    --earnings-grad-start: #3e3f8f;
-    --earnings-grad-mid: #5558b8;
-    --earnings-grad-end: #7f85e4;
-}
 
 .glass-card.earnings-card.earnings-role-devops {
     --earnings-grad-start: #7b3fd2;
@@ -1502,65 +1472,9 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
     --earnings-muted: rgba(255, 218, 241, 0.9);
 }
 
-.glass-card.earnings-card.earnings-role-member {
-    --earnings-grad-start: #0f8ad2;
-    --earnings-grad-mid: #1aa1d6;
-    --earnings-grad-end: #6fc4eb;
-}
 
-body.scrollable:not(.light-mode) .glass-card.earnings-card {
-    --earnings-grad-start: #17273b;
-    --earnings-grad-mid: #1d3149;
-    --earnings-grad-end: #29405d;
-    --earnings-accent: rgba(204, 222, 244, 0.92);
-    --earnings-ink: #ecf4ff;
-    --earnings-muted: rgba(188, 209, 232, 0.84);
-    border-color: rgba(112, 145, 184, 0.44);
-    box-shadow: 0 18px 34px rgba(4, 12, 26, 0.54);
-}
 
-body.scrollable:not(.light-mode) .glass-card.earnings-card::before {
-    background: radial-gradient(circle at 35% 34%,
-            rgba(220, 234, 248, 0.2) 0%,
-            rgba(220, 234, 248, 0.08) 44%,
-            rgba(220, 234, 248, 0) 78%);
-}
 
-body.scrollable:not(.light-mode) .glass-card.earnings-card::after {
-    border-color: rgba(194, 217, 242, 0.2);
-    border-left-color: transparent;
-    border-bottom-color: transparent;
-}
-
-body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-admin {
-    --earnings-grad-start: #0f3a38;
-    --earnings-grad-mid: #14514b;
-    --earnings-grad-end: #1d6860;
-}
-
-body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-finance {
-    --earnings-grad-start: #1a3554;
-    --earnings-grad-mid: #23476e;
-    --earnings-grad-end: #2f628b;
-}
-
-body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-branch {
-    --earnings-grad-start: #4d3415;
-    --earnings-grad-mid: #684719;
-    --earnings-grad-end: #876026;
-}
-
-body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-core {
-    --earnings-grad-start: #5a2916;
-    --earnings-grad-mid: #743720;
-    --earnings-grad-end: #915033;
-}
-
-body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-founder {
-    --earnings-grad-start: #292a63;
-    --earnings-grad-mid: #33387e;
-    --earnings-grad-end: #4753a0;
-}
 
 body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-devops {
     --earnings-grad-start: #43226f;
@@ -1571,11 +1485,7 @@ body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-devops 
     --earnings-muted: rgba(236, 204, 248, 0.84);
 }
 
-body.scrollable:not(.light-mode) .glass-card.earnings-card.earnings-role-member {
-    --earnings-grad-start: #163d63;
-    --earnings-grad-mid: #1d4f7e;
-    --earnings-grad-end: #2a669e;
-}
+
 
 .dashboard-icon-actions {
     display: grid;
@@ -1860,28 +1770,28 @@ tr:last-child {
     body.scrollable .glass-card.earnings-card,
     body.scrollable:not(.light-mode) .glass-card.earnings-card,
     body.devops-purple-theme .glass-card.earnings-card {
-        min-height: 184px !important;
-        padding: 0.9rem 0.9rem 0.85rem !important;
+        min-height: 240px !important;
+        padding: 1.4rem 1.4rem 1.2rem !important;
     }
 
     .earnings-card-kicker {
-        font-size: 1.08rem;
+        font-size: 1.25rem;
     }
 
     .earnings-card-balance {
-        font-size: clamp(1.54rem, 5.6vw, 2.08rem);
+        font-size: clamp(1.8rem, 6.5vw, 2.5rem);
     }
 
     .earnings-card-number {
-        font-size: 0.98rem;
+        font-size: 1.2rem;
     }
 
     .earnings-card-meta-label {
-        font-size: 0.64rem;
+        font-size: 0.75rem;
     }
 
     .earnings-card-meta strong {
-        font-size: 0.84rem;
+        font-size: 1.05rem;
     }
 
     .dashboard-action-btn {
@@ -1938,9 +1848,7 @@ tr:last-child {
         font-size: 0.64rem;
     }
 
-    .earnings-card-footer .earnings-card-meta:last-child strong {
-        font-size: 0.84rem;
-    }
+
 
     .main-content {
         padding: 0.75rem;
