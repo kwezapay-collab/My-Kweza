@@ -43,6 +43,21 @@ const formatDateTime = (value) => {
     });
 };
 
+const timeAgo = (date) => {
+    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + "y ago";
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + "mo ago";
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + "d ago";
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + "h ago";
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + "m ago";
+    return "just now";
+};
+
 const formatDate = (value) => {
     const parsed = Date.parse(value || '');
     if (!Number.isFinite(parsed)) return '--';
@@ -579,10 +594,13 @@ function renderNotificationCenter(notifications) {
             <div class="notification-content">
                 <div class="notification-card-header">
                     <span class="notification-app-name">MYKWEZA</span>
-                    <span class="notification-time">${formatDateTime(n.created_at)}</span>
+                    <span class="notification-time">${timeAgo(n.created_at)}</span>
                 </div>
                 <div class="notification-card-title">${escapeHtml(n.title || 'Notification')}</div>
                 <div class="notification-card-message">${escapeHtml(n.message || '')}</div>
+            </div>
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; position: relative; margin-left: 0.5rem; border: 1px solid rgba(255,255,255,0.1);">
+                <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: rgba(255,255,255,0.3);"></i>
             </div>
         `;
 
