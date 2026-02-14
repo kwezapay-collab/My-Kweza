@@ -1,6 +1,6 @@
 (function () {
   const STORAGE_KEY = 'my-kweza-theme';
-  const PAGE_TRANSITION_DURATION_MS = 180;
+  const PAGE_TRANSITION_DURATION_MS = 90;
   const PAGE_TRANSITION_READY_CLASS = 'page-transition-ready';
   const PAGE_TRANSITION_LEAVING_CLASS = 'page-transition-leaving';
   let transitionNavigationPending = false;
