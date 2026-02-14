@@ -1354,6 +1354,8 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
     gap: 0.45rem;
     align-items: start;
     text-align: left;
+    margin-top: auto;
+    margin-bottom: 0.3rem;
 }
 
 .earnings-card-headline {
@@ -1364,18 +1366,20 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
 }
 
 .earnings-card-kicker {
-    font-size: 1.1rem;
+    font-size: 1.24rem;
     font-weight: 600;
     letter-spacing: 0.01em;
     color: var(--earnings-accent);
 }
 
 .earnings-card-type {
-    font-size: 0.82rem;
+    font-size: 0.92rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: rgba(236, 248, 255, 0.92);
+    position: relative;
+    top: -2.8rem;
 }
 
 .earnings-card-balance-row {
@@ -1387,7 +1391,7 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
 .earnings-card-balance {
     margin: 0;
     flex: 1;
-    font-size: clamp(1.75rem, 4.3vw, 2.35rem);
+    font-size: clamp(2rem, 4.8vw, 2.7rem);
     font-weight: 800;
     line-height: 1.1;
     letter-spacing: 0.01em;
@@ -1413,8 +1417,8 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
 }
 
 .earnings-card-number {
-    margin-top: 0.06rem;
-    font-size: 1.02rem;
+    margin-top: 0.16rem;
+    font-size: 1.16rem;
     font-weight: 700;
     letter-spacing: 0.05em;
     color: rgba(242, 250, 255, 0.96);
@@ -1854,15 +1858,15 @@ tr:last-child {
     }
 
     .earnings-card-kicker {
-        font-size: 0.96rem;
+        font-size: 1.08rem;
     }
 
     .earnings-card-balance {
-        font-size: clamp(1.34rem, 5.3vw, 1.82rem);
+        font-size: clamp(1.54rem, 5.6vw, 2.08rem);
     }
 
     .earnings-card-number {
-        font-size: 0.86rem;
+        font-size: 0.98rem;
     }
 
     .earnings-card-meta-label {
@@ -1907,9 +1911,15 @@ tr:last-child {
         gap: 0.45rem;
     }
 
+    .earnings-card-top {
+        margin-top: auto;
+        margin-bottom: 0.2rem;
+    }
+
     .earnings-card-type {
-        font-size: 0.68rem;
+        font-size: 0.76rem;
         letter-spacing: 0.1em;
+        top: -2.3rem;
     }
 
     .earnings-card-mark-circle {
