@@ -5,6 +5,19 @@ let dashboardPath = '/dashboard.html';
 const apiFetch = (input, init = {}) => fetch(input, { credentials: 'include', ...init });
 const getMenuBackUrl = (fallbackPath = '/dashboard.html') => fallbackPath;
 
+function applyRoleTheme() {
+    if (!document.body) return;
+    const isDevOps = currentUser?.role === 'Dev Operations Assistant';
+    document.body.dataset.useDevopsTheme = isDevOps ? '1' : '0';
+    if (!isDevOps) {
+        document.body.classList.remove('devops-purple-theme');
+        return;
+    }
+
+    const activeTheme = window.themeManager?.getTheme ? window.themeManager.getTheme() : 'dark';
+    document.body.classList.toggle('devops-purple-theme', activeTheme !== 'light');
+}
+
 const escapeHtml = (value = '') => String(value)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -40,9 +53,9 @@ const formatDateTime = (value) => {
 };
 
 function updateHeader() {
-    document.getElementById('userName').innerText = currentUser.name;
-    document.getElementById('userRole').innerText = currentUser.sub_role || currentUser.role;
-    document.getElementById('memberId').innerText = `ID: ${currentUser.member_id}`;
+    const userNameEl = document.getElementById('userName'); if (userNameEl) userNameEl.innerText = currentUser.name;
+    const userRoleEl = document.getElementById('userRole'); if (userRoleEl) userRoleEl.innerText = currentUser.sub_role || currentUser.role;
+    const memberIdEl = document.getElementById('memberId'); if (memberIdEl) memberIdEl.innerText = `ID: ${currentUser.member_id}`;
 }
 
 function renderWithdrawals(withdrawals) {
@@ -99,6 +112,7 @@ async function loadWithdrawalHistory() {
         if (currentUser.role === 'Dev Operations Assistant') {
             dashboardPath = '/dev-operations.html';
         }
+        applyRoleTheme();
 
         const dashboardBtn = document.getElementById('dashboardBtn');
         if (dashboardBtn) {
@@ -173,7 +187,7 @@ document.getElementById('withdrawalForm')?.addEventListener('submit', async (eve
     }
 });
 
-document.getElementById('logoutBtn').addEventListener('click', async () => {
+document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     await apiFetch('/api/logout', { method: 'POST' });
     window.location.href = '/';
 });

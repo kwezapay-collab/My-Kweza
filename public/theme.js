@@ -599,6 +599,12 @@
         if (!response.ok) return;
         const user = await response.json();
         currentMenuUser = user;
+        const isDevOpsUser = user.role === 'Dev Operations Assistant';
+        if (document.body) {
+          document.body.dataset.useDevopsTheme = isDevOpsUser ? '1' : '0';
+          const activeTheme = window.themeManager?.getTheme ? window.themeManager.getTheme() : 'dark';
+          syncDevOpsClassForTheme(activeTheme);
+        }
         menuHomePath = resolveMenuHomePathByRole(user.role);
         setStoredMenuHomePath(menuHomePath);
         updateProfileHeader(user);

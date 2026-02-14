@@ -9,9 +9,9 @@ function todayIsoDate() {
 }
 
 function updateHeader() {
-    document.getElementById('userName').innerText = currentUser.name;
-    document.getElementById('userRole').innerText = currentUser.sub_role || currentUser.role;
-    document.getElementById('memberId').innerText = `ID: ${currentUser.member_id}`;
+    const userNameEl = document.getElementById('userName'); if (userNameEl) userNameEl.innerText = currentUser.name;
+    const userRoleEl = document.getElementById('userRole'); if (userRoleEl) userRoleEl.innerText = currentUser.sub_role || currentUser.role;
+    const memberIdEl = document.getElementById('memberId'); if (memberIdEl) memberIdEl.innerText = `ID: ${currentUser.member_id}`;
 }
 
 function resetFormDefaults() {

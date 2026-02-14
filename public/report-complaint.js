@@ -22,9 +22,9 @@ function applyRoleTheme() {
 }
 
 function updateHeader() {
-    document.getElementById('userName').innerText = currentUser.name;
-    document.getElementById('userRole').innerText = currentUser.sub_role || currentUser.role;
-    document.getElementById('memberId').innerText = `ID: ${currentUser.member_id}`;
+    const userNameEl = document.getElementById('userName'); if (userNameEl) userNameEl.innerText = currentUser.name;
+    const userRoleEl = document.getElementById('userRole'); if (userRoleEl) userRoleEl.innerText = currentUser.sub_role || currentUser.role;
+    const memberIdEl = document.getElementById('memberId'); if (memberIdEl) memberIdEl.innerText = `ID: ${currentUser.member_id}`;
 }
 
 async function loadComplaintPage() {
@@ -41,10 +41,6 @@ async function loadComplaintPage() {
         updateHeader();
         applyRoleTheme();
 
-        const devopsInboxHint = document.getElementById('devopsInboxHint');
-        if (devopsInboxHint) {
-            devopsInboxHint.style.display = currentUser.role === 'Dev Operations Assistant' ? 'block' : 'none';
-        }
     } catch (err) {
         window.location.href = '/';
     }

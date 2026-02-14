@@ -18,30 +18,6 @@
 </head>
 
 <body class="scrollable">
-    <nav class="dashboard-nav">
-        <div class="brand-group" style="display: flex; align-items: center; gap: 1rem;">
-            <img src="logo.png" alt="Logo" class="nav-logo"
-                onerror="this.src='https://placehold.co/40x40/1a4d6e/white?text=K'">
-            <h2 class="brand">My Kweza</h2>
-        </div>
-        <div class="user-actions" style="display: flex; align-items: center; gap: 1rem;">
-            <div class="user-info" style="text-align: right;">
-                <p id="userName" style="font-weight: 600;">Loading...</p>
-                <div style="display: flex; flex-direction: column; gap: 2px;">
-                    <p id="userRole" style="font-size: 0.75rem; color: var(--accent); font-weight: 600;">---</p>
-                    <p id="memberId" style="font-size: 0.7rem; color: var(--text-muted); opacity: 0.8;">ID: ---</p>
-                </div>
-            </div>
-
-            <button id="dashboardBtn" class="nav-icon-btn" onclick="window.location.href='/dashboard.html'"><i
-                    data-lucide="layout-dashboard"></i></button>
-            <button id="settingsBtn" class="nav-icon-btn" onclick="window.location.href='/settings.html'"><i
-                    data-lucide="settings"></i></button>
-            <button id="logoutBtn" class="nav-icon-btn" style="color: var(--danger);"><i
-                    data-lucide="log-out"></i></button>
-        </div>
-    </nav>
-
     <main class="main-content">
         <header class="dashboard-page-header"
             style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">

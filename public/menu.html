@@ -18,28 +18,8 @@
 </head>
 
 <body class="scrollable">
-    <nav class="dashboard-nav">
-        <div class="brand-group" style="display: flex; align-items: center; gap: 1rem;">
-            <img src="logo.png" alt="Logo" class="nav-logo"
-                onerror="this.src='https://placehold.co/40x40/1a4d6e/white?text=K'">
-            <h2 class="brand">My Kweza</h2>
-        </div>
-        <div class="user-actions" style="display: flex; align-items: center; gap: 1rem;">
-            <div class="user-info" style="text-align: right;">
-                <p id="userName" style="font-weight: 600;">Loading...</p>
-                <div style="display: flex; flex-direction: column; gap: 2px;">
-                    <p id="userRole" style="font-size: 0.75rem; color: var(--accent); font-weight: 600;">---</p>
-                    <p id="memberId" style="font-size: 0.7rem; color: var(--text-muted); opacity: 0.8;">ID: ---</p>
-                </div>
-            </div>
-        </div>
-    </nav>
-
     <main class="main-content">
-        <div class="glass-card animate-fade" style="max-width: 420px; margin: 2rem auto; text-align: center;">
-            <h3 style="margin-bottom: 0.4rem;">Menu</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Use the menu button to navigate.</p>
-        </div>
+        <div id="dashboardMenuMount" class="nav-menu-action-mount"></div>
     </main>
 
     <script src='/pwa.js'></script>

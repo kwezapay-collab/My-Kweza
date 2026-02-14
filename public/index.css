@@ -587,6 +587,19 @@ h3,
     font-size: 0.78rem;
 }
 
+/* Normalize native date controls so they align with other report inputs */
+#weeklyReportForm input[type="date"],
+#weeklyReportForm input[type="datetime-local"] {
+    text-align: left;
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+#weeklyReportForm input[type="date"]::-webkit-datetime-edit,
+#weeklyReportForm input[type="datetime-local"]::-webkit-datetime-edit {
+    padding: 0;
+}
+
 option {
     background-color: var(--bg-dark);
     color: var(--text-main);
@@ -1625,7 +1638,7 @@ body.light-mode .dashboard-action-btn-label {
 }
 
 .mobile-splash-logo-wrap {
-    width: clamp(150px, 44vw, 220px);
+    width: clamp(190px, 56vw, 300px);
     display: grid;
     place-items: center;
 }

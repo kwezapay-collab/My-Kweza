@@ -35,7 +35,7 @@ const showMobileSplash = () => {
   const splash = createMobileSplash();
   document.body.appendChild(splash);
 
-  const displayDuration = 900;
+  const displayDuration = 2000;
   setTimeout(() => splash.remove(), displayDuration);
 };
 
