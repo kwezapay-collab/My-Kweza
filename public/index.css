@@ -1396,6 +1396,7 @@ body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
     line-height: 1.1;
     letter-spacing: 0.01em;
     color: var(--earnings-ink);
+    white-space: nowrap;
 }
 
 .earnings-card-mark {
@@ -2023,5 +2024,11 @@ tr:last-child {
 
     #logoutBtn {
         display: none;
+    }
+}
+
+@media (max-width: 420px) {
+    .earnings-card-balance {
+        font-size: clamp(1.24rem, 5.4vw, 1.56rem);
     }
 }
