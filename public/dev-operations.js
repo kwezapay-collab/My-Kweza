@@ -93,7 +93,13 @@ function updateUI() {
     const salary = Number(currentUser.salary || 0);
     const bonus = Number(currentUser.bonus || 0);
     const dividends = Number(currentUser.dividends || 0);
-    document.getElementById('totalVal').innerText = (salary + bonus + dividends).toLocaleString();
+    const totalValEl = document.getElementById('totalVal');
+    if (totalValEl) {
+        totalValEl.innerText = (salary + bonus + dividends).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
 }
 
 async function fetchPayouts() {
