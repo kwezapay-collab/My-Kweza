@@ -1856,9 +1856,12 @@ tr:last-child {
         margin-bottom: 0.75rem;
     }
 
-    body.scrollable .glass-card.earnings-card {
-        min-height: 170px;
-        padding: 0.8rem 0.8rem 0.75rem;
+    .glass-card.earnings-card,
+    body.scrollable .glass-card.earnings-card,
+    body.scrollable:not(.light-mode) .glass-card.earnings-card,
+    body.devops-purple-theme .glass-card.earnings-card {
+        min-height: 184px !important;
+        padding: 0.9rem 0.9rem 0.85rem !important;
     }
 
     .earnings-card-kicker {
@@ -2163,6 +2166,64 @@ tr:last-child {
 }
 
 /* Scroll Effect Classes (applied via JS) */
+/* Light mode notifications */
+html.light-mode .notification-card,
+body.light-mode .notification-card {
+    background: rgba(26, 77, 110, 0.08);
+    border-color: rgba(26, 77, 110, 0.15);
+    box-shadow: 0 8px 24px rgba(26, 77, 110, 0.12);
+}
+
+html.light-mode .notification-app-name,
+body.light-mode .notification-app-name {
+    color: rgba(16, 42, 67, 0.6);
+}
+
+html.light-mode .notification-time,
+body.light-mode .notification-time {
+    color: rgba(16, 42, 67, 0.5);
+}
+
+html.light-mode .notification-card-title,
+body.light-mode .notification-card-title {
+    color: #102a43;
+}
+
+html.light-mode .notification-card-message,
+body.light-mode .notification-card-message {
+    color: #334e68;
+}
+
+html.light-mode .notification-chevron-icon,
+body.light-mode .notification-chevron-icon {
+    color: rgba(16, 42, 67, 0.3);
+}
+
+html.light-mode .notification-chevron-wrap,
+body.light-mode .notification-chevron-wrap {
+    background: rgba(26, 77, 110, 0.05);
+    border-color: rgba(26, 77, 110, 0.1);
+}
+
+.notification-chevron-wrap {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-left: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.notification-chevron-icon {
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
 .notification-card.scrolled-out {
     opacity: 0;
     transform: scale(0.85) translateY(-20px);

@@ -579,9 +579,9 @@ function renderNotificationCenter(notifications) {
         card.dataset.index = index;
 
         // Initial stacking
-        const offset = index * 8;
-        const scale = Math.max(0.7, 1 - (index * 0.05));
-        const opacity = Math.max(0, 1 - (index * 0.3));
+        const offset = index * 12;
+        const scale = Math.max(0.7, 1 - (index * 0.045));
+        const opacity = Math.max(0, 1 - (index * 0.18));
 
         card.style.transform = `translateY(${offset}px) scale(${scale})`;
         card.style.opacity = opacity;
@@ -599,8 +599,8 @@ function renderNotificationCenter(notifications) {
                 <div class="notification-card-title">${escapeHtml(n.title || 'Notification')}</div>
                 <div class="notification-card-message">${escapeHtml(n.message || '')}</div>
             </div>
-            <div style="width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; position: relative; margin-left: 0.5rem; border: 1px solid rgba(255,255,255,0.1);">
-                <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: rgba(255,255,255,0.3);"></i>
+            <div class="notification-chevron-wrap">
+                <i data-lucide="chevron-right" class="notification-chevron-icon"></i>
             </div>
         `;
 
@@ -688,10 +688,10 @@ function updateNotifStack() {
             scale = 1;
             opacity = 1;
         } else {
-            // Below focus: stacked behind
+            // Below focus: stacked behind (upside down pyramid look)
             translateY = relativeIndex * 12;
-            scale = Math.max(0.7, 1 - (relativeIndex * 0.05));
-            opacity = Math.max(0, 1 - (relativeIndex * 0.3));
+            scale = Math.max(0.7, 1 - (relativeIndex * 0.045));
+            opacity = Math.max(0, 1 - (relativeIndex * 0.18));
         }
 
         card.style.transform = `translateY(${translateY}px) scale(${scale})`;
