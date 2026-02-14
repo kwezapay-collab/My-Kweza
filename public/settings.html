@@ -37,17 +37,17 @@
                 <button id="toggleProfileFormBtn" type="button" class="btn btn-secondary" style="width: 100%;">Update
                     Preferences</button>
                 <div id="profileFormWrap" style="display: none; margin-top: 1rem;">
-                <form id="profileForm">
-                    <div class="input-group">
-                        <label>Email for Notifications</label>
-                        <input type="email" id="profileEmail" placeholder="your@email.com">
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
-                        <input type="checkbox" id="notifyToggle" style="width: 18px; height: 18px;">
-                        <label for="notifyToggle" style="font-size: 0.9rem;">Enable Dashboard Alerts</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Save Preferences</button>
-                </form>
+                    <form id="profileForm">
+                        <div class="input-group">
+                            <label>Email for Notifications</label>
+                            <input type="email" id="profileEmail" placeholder="your@email.com">
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
+                            <input type="checkbox" id="notifyToggle" style="width: 18px; height: 18px;">
+                            <label for="notifyToggle" style="font-size: 0.9rem;">Enable Dashboard Alerts</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Preferences</button>
+                    </form>
                 </div>
             </section>
 
@@ -58,23 +58,36 @@
                 <button id="togglePinFormBtn" type="button" class="btn btn-secondary" style="width: 100%;">Update
                     PIN</button>
                 <div id="pinFormWrap" style="display: none; margin-top: 1rem;">
-                <form id="pinForm">
-                    <div class="input-group">
-                        <label>Current PIN</label>
-                        <input type="password" id="oldPin" placeholder="••••" maxlength="4" required>
-                    </div>
-                    <div class="input-group">
-                        <label>New PIN (4 digits)</label>
-                        <input type="password" id="newPin" placeholder="••••" maxlength="4" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Confirm New PIN</label>
-                        <input type="password" id="confirmPin" placeholder="••••" maxlength="4" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; background: var(--accent);">Update
-                        PIN</button>
-                </form>
+                    <form id="pinForm">
+                        <div class="input-group">
+                            <label>Current PIN</label>
+                            <input type="password" id="oldPin" placeholder="••••" maxlength="4" required>
+                        </div>
+                        <div class="input-group">
+                            <label>New PIN (4 digits)</label>
+                            <input type="password" id="newPin" placeholder="••••" maxlength="4" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Confirm New PIN</label>
+                            <input type="password" id="confirmPin" placeholder="••••" maxlength="4" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary"
+                            style="width: 100%; background: var(--accent);">Update
+                            PIN</button>
+                    </form>
                 </div>
+            </section>
+
+            <!-- Notifications History Section -->
+            <section class="glass-card animate-fade">
+                <h2 style="margin-bottom: 1.5rem;"><i data-lucide="bell"
+                        style="vertical-align: middle; margin-right: 0.5rem;"></i>Notifications</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">View all your past and
+                    new notifications.</p>
+                <button onclick="window.myKwezaPageTransition.go('/notifications.html')" class="btn btn-secondary"
+                    style="width: 100%;">
+                    See Past Notifications
+                </button>
             </section>
 
         </div>
@@ -87,4 +100,3 @@
 </body>
 
 </html>
-

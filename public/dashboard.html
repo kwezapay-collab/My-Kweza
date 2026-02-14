@@ -30,6 +30,11 @@
             </button>
         </header>
 
+        <!-- Brand Label -->
+        <div class="dashboard-section-label animate-fade"
+            style="text-align: center; margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 700; font-size: 1.2rem; color: var(--text);">
+            MyKweza</div>
+
         <!-- Unified Stats Card (Visible to all) -->
         <div id="earningsCard" class="glass-card unified-stats-card earnings-card animate-fade">
             <div class="earnings-card-top">
@@ -59,6 +64,11 @@
             </div>
         </div>
 
+        <!-- Quick Actions Label -->
+        <div class="dashboard-section-label animate-fade"
+            style="text-align: center; margin-top: 2rem; margin-bottom: 1rem; font-weight: 600; font-size: 1rem; color: var(--text-muted); text-transform: lowercase;">
+            quick actions</div>
+
         <div class="dashboard-icon-actions">
             <div id="dashboardMenuMount" class="nav-menu-action-mount animate-fade"></div>
 
@@ -86,24 +96,38 @@
             <a id="branchRevenueReportBtn" class="dashboard-action-btn animate-fade" style="display: none;"
                 href="/branch-revenue-report.html">
                 <span class="dashboard-action-btn-icon"><i data-lucide="building-2"></i></span>
-                <span id="branchRevenueReportBtnLabel" class="dashboard-action-btn-label">Branch Revenue Reporting</span>
+                <span id="branchRevenueReportBtnLabel" class="dashboard-action-btn-label">Branch Revenue
+                    Reporting</span>
             </a>
+        </div>
+
+        <!-- Notification Center -->
+        <div class="notification-center-section animate-fade">
+            <h2 class="notification-center-title">Notification Centre</h2>
+            <div id="notificationCenterList" class="notification-center-list">
+                <!-- Notifications will be injected here -->
+                <div class="notification-center-empty">No new notifications</div>
+            </div>
         </div>
 
         <div id="financialNotifyModal" class="finance-modal-backdrop" style="display: none;">
             <div class="glass-card finance-modal-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.8rem;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.8rem;">
                     <h3 style="margin: 0;">Mark Paid + Notify</h3>
-                    <button id="financialNotifyCloseBtn" class="nav-icon-btn" type="button" aria-label="Close notification modal">
+                    <button id="financialNotifyCloseBtn" class="nav-icon-btn" type="button"
+                        aria-label="Close notification modal">
                         <i data-lucide="x"></i>
                     </button>
                 </div>
-                <p id="financialNotifyTarget" style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">--</p>
+                <p id="financialNotifyTarget"
+                    style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">--</p>
                 <div class="input-group" style="margin-bottom: 1rem;">
                     <label>Notification Message</label>
                     <textarea id="financialNotifyMessage" placeholder="Enter payment notification message"></textarea>
                 </div>
-                <div class="finance-modal-actions" style="display: flex; justify-content: flex-end; gap: 0.7rem; flex-wrap: wrap;">
+                <div class="finance-modal-actions"
+                    style="display: flex; justify-content: flex-end; gap: 0.7rem; flex-wrap: wrap;">
                     <button id="financialNotifyCancelBtn" class="btn btn-secondary" type="button">Cancel</button>
                     <button id="financialNotifySendBtn" class="btn btn-primary" type="button">Send</button>
                 </div>
@@ -118,4 +142,3 @@
 </body>
 
 </html>
-

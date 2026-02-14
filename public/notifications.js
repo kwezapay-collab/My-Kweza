@@ -171,7 +171,15 @@ async function loadNotificationsPage() {
 
         currentUser = await meResponse.json();
         updateHeader();
-        await loadNotifications();
+
+        // Handle detail view if ID is present
+        const urlParams = new URLSearchParams(window.location.search);
+        const notifId = urlParams.get('id');
+        if (notifId) {
+            await showNotificationDetail(notifId);
+        } else {
+            await loadNotifications();
+        }
     } catch (err) {
         window.myKwezaPageTransition.go('/');
     }
@@ -193,6 +201,52 @@ document.getElementById('markAllReadBtn')?.addEventListener('click', async () =>
 document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     await apiFetch('/api/logout', { method: 'POST' });
     window.myKwezaPageTransition.go('/');
+});
+
+async function showNotificationDetail(id) {
+    const detailView = document.getElementById('notificationDetailView');
+    const listSection = document.getElementById('notificationsListSection');
+    if (!detailView || !listSection) return;
+
+    detailView.style.display = 'block';
+    listSection.style.display = 'none';
+
+    try {
+        const response = await apiFetch(`/api/notifications?limit=200`);
+        if (!response.ok) throw new Error('Failed to fetch');
+        const rows = await response.json();
+        const notification = rows.find(r => String(r.id) === String(id));
+
+        if (!notification) {
+            document.getElementById('detailTitle').innerText = 'Notification Not Found';
+            document.getElementById('detailBody').innerText = 'The notification you are looking for does not exist or has been removed.';
+            return;
+        }
+
+        // Mark as read immediately if unread
+        if (Number(notification.is_read) !== 1) {
+            await markNotificationRead(id);
+        }
+
+        document.getElementById('detailTitle').innerText = notification.title || 'Notification';
+        document.getElementById('detailMeta').innerText = formatDateTime(notification.created_at);
+        document.getElementById('detailBody').innerText = notification.message || 'No details provided.';
+
+    } catch (err) {
+        document.getElementById('detailTitle').innerText = 'Error';
+        document.getElementById('detailBody').innerText = 'Could not load notification details.';
+    }
+}
+
+document.getElementById('closeDetailBtn')?.addEventListener('click', () => {
+    // Clear URL param without reload
+    const url = new URL(window.location);
+    url.searchParams.delete('id');
+    window.history.replaceState({}, '', url);
+
+    document.getElementById('notificationDetailView').style.display = 'none';
+    document.getElementById('notificationsListSection').style.display = 'block';
+    loadNotifications();
 });
 
 loadNotificationsPage();

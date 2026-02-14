@@ -28,13 +28,31 @@
                 </button>
                 <div>
                     <h1>Notifications</h1>
-                    <p id="notificationsCount" style="color: var(--text-muted); font-size: 0.9rem;">Loading notifications...</p>
+                    <p id="notificationsCount" style="color: var(--text-muted); font-size: 0.9rem;">Loading
+                        notifications...</p>
                 </div>
             </div>
             <button id="markAllReadBtn" class="btn btn-secondary" type="button">Mark All Read</button>
         </header>
 
-        <section class="glass-card animate-fade">
+        <!-- Individual Notification Detail View (Shown when ID is in URL) -->
+        <section id="notificationDetailView" class="notification-detail-view animate-fade">
+            <div class="glass-card notification-detail-card">
+                <div class="notification-detail-header">
+                    <h2 id="detailTitle" class="notification-detail-title">Loading...</h2>
+                    <div id="detailMeta" class="notification-detail-meta">--</div>
+                </div>
+                <div id="detailBody" class="notification-detail-body">
+                    Please wait while we fetch the notification details...
+                </div>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button id="closeDetailBtn" class="btn btn-secondary">Back to List</button>
+                    <button id="deleteNotifBtn" class="btn btn-danger" style="display:none;">Delete</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="notificationsListSection" class="glass-card animate-fade">
             <div class="responsive-table-wrap" style="overflow-x: auto;">
                 <table class="mobile-stack" style="width: 100%; border-collapse: collapse;">
                     <thead>
@@ -48,7 +66,8 @@
                     </thead>
                     <tbody id="notificationsTable">
                         <tr>
-                            <td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">Loading...
+                            <td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">
+                                Loading...
                             </td>
                         </tr>
                     </tbody>

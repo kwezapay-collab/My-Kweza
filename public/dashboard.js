@@ -122,7 +122,7 @@ async function loadDashboard() {
 
         updateUI();
 
-        const requests = [fetchPayouts(), fetchWithdrawalRequests()];
+        const requests = [fetchPayouts(), fetchWithdrawalRequests(), fetchNotifications()];
         if (isFinancialManagerRole(currentUser.role)) {
             requests.push(fetchFinancialWithdrawals());
         }
@@ -514,6 +514,208 @@ function renderFounderWeeklyReports() {
             <td>${reviewedBy}</td>
         `;
         tableBody.appendChild(row);
+    });
+}
+
+async function fetchNotifications() {
+    const listEl = document.getElementById('notificationCenterList');
+    if (!listEl) return;
+
+    try {
+        const res = await apiFetch('/api/notifications?limit=20');
+        let rows = [];
+        if (res.ok) {
+            rows = await res.json();
+        }
+
+        // FOR DEMO: If no notifications exist, add some samples
+        if (!rows || rows.length === 0) {
+            rows = [
+                {
+                    id: 'demo1',
+                    title: 'Payout Received',
+                    message: 'Your salary for February 2026 (MWK 450,000.00) has been processed and is now available in your balance.',
+                    created_at: new Date().toISOString(),
+                    is_read: 0
+                },
+                {
+                    id: 'demo2',
+                    title: 'Withdrawal Approved',
+                    message: 'Your withdrawal request of MWK 50,000 has been approved by the Financial Manager.',
+                    created_at: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+                    is_read: 0
+                },
+                {
+                    id: 'demo3',
+                    title: 'Security Alert',
+                    message: 'Your account PIN was successfully updated. If this wasn\'t you, please contact support immediately.',
+                    created_at: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+                    is_read: 0
+                },
+                {
+                    id: 'demo4',
+                    title: 'New Feature Available',
+                    message: 'We\'ve added a new Notification Center to help you stay updated on your payouts and requests!',
+                    created_at: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+                    is_read: 0
+                },
+                {
+                    id: 'demo5',
+                    title: 'Dividend Distribution',
+                    message: 'Quarterly dividends have been distributed to all share members. Check your earnings card for the update.',
+                    created_at: new Date(Date.now() - 259200000).toISOString(), // 3 days ago
+                    is_read: 0
+                }
+            ];
+        }
+
+        // Once read the notification should be removed from the notification centre
+        const unreadRows = Array.isArray(rows) ? rows.filter(r => Number(r.is_read) !== 1) : [];
+        renderNotificationCenter(unreadRows);
+    } catch (err) {
+        console.error('Failed to fetch notifications:', err);
+    }
+}
+
+let currentNotifIndex = 0;
+let isScrollingNotifs = false;
+
+function renderNotificationCenter(notifications) {
+    const listEl = document.getElementById('notificationCenterList');
+    if (!listEl) return;
+
+    if (!notifications.length) {
+        listEl.innerHTML = '<div class="notification-center-empty">No new notifications</div>';
+        return;
+    }
+
+    listEl.innerHTML = '';
+    notifications.forEach((n, index) => {
+        const card = document.createElement('div');
+        card.className = 'notification-card';
+        card.dataset.id = n.id;
+        card.dataset.index = index;
+
+        // Initial stacking
+        const offset = index * 8;
+        const scale = Math.max(0.7, 1 - (index * 0.05));
+        const opacity = Math.max(0, 1 - (index * 0.3));
+
+        card.style.transform = `translateY(${offset}px) scale(${scale})`;
+        card.style.opacity = opacity;
+        card.style.zIndex = 100 - index;
+
+        card.innerHTML = `
+            <div class="notification-icon-wrap">
+                <i data-lucide="bell" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="notification-content">
+                <div class="notification-card-header">
+                    <span class="notification-app-name">MYKWEZA</span>
+                    <span class="notification-time">${formatDateTime(n.created_at)}</span>
+                </div>
+                <div class="notification-card-title">${escapeHtml(n.title || 'Notification')}</div>
+                <div class="notification-card-message">${escapeHtml(n.message || '')}</div>
+            </div>
+        `;
+
+        card.onclick = () => {
+            window.myKwezaPageTransition.go(`/notifications.html?id=${n.id}`);
+        };
+
+        listEl.appendChild(card);
+    });
+    lucide.createIcons();
+
+    // Attach wheel listener to the list container
+    listEl.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        if (isScrollingNotifs) return;
+
+        if (e.deltaY > 0) {
+            // Scroll down: next notification
+            if (currentNotifIndex < notifications.length - 1) {
+                currentNotifIndex++;
+                updateNotifStack();
+            }
+        } else {
+            // Scroll up: previous
+            if (currentNotifIndex > 0) {
+                currentNotifIndex--;
+                updateNotifStack();
+            }
+        }
+
+        isScrollingNotifs = true;
+        setTimeout(() => isScrollingNotifs = false, 400); // Match transition time
+    }, { passive: false });
+
+    // Touch support for swiping
+    let touchStartY = 0;
+    listEl.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    listEl.addEventListener('touchmove', (e) => {
+        if (isScrollingNotifs) return;
+        const touchY = e.touches[0].clientY;
+        const diff = touchStartY - touchY;
+
+        if (Math.abs(diff) > 30) { // Threshold
+            if (diff > 0) {
+                if (currentNotifIndex < notifications.length - 1) {
+                    currentNotifIndex++;
+                    updateNotifStack();
+                }
+            } else {
+                if (currentNotifIndex > 0) {
+                    currentNotifIndex--;
+                    updateNotifStack();
+                }
+            }
+            isScrollingNotifs = true;
+            setTimeout(() => isScrollingNotifs = false, 400);
+        }
+    }, { passive: true });
+}
+
+
+function updateNotifStack() {
+    const cards = document.querySelectorAll('.notification-card');
+    cards.forEach((card) => {
+        const index = parseInt(card.dataset.index);
+        const relativeIndex = index - currentNotifIndex;
+
+        let translateY = 0;
+        let scale = 1;
+        let opacity = 1;
+        let pointerEvents = 'auto';
+
+        if (relativeIndex < 0) {
+            // Above focus: slide up and fade out
+            translateY = -120;
+            scale = 0.8;
+            opacity = 0;
+            pointerEvents = 'none';
+        } else if (relativeIndex === 0) {
+            // In focus: centered and full size
+            translateY = 0;
+            scale = 1;
+            opacity = 1;
+        } else {
+            // Below focus: stacked behind
+            translateY = relativeIndex * 12;
+            scale = Math.max(0.7, 1 - (relativeIndex * 0.05));
+            opacity = Math.max(0, 1 - (relativeIndex * 0.3));
+        }
+
+        card.style.transform = `translateY(${translateY}px) scale(${scale})`;
+        card.style.opacity = opacity;
+        card.style.pointerEvents = pointerEvents;
+        card.style.zIndex = 100 - relativeIndex;
+
+        // Add a blur to background cards
+        card.style.filter = relativeIndex > 0 ? `blur(${relativeIndex * 2}px)` : 'none';
     });
 }
 
