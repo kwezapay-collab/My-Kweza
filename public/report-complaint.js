@@ -31,7 +31,7 @@ async function loadComplaintPage() {
     try {
         const meRes = await apiFetch('/api/me');
         if (!meRes.ok) {
-            window.location.href = '/';
+            window.myKwezaPageTransition.go('/');
             return;
         }
 
@@ -42,7 +42,7 @@ async function loadComplaintPage() {
         applyRoleTheme();
 
     } catch (err) {
-        window.location.href = '/';
+        window.myKwezaPageTransition.go('/');
     }
 }
 
@@ -77,16 +77,16 @@ document.getElementById('complaintForm')?.addEventListener('submit', async (even
 });
 
 document.getElementById('backToDashboardBtn')?.addEventListener('click', () => {
-    window.location.href = getMenuBackUrl(dashboardPath);
+    window.myKwezaPageTransition.go(getMenuBackUrl(dashboardPath));
 });
 
 document.getElementById('dashboardBtn')?.addEventListener('click', () => {
-    window.location.href = dashboardPath;
+    window.myKwezaPageTransition.go(dashboardPath);
 });
 
 document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     await apiFetch('/api/logout', { method: 'POST' });
-    window.location.href = '/';
+    window.myKwezaPageTransition.go('/');
 });
 
 loadComplaintPage();

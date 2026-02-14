@@ -100,13 +100,13 @@ async function loadWithdrawalHistory() {
     try {
         const meRes = await apiFetch('/api/me');
         if (!meRes.ok) {
-            window.location.href = '/';
+            window.myKwezaPageTransition.go('/');
             return;
         }
         currentUser = await meRes.json();
 
         if (currentUser.role === 'Super Admin') {
-            window.location.href = '/super-admin.html';
+            window.myKwezaPageTransition.go('/super-admin.html');
             return;
         }
         if (currentUser.role === 'Dev Operations Assistant') {
@@ -117,7 +117,7 @@ async function loadWithdrawalHistory() {
         const dashboardBtn = document.getElementById('dashboardBtn');
         if (dashboardBtn) {
             dashboardBtn.onclick = () => {
-                window.location.href = dashboardPath;
+                window.myKwezaPageTransition.go(dashboardPath);
             };
         }
 
@@ -142,16 +142,16 @@ async function loadWithdrawalHistory() {
             : [];
         renderWithdrawals(sortedWithdrawals);
     } catch (err) {
-        window.location.href = '/';
+        window.myKwezaPageTransition.go('/');
     }
 }
 
 document.getElementById('backToDashboardBtn').addEventListener('click', () => {
-    window.location.href = getMenuBackUrl(dashboardPath);
+    window.myKwezaPageTransition.go(getMenuBackUrl(dashboardPath));
 });
 
 document.getElementById('dashboardBtn')?.addEventListener('click', () => {
-    window.location.href = dashboardPath;
+    window.myKwezaPageTransition.go(dashboardPath);
 });
 
 document.getElementById('withdrawalForm')?.addEventListener('submit', async (event) => {
@@ -189,7 +189,7 @@ document.getElementById('withdrawalForm')?.addEventListener('submit', async (eve
 
 document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     await apiFetch('/api/logout', { method: 'POST' });
-    window.location.href = '/';
+    window.myKwezaPageTransition.go('/');
 });
 
 loadWithdrawalHistory();

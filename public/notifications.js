@@ -53,14 +53,14 @@ function updateHeader() {
     const dashboardBtn = document.getElementById('dashboardBtn');
     if (dashboardBtn) {
         dashboardBtn.onclick = () => {
-            window.location.href = dashboardPath;
+            window.myKwezaPageTransition.go(dashboardPath);
         };
     }
 
     const brandBtn = document.querySelector('.brand-group');
     if (brandBtn) {
         brandBtn.onclick = () => {
-            window.location.href = dashboardPath;
+            window.myKwezaPageTransition.go(dashboardPath);
         };
     }
 
@@ -92,7 +92,7 @@ function bindNotificationActions() {
             }
 
             if (link) {
-                window.location.href = link;
+                window.myKwezaPageTransition.go(link);
                 return;
             }
 
@@ -165,7 +165,7 @@ async function loadNotificationsPage() {
     try {
         const meResponse = await apiFetch('/api/me');
         if (!meResponse.ok) {
-            window.location.href = '/';
+            window.myKwezaPageTransition.go('/');
             return;
         }
 
@@ -173,12 +173,12 @@ async function loadNotificationsPage() {
         updateHeader();
         await loadNotifications();
     } catch (err) {
-        window.location.href = '/';
+        window.myKwezaPageTransition.go('/');
     }
 }
 
 document.getElementById('backToDashboardBtn')?.addEventListener('click', () => {
-    window.location.href = getMenuBackUrl(dashboardPath);
+    window.myKwezaPageTransition.go(getMenuBackUrl(dashboardPath));
 });
 
 document.getElementById('markAllReadBtn')?.addEventListener('click', async () => {
@@ -192,7 +192,7 @@ document.getElementById('markAllReadBtn')?.addEventListener('click', async () =>
 
 document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     await apiFetch('/api/logout', { method: 'POST' });
-    window.location.href = '/';
+    window.myKwezaPageTransition.go('/');
 });
 
 loadNotificationsPage();

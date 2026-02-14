@@ -57,23 +57,23 @@ async function loadDashboard() {
     try {
         const res = await apiFetch('/api/me');
         if (!res.ok) {
-            window.location.href = '/';
+            window.myKwezaPageTransition.go('/');
             return;
         }
         currentUser = await res.json();
 
         if (currentUser.role !== 'Dev Operations Assistant') {
             if (currentUser.role === 'Super Admin') {
-                window.location.href = '/super-admin.html';
+                window.myKwezaPageTransition.go('/super-admin.html');
             } else {
-                window.location.href = '/dashboard.html';
+                window.myKwezaPageTransition.go('/dashboard.html');
             }
             return;
         }
 
         updateUI();
     } catch (err) {
-        window.location.href = '/';
+        window.myKwezaPageTransition.go('/');
     }
 }
 
@@ -226,7 +226,7 @@ async function updateComplaintStatus(id, status) {
 
 document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     await apiFetch('/api/logout', { method: 'POST' });
-    window.location.href = '/';
+    window.myKwezaPageTransition.go('/');
 });
 
 document.getElementById('withdrawalForm')?.addEventListener('submit', async (e) => {

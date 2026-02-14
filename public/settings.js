@@ -77,17 +77,17 @@ function updateUI() {
 
     const dashboardBtn = document.getElementById('dashboardBtn');
     if (dashboardBtn) {
-        dashboardBtn.onclick = () => window.location.href = dashboardPath;
+        dashboardBtn.onclick = () => window.myKwezaPageTransition.go(dashboardPath);
     }
 
     const brandBtn = document.querySelector('.brand-group[onclick*="/dashboard.html"]');
     if (brandBtn) {
-        brandBtn.onclick = () => window.location.href = dashboardPath;
+        brandBtn.onclick = () => window.myKwezaPageTransition.go(dashboardPath);
     }
 
     const backBtn = document.querySelector('header button[onclick*="/dashboard.html"]');
     if (backBtn) {
-        backBtn.onclick = () => window.location.href = getMenuBackUrl(dashboardPath);
+        backBtn.onclick = () => window.myKwezaPageTransition.go(getMenuBackUrl(dashboardPath));
     }
 }
 
@@ -95,19 +95,19 @@ async function loadSettings() {
     try {
         const res = await apiFetch('/api/me');
         if (!res.ok) {
-            window.location.href = '/';
+            window.myKwezaPageTransition.go('/');
             return;
         }
         currentUser = await res.json();
         updateUI();
     } catch (err) {
-        window.location.href = '/';
+        window.myKwezaPageTransition.go('/');
     }
 }
 
 const logoutLogic = async () => {
     await apiFetch('/api/logout', { method: 'POST' });
-    window.location.href = '/';
+    window.myKwezaPageTransition.go('/');
 };
 
 document.getElementById('logoutBtn')?.addEventListener('click', logoutLogic);

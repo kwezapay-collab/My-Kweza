@@ -35,18 +35,18 @@ async function loadBranchRevenueReportPage() {
     try {
         const meRes = await apiFetch('/api/me');
         if (!meRes.ok) {
-            window.location.href = '/';
+            window.myKwezaPageTransition.go('/');
             return;
         }
         currentUser = await meRes.json();
 
         if (currentUser.role !== 'Branch Manager') {
             if (currentUser.role === 'Super Admin') {
-                window.location.href = '/super-admin.html';
+                window.myKwezaPageTransition.go('/super-admin.html');
             } else if (currentUser.role === 'Dev Operations Assistant') {
-                window.location.href = '/dev-operations.html';
+                window.myKwezaPageTransition.go('/dev-operations.html');
             } else {
-                window.location.href = '/dashboard.html';
+                window.myKwezaPageTransition.go('/dashboard.html');
             }
             return;
         }
@@ -54,7 +54,7 @@ async function loadBranchRevenueReportPage() {
         updateHeader();
         resetFormDefaults();
     } catch (err) {
-        window.location.href = '/';
+        window.myKwezaPageTransition.go('/');
     }
 }
 
@@ -112,16 +112,16 @@ document.getElementById('branchRevenueReportForm')?.addEventListener('submit', a
 });
 
 document.getElementById('backToDashboardBtn')?.addEventListener('click', () => {
-    window.location.href = dashboardPath;
+    window.myKwezaPageTransition.go(dashboardPath);
 });
 
 document.getElementById('dashboardBtn')?.addEventListener('click', () => {
-    window.location.href = dashboardPath;
+    window.myKwezaPageTransition.go(dashboardPath);
 });
 
 document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     await apiFetch('/api/logout', { method: 'POST' });
-    window.location.href = '/';
+    window.myKwezaPageTransition.go('/');
 });
 
 loadBranchRevenueReportPage();

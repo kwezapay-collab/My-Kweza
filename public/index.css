@@ -30,6 +30,40 @@ body {
     flex-direction: column;
 }
 
+html.page-transitions-enabled body {
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+html.page-transitions-enabled body.page-transition-ready {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    will-change: opacity, transform;
+}
+
+html.page-transitions-enabled body.page-transition-leaving {
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+}
+
+body.app-logging-out .nav-menu-launcher,
+body.app-logging-out .nav-hamburger-btn {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.page-transitions-enabled body,
+    html.page-transitions-enabled body.page-transition-ready,
+    html.page-transitions-enabled body.page-transition-leaving {
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+}
+
 /* Dev Operations purple theme (page-specific via body class) */
 body.devops-purple-theme {
     --primary: #8f63ff;

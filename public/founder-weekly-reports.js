@@ -150,18 +150,18 @@ async function loadFounderWeeklyReportsHistory() {
     try {
         const meRes = await apiFetch('/api/me');
         if (!meRes.ok) {
-            window.location.href = '/';
+            window.myKwezaPageTransition.go('/');
             return;
         }
         currentUser = await meRes.json();
 
         if (!isFounderRole(currentUser.role)) {
             if (currentUser.role === 'Super Admin') {
-                window.location.href = '/super-admin.html';
+                window.myKwezaPageTransition.go('/super-admin.html');
             } else if (currentUser.role === 'Dev Operations Assistant') {
-                window.location.href = '/dev-operations.html';
+                window.myKwezaPageTransition.go('/dev-operations.html');
             } else {
-                window.location.href = '/dashboard.html';
+                window.myKwezaPageTransition.go('/dashboard.html');
             }
             return;
         }
@@ -169,7 +169,7 @@ async function loadFounderWeeklyReportsHistory() {
         updateHeader();
         await fetchWeeklyReports();
     } catch (err) {
-        window.location.href = '/';
+        window.myKwezaPageTransition.go('/');
     }
 }
 
@@ -179,16 +179,16 @@ document.getElementById('toDate')?.addEventListener('change', renderWeeklyReport
 document.getElementById('approvalFilter')?.addEventListener('change', renderWeeklyReports);
 
 document.getElementById('backToDashboardBtn')?.addEventListener('click', () => {
-    window.location.href = dashboardPath;
+    window.myKwezaPageTransition.go(dashboardPath);
 });
 
 document.getElementById('dashboardBtn')?.addEventListener('click', () => {
-    window.location.href = dashboardPath;
+    window.myKwezaPageTransition.go(dashboardPath);
 });
 
 document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     await apiFetch('/api/logout', { method: 'POST' });
-    window.location.href = '/';
+    window.myKwezaPageTransition.go('/');
 });
 
 loadFounderWeeklyReportsHistory();

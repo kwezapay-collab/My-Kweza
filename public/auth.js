@@ -31,11 +31,11 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
             }
 
             if (data.user.role === 'Super Admin') {
-                window.location.href = '/super-admin.html';
+                window.myKwezaPageTransition.go('/super-admin.html');
             } else if (data.user.role === 'Dev Operations Assistant') {
-                window.location.href = '/dev-operations.html';
+                window.myKwezaPageTransition.go('/dev-operations.html');
             } else {
-                window.location.href = '/dashboard.html';
+                window.myKwezaPageTransition.go('/dashboard.html');
             }
         } else {
             errorMsg.innerText = data.error || 'Login failed';

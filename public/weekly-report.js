@@ -37,16 +37,16 @@ async function loadWeeklyReportPage() {
     try {
         const meRes = await apiFetch('/api/me');
         if (!meRes.ok) {
-            window.location.href = '/';
+            window.myKwezaPageTransition.go('/');
             return;
         }
         currentUser = await meRes.json();
 
         if (currentUser.role !== 'Dev Operations Assistant') {
             if (currentUser.role === 'Super Admin') {
-                window.location.href = '/super-admin.html';
+                window.myKwezaPageTransition.go('/super-admin.html');
             } else {
-                window.location.href = '/dashboard.html';
+                window.myKwezaPageTransition.go('/dashboard.html');
             }
             return;
         }
@@ -54,7 +54,7 @@ async function loadWeeklyReportPage() {
         updateHeader();
         resetFormDefaults();
     } catch (err) {
-        window.location.href = '/';
+        window.myKwezaPageTransition.go('/');
     }
 }
 
@@ -112,16 +112,16 @@ document.getElementById('weeklyReportForm')?.addEventListener('submit', async (e
 });
 
 document.getElementById('backToDashboardBtn')?.addEventListener('click', () => {
-    window.location.href = dashboardPath;
+    window.myKwezaPageTransition.go(dashboardPath);
 });
 
 document.getElementById('dashboardBtn')?.addEventListener('click', () => {
-    window.location.href = dashboardPath;
+    window.myKwezaPageTransition.go(dashboardPath);
 });
 
 document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     await apiFetch('/api/logout', { method: 'POST' });
-    window.location.href = '/';
+    window.myKwezaPageTransition.go('/');
 });
 
 loadWeeklyReportPage();

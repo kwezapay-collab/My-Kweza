@@ -13,16 +13,16 @@ async function init() {
         // 1. Verify Authentication
         const res = await apiFetch('/api/me');
         if (!res.ok) {
-            window.location.href = '/';
+            window.myKwezaPageTransition.go('/');
             return;
         }
 
         currentUser = await res.json();
         if (currentUser.role !== 'Super Admin') {
             if (currentUser.role === 'Dev Operations Assistant') {
-                window.location.href = '/dev-operations.html';
+                window.myKwezaPageTransition.go('/dev-operations.html');
             } else {
-                window.location.href = '/dashboard.html';
+                window.myKwezaPageTransition.go('/dashboard.html');
             }
             return;
         }
@@ -245,7 +245,7 @@ function setupEventListeners() {
     // Logout
     document.getElementById('logoutBtn')?.addEventListener('click', async () => {
         await apiFetch('/api/logout', { method: 'POST' });
-        window.location.href = '/';
+        window.myKwezaPageTransition.go('/');
     });
 
     // Close modal on background click
@@ -715,7 +715,7 @@ async function toggleLRM() {
 }
 
 function exportCSV() {
-    window.location.href = '/api/export/payouts';
+    window.myKwezaPageTransition.go('/api/export/payouts');
 }
 
 async function deletePayout(id) {

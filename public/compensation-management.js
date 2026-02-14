@@ -29,15 +29,15 @@ function updateHeader() {
 
     const dashboardPath = getDashboardPath();
     document.getElementById('dashboardBtn')?.addEventListener('click', () => {
-        window.location.href = dashboardPath;
+        window.myKwezaPageTransition.go(dashboardPath);
     });
     document.getElementById('backBtn')?.addEventListener('click', () => {
-        window.location.href = getMenuBackUrl(dashboardPath);
+        window.myKwezaPageTransition.go(getMenuBackUrl(dashboardPath));
     });
 
     const brandBtn = document.querySelector('.brand-group[onclick*="/dashboard.html"]');
     if (brandBtn) {
-        brandBtn.onclick = () => window.location.href = dashboardPath;
+        brandBtn.onclick = () => window.myKwezaPageTransition.go(dashboardPath);
     }
 }
 
@@ -122,13 +122,13 @@ async function loadCompensationPage() {
     try {
         const res = await apiFetch('/api/me');
         if (!res.ok) {
-            window.location.href = '/';
+            window.myKwezaPageTransition.go('/');
             return;
         }
 
         currentUser = await res.json();
         if (!isFinancialManagerRole(currentUser.role)) {
-            window.location.href = '/dashboard.html';
+            window.myKwezaPageTransition.go('/dashboard.html');
             return;
         }
 
@@ -141,7 +141,7 @@ async function loadCompensationPage() {
         updateHeader();
         await loadFounderMembers();
     } catch (err) {
-        window.location.href = '/';
+        window.myKwezaPageTransition.go('/');
     }
 }
 
@@ -180,7 +180,7 @@ document.getElementById('founderCompForm')?.addEventListener('submit', async (e)
 
 document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     await apiFetch('/api/logout', { method: 'POST' });
-    window.location.href = '/';
+    window.myKwezaPageTransition.go('/');
 });
 
 loadCompensationPage();

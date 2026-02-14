@@ -106,17 +106,17 @@ async function loadDashboard() {
     try {
         const res = await apiFetch('/api/me');
         if (!res.ok) {
-            window.location.href = '/';
+            window.myKwezaPageTransition.go('/');
             return;
         }
         currentUser = await res.json();
 
         if (currentUser.role === 'Super Admin') {
-            window.location.href = '/super-admin.html';
+            window.myKwezaPageTransition.go('/super-admin.html');
             return;
         }
         if (currentUser.role === 'Dev Operations Assistant') {
-            window.location.href = '/dev-operations.html';
+            window.myKwezaPageTransition.go('/dev-operations.html');
             return;
         }
 
@@ -132,7 +132,7 @@ async function loadDashboard() {
 
         await Promise.all(requests);
     } catch (err) {
-        window.location.href = '/';
+        window.myKwezaPageTransition.go('/');
     }
 }
 
@@ -514,11 +514,11 @@ function renderFounderWeeklyReports() {
 // Event Listeners
 document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     await apiFetch('/api/logout', { method: 'POST' });
-    window.location.href = '/';
+    window.myKwezaPageTransition.go('/');
 });
 
 document.getElementById('exportCSVBtn')?.addEventListener('click', () => {
-    window.location.href = '/api/export/payouts';
+    window.myKwezaPageTransition.go('/api/export/payouts');
 });
 
 document.getElementById('withdrawalForm')?.addEventListener('submit', async (e) => {
