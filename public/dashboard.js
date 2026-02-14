@@ -83,7 +83,7 @@ function applyEarningsCardTheme(role) {
 function updateEarningsCardMeta() {
     const memberIdEl = document.getElementById('earningsCardNumber');
     if (memberIdEl) {
-        memberIdEl.innerText = String(currentUser?.member_id || '--');
+        memberIdEl.innerText = `ID: ${String(currentUser?.member_id || '--')}`;
     }
 
     const validThruEl = document.getElementById('earningsValidThru');

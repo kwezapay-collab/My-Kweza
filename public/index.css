@@ -1332,46 +1332,61 @@ body.devops-purple-theme.scrollable .glass-card.earnings-card::after {
 }
 
 .earnings-card-top,
-.earnings-card-chip-row,
 .earnings-card-footer {
     position: relative;
     z-index: 1;
 }
 
-body.scrollable .glass-card.earnings-card>.earnings-card-chip-image {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    right: auto !important;
-    inset-inline-start: 1rem;
-    inset-inline-end: auto;
-    width: 72px;
+body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
+    position: static;
+    width: 62px;
     height: auto;
-    z-index: 3;
+    z-index: 1;
     margin: 0;
+    flex-shrink: 0;
     pointer-events: none;
     user-select: none;
     filter: drop-shadow(0 6px 14px rgba(5, 16, 34, 0.28));
 }
 
 .earnings-card-top {
+    display: grid;
+    gap: 0.45rem;
+    align-items: start;
+    text-align: left;
+}
+
+.earnings-card-headline {
     display: flex;
-    flex-direction: column;
-    gap: 0.32rem;
-    padding-left: 84px;
-    align-items: flex-end;
-    text-align: right;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.6rem;
 }
 
 .earnings-card-kicker {
-    font-size: 1.08rem;
+    font-size: 1.1rem;
     font-weight: 600;
     letter-spacing: 0.01em;
     color: var(--earnings-accent);
 }
 
+.earnings-card-type {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(236, 248, 255, 0.92);
+}
+
+.earnings-card-balance-row {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
 .earnings-card-balance {
     margin: 0;
+    flex: 1;
     font-size: clamp(1.75rem, 4.3vw, 2.35rem);
     font-weight: 800;
     line-height: 1.1;
@@ -1379,42 +1394,31 @@ body.scrollable .glass-card.earnings-card>.earnings-card-chip-image {
     color: var(--earnings-ink);
 }
 
-.earnings-card-chip-row {
-    display: flex;
+.earnings-card-mark {
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.85rem;
-}
-
-.earnings-card-chip,
-.earnings-card-chip-dot {
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.36);
-}
-
-.earnings-card-chip {
-    width: 36px;
-    height: 36px;
-    order: 2;
     margin-left: auto;
 }
 
-.earnings-card-chip-dot {
-    width: 26px;
-    height: 26px;
-    margin-left: -26px;
-    opacity: 0.8;
-    order: 3;
+.earnings-card-mark-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.34);
+}
+
+.earnings-card-mark-circle+.earnings-card-mark-circle {
+    margin-left: -12px;
+    opacity: 0.82;
 }
 
 .earnings-card-number {
-    margin-left: 0;
+    margin-top: 0.06rem;
     font-size: 1.02rem;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
     color: rgba(242, 250, 255, 0.96);
     text-transform: uppercase;
-    order: 1;
 }
 
 .earnings-card-footer {
@@ -1895,17 +1899,22 @@ tr:last-child {
         max-width: 12ch;
     }
 
-    body.scrollable .glass-card.earnings-card>.earnings-card-chip-image {
-        top: 0.8rem;
-        left: 0.8rem;
-        right: auto !important;
-        inset-inline-start: 0.8rem;
-        inset-inline-end: auto;
-        width: 58px;
+    body.scrollable .glass-card.earnings-card .earnings-card-chip-image {
+        width: 52px;
     }
 
-    .earnings-card-top {
-        padding-left: 68px;
+    .earnings-card-headline {
+        gap: 0.45rem;
+    }
+
+    .earnings-card-type {
+        font-size: 0.68rem;
+        letter-spacing: 0.1em;
+    }
+
+    .earnings-card-mark-circle {
+        width: 28px;
+        height: 28px;
     }
 
     .earnings-card-footer .earnings-card-meta:last-child .earnings-card-meta-label {

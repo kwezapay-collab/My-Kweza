@@ -32,14 +32,19 @@
 
         <!-- Unified Stats Card (Visible to all) -->
         <div id="earningsCard" class="glass-card unified-stats-card earnings-card animate-fade">
-            <img src="/cardchip.png" alt="" class="earnings-card-chip-image" aria-hidden="true">
             <div class="earnings-card-top">
-                <p class="earnings-card-kicker">Main Balance</p>
-                <p class="earnings-card-balance">MWK <span id="totalVal">0.00</span></p>
-            </div>
-            <div class="earnings-card-chip-row">
-                <span class="earnings-card-chip" aria-hidden="true"></span>
-                <span class="earnings-card-chip-dot" aria-hidden="true"></span>
+                <div class="earnings-card-headline">
+                    <p class="earnings-card-kicker">Available balance</p>
+                    <p class="earnings-card-type">Earnings Card</p>
+                </div>
+                <div class="earnings-card-balance-row">
+                    <img src="/cardchip.png" alt="" class="earnings-card-chip-image" aria-hidden="true">
+                    <p class="earnings-card-balance">MWK <span id="totalVal">0.00</span></p>
+                    <span class="earnings-card-mark" aria-hidden="true">
+                        <span class="earnings-card-mark-circle"></span>
+                        <span class="earnings-card-mark-circle"></span>
+                    </span>
+                </div>
                 <p class="earnings-card-number" id="earningsCardNumber">----</p>
             </div>
             <div class="earnings-card-footer">
