@@ -59,8 +59,8 @@ function updateUI() {
     const navUserRole = document.getElementById('userRole');
     if (navUserRole) navUserRole.innerText = currentUser.sub_role || currentUser.role;
 
-    document.getElementById('profileEmail').value = currentUser.email || '';
-    document.getElementById('notifyToggle').checked = currentUser.notifications_enabled === 1;
+    const nameField = document.getElementById('profileName');
+    if (nameField) nameField.value = currentUser.name;
 
     const themeMode = getAccountThemeMode();
     if (window.themeManager?.syncFromServer) {
@@ -114,21 +114,8 @@ document.getElementById('logoutBtn')?.addEventListener('click', logoutLogic);
 
 document.getElementById('profileForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('profileEmail').value;
-    const notifications_enabled = document.getElementById('notifyToggle').checked;
-
-    const res = await apiFetch('/api/profile/update', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, notifications_enabled })
-    });
-
-    if (res.ok) {
-        alert('Preferences updated!');
-        setProfileFormVisibility(false);
-    } else {
-        alert('Failed to update preferences.');
-    }
+    alert('User preferences are managed by administration.');
+    setProfileFormVisibility(false);
 });
 
 document.getElementById('pinForm')?.addEventListener('submit', async (e) => {

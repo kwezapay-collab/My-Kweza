@@ -80,23 +80,23 @@ function bindNotificationActions() {
     document.querySelectorAll('.notification-open-btn').forEach((button) => {
         button.addEventListener('click', async () => {
             const id = Number.parseInt(String(button.dataset.id || ''), 10);
-            const isRead = String(button.dataset.read || '0') === '1';
             const link = String(button.dataset.link || '').trim();
 
-            try {
-                if (!isRead) {
-                    await markNotificationRead(id);
-                }
-            } catch (err) {
-                // Continue navigation even if mark-read fails.
-            }
-
-            if (link) {
+            // If it's a specific external link (not just back to this page), navigate
+            if (link && link !== '/notifications.html' && !link.startsWith('/notifications.html?')) {
+                const isRead = String(button.dataset.read || '0') === '1';
+                try {
+                    if (!isRead) await markNotificationRead(id);
+                } catch (err) { }
                 window.myKwezaPageTransition.go(link);
                 return;
             }
 
-            await loadNotifications();
+            // Otherwise, show the detail view right here
+            const url = new URL(window.location);
+            url.searchParams.set('id', id);
+            window.history.pushState({}, '', url);
+            await showNotificationDetail(id);
         });
     });
 }
@@ -134,9 +134,8 @@ function renderNotifications(rows) {
                     data-id="${entry.id}"
                     data-read="${isRead ? 1 : 0}"
                     data-link="${escapeHtml(link)}"
-                    ${actionDisabled ? 'disabled' : ''}
                     style="padding: 8px 12px; font-size: 0.72rem;">
-                    ${actionLabel}
+                    ${link && link !== '/notifications.html' ? (isRead ? 'Open Link' : 'Read + Open') : (isRead ? 'View' : 'Read')}
                 </button>
             </td>
         `;
@@ -170,6 +169,10 @@ async function loadNotificationsPage() {
         }
 
         currentUser = await meResponse.json();
+        if (currentUser.role === 'Super Admin') dashboardPath = '/super-admin.html';
+        else if (currentUser.role === 'Dev Operations Assistant') dashboardPath = '/dev-operations.html';
+        else dashboardPath = '/dashboard.html';
+
         updateHeader();
 
         // Handle detail view if ID is present
