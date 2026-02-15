@@ -117,6 +117,21 @@ function updateEarningsCardMeta() {
     }
 }
 
+function applyDashboardTheme() {
+    if (!document.body) return;
+
+    const usePurpleTheme = currentUser?.member_id === 'CTM-2025-002';
+    document.body.dataset.useDevopsTheme = usePurpleTheme ? '1' : '0';
+
+    if (!usePurpleTheme) {
+        document.body.classList.remove('devops-purple-theme');
+        return;
+    }
+
+    const activeTheme = window.themeManager?.getTheme ? window.themeManager.getTheme() : 'dark';
+    document.body.classList.toggle('devops-purple-theme', activeTheme !== 'light');
+}
+
 async function loadDashboard() {
     try {
         const res = await apiFetch('/api/me');
@@ -161,6 +176,7 @@ function updateUI() {
     const memberIdEl = document.getElementById('memberId');
     if (memberIdEl) memberIdEl.innerText = `ID: ${currentUser.member_id}`;
 
+    applyDashboardTheme();
     updateEarningsCardMeta();
     applyEarningsCardTheme(currentUser.role);
 
