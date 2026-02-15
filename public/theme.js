@@ -441,8 +441,8 @@
       const menuWrap = document.createElement('div');
       menuWrap.className = 'nav-hamburger-wrap';
       menuWrap.innerHTML = `
-      <button id="navMenuToggleBtn" type="button" class="${isActionMount ? 'dashboard-action-btn nav-menu-launcher' : 'nav-icon-btn nav-hamburger-btn'}" aria-label="Open menu" aria-expanded="false" aria-haspopup="true">
-        ${isActionMount ? '<span class="dashboard-action-btn-icon"><i data-lucide="menu"></i></span><span class="dashboard-action-btn-label">Menu</span>' : '<i data-lucide="menu"></i>'}
+      <button id="navMenuToggleBtn" type="button" class="${isActionMount ? 'dashboard-action-btn nav-menu-launcher' : 'nav-icon-btn nav-hamburger-btn'}" aria-label="Open More Actions" aria-expanded="false" aria-haspopup="true">
+        ${isActionMount ? '<span class="dashboard-action-btn-icon"><i data-lucide="more-vertical"></i></span><span class="dashboard-action-btn-label">More Actions</span>' : '<i data-lucide="more-vertical"></i>'}
       </button>
       <div class="nav-hamburger-menu" role="menu" aria-label="Navigation menu">
         <div class="nav-menu-profile">
