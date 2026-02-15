@@ -1995,18 +1995,20 @@ tr:last-child {
 }
 
 .notification-center-list {
-    display: grid;
-    grid-template-areas: "stack";
-    gap: 0;
-    perspective: 1200px;
-    height: 120px;
-    /* Fixed height for the interaction area */
-    position: relative;
-    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 360px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 0.3rem;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    scrollbar-gutter: stable;
 }
 
 .notification-card {
-    grid-area: stack;
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(28px) saturate(190%);
     -webkit-backdrop-filter: blur(28px) saturate(190%);
@@ -2016,15 +2018,9 @@ tr:last-child {
     display: flex;
     align-items: center;
     gap: 0.85rem;
-    transition: transform 0.4s cubic-bezier(0.2, 0, 0.2, 1),
-        opacity 0.4s ease,
-        filter 0.4s ease,
-        background 0.3s ease;
+    transition: background 0.3s ease;
     cursor: pointer;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-    transform-origin: center center;
-    will-change: transform, opacity;
-    position: relative;
     min-height: 84px;
 }
 
@@ -2105,7 +2101,6 @@ tr:last-child {
     border: 1px dashed rgba(255, 255, 255, 0.1);
 }
 
-/* Scroll Effect Classes (applied via JS) */
 /* Light mode notifications */
 html.light-mode .notification-card,
 body.light-mode .notification-card {
@@ -2162,12 +2157,6 @@ body.light-mode .notification-chevron-wrap {
     width: 16px;
     height: 16px;
     color: rgba(255, 255, 255, 0.3);
-}
-
-.notification-card.scrolled-out {
-    opacity: 0;
-    transform: scale(0.85) translateY(-20px);
-    pointer-events: none;
 }
 
 /* Section Labels */
