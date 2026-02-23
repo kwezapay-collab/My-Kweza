@@ -26,10 +26,13 @@ body {
     background: radial-gradient(circle at top left, #1e293b, #0f172a);
     color: var(--text-main);
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
+    overflow: hidden;
     width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 html.page-transitions-enabled body {
@@ -478,16 +481,19 @@ h3,
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(8px);
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--glass-border);
+    width: calc(100% + 10%);
     margin-left: -5%;
     margin-right: -5%;
 }
 
 html.light-mode .dashboard-page-header,
 body.light-mode .dashboard-page-header {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(240, 244, 248, 0.9);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 /* Glass Card */
@@ -1924,7 +1930,7 @@ tr:last-child {
 
 
     .main-content {
-        padding: 0.4rem 0.5rem;
+        padding: 0.4rem 0.5rem 120px;
     }
 
     .form-grid-two {
@@ -2320,10 +2326,23 @@ body.light-mode .notification-chevron-wrap {
     color: #1a4d6e;
 }
 
-/* Adjust main content for bottom nav */
-body {
-    padding-bottom: 110px;
+/* Ensure only one active item when side menu is open */
+body.nav-menu-open .bottom-nav-item.active:not(#bottomNavMoreBtn) {
+    background: transparent !important;
+    color: #486581 !important;
+    box-shadow: none !important;
 }
+
+body.nav-menu-open .bottom-nav-item.active:not(#bottomNavMoreBtn) span {
+    display: none !important;
+    opacity: 0 !important;
+}
+
+html[data-theme="dark"] body.nav-menu-open .bottom-nav-item.active:not(#bottomNavMoreBtn) {
+    color: #94a3b8 !important;
+}
+
+/* Redundant padding removed as we use .scrollable .main-content flex layout */
 
 /* Light/Dark mode adjustments for bottom nav */
 html.light-mode .bottom-nav {

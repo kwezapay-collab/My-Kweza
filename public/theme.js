@@ -434,9 +434,9 @@
 
     const items = [
       { href: '/dashboard.html', icon: 'home', label: 'Home' },
-      { href: '#more', icon: 'more-horizontal', label: 'More' },
+      { href: '#more', icon: 'user', label: 'Account' },
       { href: '/notifications.html', icon: 'mail', label: 'Inbox' },
-      { href: '/settings.html', icon: 'circle-user', label: 'Account' }
+      { href: '/settings.html', icon: 'settings', label: 'Settings' }
     ];
 
     nav.innerHTML = items.map(item => {
@@ -472,8 +472,8 @@
     const menuWrap = document.createElement('div');
     menuWrap.className = 'nav-hamburger-wrap';
     menuWrap.innerHTML = `
-      <button id="navMenuToggleBtn" type="button" class="${isActionMount ? 'dashboard-action-btn nav-menu-launcher' : 'nav-icon-btn nav-hamburger-btn'}" aria-label="Open More Actions" aria-expanded="false" aria-haspopup="true">
-        ${isActionMount ? '<span class="dashboard-action-btn-icon"><i data-lucide="more-vertical"></i></span><span class="dashboard-action-btn-label">More Actions</span>' : '<i data-lucide="more-vertical"></i>'}
+      <button id="navMenuToggleBtn" type="button" class="${isActionMount ? 'dashboard-action-btn nav-menu-launcher' : 'nav-icon-btn nav-hamburger-btn'}" aria-label="Open Account Menu" aria-expanded="false" aria-haspopup="true">
+        ${isActionMount ? '<span class="dashboard-action-btn-icon"><i data-lucide="user"></i></span><span class="dashboard-action-btn-label">Account</span>' : '<i data-lucide="user"></i>'}
       </button>
       <div class="nav-hamburger-menu" role="menu" aria-label="Navigation menu">
         <div class="nav-menu-profile">
@@ -538,10 +538,6 @@
               <strong id="navMenuEarningsTotal">MWK 0</strong>
             </div>
           </div>
-          <a class="nav-menu-link ${window.location.pathname.endsWith('/settings.html') ? 'active' : ''}" role="menuitem" href="/settings.html">
-            <i data-lucide="settings"></i>
-            <span>Settings</span>
-          </a>
           <button id="navMenuThemeSwitchBtn" class="nav-menu-link nav-menu-theme-item" role="menuitem" type="button" aria-label="Toggle theme">
             <span class="nav-menu-theme-main">
               <i data-lucide="moon"></i>
