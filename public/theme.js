@@ -435,7 +435,6 @@
     const items = [
       { href: '/dashboard.html', icon: 'home', label: 'Home' },
       { href: '#more', icon: 'user', label: 'Account' },
-      { href: '/notifications.html', icon: 'mail', label: 'Inbox' },
       { href: '/settings.html', icon: 'settings', label: 'Settings' }
     ];
 
@@ -498,11 +497,6 @@
           <p id="navMenuProfileDetails" class="nav-menu-profile-details">Role: -- | Branch: --</p>
         </div>
         <div class="nav-menu-items">
-          <a id="navMenuNotificationsLink" class="nav-menu-link ${window.location.pathname.endsWith('/notifications.html') ? 'active' : ''}" role="menuitem" href="/notifications.html">
-            <i data-lucide="bell"></i>
-            <span>Notifications</span>
-            <span id="navMenuNotificationBadge" class="nav-menu-badge" style="display: none;">0</span>
-          </a>
           <a id="navMenuFinancialQueueLink" class="nav-menu-link ${window.location.pathname.endsWith('/financial-withdrawals-history.html') ? 'active' : ''}" role="menuitem" href="/financial-withdrawals-history.html" style="display: none;">
             <i data-lucide="inbox"></i>
             <span>Financial Manager Withdrawal Queue</span>
@@ -538,21 +532,6 @@
               <strong id="navMenuEarningsTotal">MWK 0</strong>
             </div>
           </div>
-          <button id="navMenuThemeSwitchBtn" class="nav-menu-link nav-menu-theme-item" role="menuitem" type="button" aria-label="Toggle theme">
-            <span class="nav-menu-theme-main">
-              <i data-lucide="moon"></i>
-              <span>Theme</span>
-            </span>
-            <span class="nav-menu-theme-switch" aria-hidden="true">
-              <span class="nav-menu-theme-switch-side nav-menu-theme-switch-side-dark">
-                <i data-lucide="moon"></i>
-              </span>
-              <span class="nav-menu-theme-switch-side nav-menu-theme-switch-side-light">
-                <i data-lucide="sun"></i>
-              </span>
-              <span class="nav-menu-theme-switch-thumb"></span>
-            </span>
-          </button>
           <button class="nav-menu-link nav-menu-logout" role="menuitem" type="button">
             <i data-lucide="log-out"></i>
             <span>Log Out</span>
@@ -649,20 +628,28 @@
     };
 
     const updateNotificationBadge = async () => {
-      if (!notificationsBadge) return;
+      const headerBadge = document.getElementById('headerNotificationBadge');
+      const sideMenuBadge = document.getElementById('navMenuNotificationBadge');
+
       try {
         const response = await fetch('/api/notifications/unread-count', { credentials: 'include' });
         if (!response.ok) return;
         const payload = await response.json();
         const unreadCount = Number.parseInt(String(payload?.unread_count || '0'), 10);
         const count = Number.isFinite(unreadCount) && unreadCount > 0 ? unreadCount : 0;
-        if (count > 0) {
-          notificationsBadge.style.display = 'inline-flex';
-          notificationsBadge.textContent = count > 99 ? '99+' : String(count);
-        } else {
-          notificationsBadge.style.display = 'none';
-          notificationsBadge.textContent = '0';
-        }
+
+        const updateBadgeEl = (el, val) => {
+          if (!el) return;
+          if (val > 0) {
+            el.style.display = 'flex';
+            el.textContent = val > 99 ? '99+' : String(val);
+          } else {
+            el.style.display = 'none';
+          }
+        };
+
+        updateBadgeEl(headerBadge, count);
+        updateBadgeEl(sideMenuBadge, count);
       } catch (err) {
         // Ignore notification badge update failures.
       }
@@ -888,33 +875,6 @@
       closeMenu();
     });
 
-    themeSwitchBtn?.addEventListener('click', async () => {
-      const activeTheme = window.themeManager?.getTheme ? window.themeManager.getTheme() : 'dark';
-      const nextTheme = activeTheme === 'light' ? 'dark' : 'light';
-
-      if (window.themeManager?.setTheme) {
-        window.themeManager.setTheme(nextTheme, true);
-      }
-      refreshThemeToggleIcon();
-
-      try {
-        if (currentMenuUser) {
-          await fetch('/api/profile/update', {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: currentMenuUser.email || '',
-              notifications_enabled: Boolean(currentMenuUser.notifications_enabled),
-              theme_mode: nextTheme
-            })
-          });
-          currentMenuUser.theme_mode = nextTheme;
-        }
-      } catch (err) {
-        // Keep local theme change even if server sync fails.
-      }
-    });
 
     earningsToggleBtn?.addEventListener('click', () => {
       const isOpen = earningsPanel?.classList.toggle('is-open');

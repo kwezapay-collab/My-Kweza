@@ -68,6 +68,19 @@ function updateUI() {
     }
     syncDevOpsThemeForCurrentUser(themeMode);
 
+    // Update theme toggle UI
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+    const isDark = themeMode === 'dark';
+
+    if (themeIcon) {
+        themeIcon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+        lucide.createIcons();
+    }
+    if (themeLabel) {
+        themeLabel.innerText = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+    }
+
     const getDashboardPath = () => {
         if (currentUser.role === 'Super Admin') return '/super-admin.html';
         if (currentUser.role === 'Dev Operations Assistant') return '/dev-operations.html';
@@ -177,6 +190,34 @@ document.getElementById('pinForm')?.addEventListener('submit', async (e) => {
         }
     } catch (err) {
         alert('An error occurred. Please try again.');
+    }
+});
+
+document.getElementById('themeToggleBtn')?.addEventListener('click', async () => {
+    const currentTheme = window.themeManager?.getTheme ? window.themeManager.getTheme() : 'dark';
+    const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    if (window.themeManager?.setTheme) {
+        window.themeManager.setTheme(nextTheme, true);
+    }
+
+    // Optimistically update UI
+    if (currentUser) {
+        currentUser.theme_mode = nextTheme;
+        updateUI();
+    }
+
+    try {
+        await apiFetch('/api/profile/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                theme_mode: nextTheme,
+                email: currentUser?.email || ''
+            })
+        });
+    } catch (err) {
+        console.error('Failed to sync theme to server:', err);
     }
 });
 

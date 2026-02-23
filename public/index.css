@@ -2342,6 +2342,67 @@ html[data-theme="dark"] body.nav-menu-open .bottom-nav-item.active:not(#bottomNa
     color: #94a3b8 !important;
 }
 
+/* Notification Bell & Badge */
+.header-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.header-notification-btn {
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.header-notification-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.header-notification-btn i {
+    width: 20px;
+    height: 20px;
+}
+
+.header-notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #e74c3c;
+    color: white;
+    font-size: 0.62rem;
+    font-weight: 800;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid #0f172a;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+html.light-mode .header-notification-btn {
+    background: rgba(26, 77, 110, 0.05);
+    border-color: rgba(26, 77, 110, 0.1);
+    color: #1a4d6e;
+}
+
+html.light-mode .header-notification-badge {
+    border-color: #f0f4f8;
+}
+
 /* Redundant padding removed as we use .scrollable .main-content flex layout */
 
 /* Light/Dark mode adjustments for bottom nav */

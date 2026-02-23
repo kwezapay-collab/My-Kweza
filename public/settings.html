@@ -27,6 +27,19 @@
         </header>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <!-- Appearance Settings -->
+            <section class="glass-card animate-fade">
+                <h2 style="margin-bottom: 1.5rem;"><i data-lucide="palette"
+                        style="vertical-align: middle; margin-right: 0.5rem;"></i>Appearance</h2>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Choose your preferred
+                    application theme</p>
+                <button id="themeToggleBtn" type="button" class="btn btn-secondary"
+                    style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.8rem;">
+                    <i data-lucide="moon" id="themeIcon" style="width: 18px; height: 18px;"></i>
+                    <span id="themeLabel">Switch to Light Mode</span>
+                </button>
+            </section>
+
             <!-- Profile Settings -->
             <section class="glass-card animate-fade">
                 <h2 style="margin-bottom: 1.5rem;"><i data-lucide="user"

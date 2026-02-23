@@ -19,10 +19,23 @@
 
 <body class="scrollable devops-purple-theme">
     <main class="main-content">
-        <!-- Brand Label -->
-        <div class="dashboard-section-label animate-fade"
-            style="text-align: center; margin-top: 0rem; margin-bottom: 0.15rem; font-weight: 700; font-size: 1.05rem; color: var(--text);">
-            MyKweza</div>
+        <!-- Header with Notifications -->
+        <header
+            style="padding: 1rem 5.5%; margin-bottom: 0.1rem; display: flex; justify-content: space-between; align-items: center; min-height: 54px;">
+            <div class="header-actions-group">
+                <!-- Brand Label -->
+                <div class="dashboard-section-label animate-fade"
+                    style="font-weight: 700; font-size: 1.05rem; color: var(--text);">
+                    MyKweza</div>
+            </div>
+            <div class="header-actions-group">
+                <button class="header-notification-btn" onclick="window.myKwezaPageTransition.go('/notifications.html')"
+                    aria-label="View notifications">
+                    <i data-lucide="bell"></i>
+                    <span id="headerNotificationBadge" class="header-notification-badge" style="display: none;">0</span>
+                </button>
+            </div>
+        </header>
 
         <div id="earningsCard" class="glass-card unified-stats-card earnings-card animate-fade">
             <div class="earnings-card-top">
