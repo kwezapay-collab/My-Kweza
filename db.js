@@ -1,26 +1,35 @@
 const { Pool } = require('pg');
+const { createClient } = require('@libsql/client');
 require('dotenv').config();
 
-const connectionString =
-    process.env.POSTGRES_URL ||
-    process.env.DATABASE_URL ||
-    process.env.POSTGRES_PRISMA_URL;
+const postgresUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+const useLocalDb = process.env.USE_LOCAL_DB === 'true' || !postgresUrl;
 
-if (!connectionString) {
-    throw new Error('POSTGRES_URL (or DATABASE_URL) is required');
+let pgPool = null;
+let sqliteClient = null;
+
+if (!useLocalDb) {
+    const useSsl = !/localhost|127\.0\.0\.1/i.test(postgresUrl);
+    pgPool = new Pool({
+        connectionString: postgresUrl,
+        ssl: useSsl ? { rejectUnauthorized: false } : false,
+    });
+} else {
+    console.log('Using local SQLite database (kweza.db)');
+    sqliteClient = createClient({
+        url: 'file:kweza.db',
+    });
 }
 
-const useSsl = !/localhost|127\.0\.0\.1/i.test(connectionString);
-const pool = new Pool({
-    connectionString,
-    ssl: useSsl ? { rejectUnauthorized: false } : false,
-});
+const mapPlaceholders = (sql, args, isSqlite) => {
+    if (!args || args.length === 0) return { sql, args: [] };
 
-const mapPlaceholders = (sql, args) => {
-    if (!args || args.length === 0 || !sql.includes('?')) {
-        return { sql, args: args || [] };
+    if (isSqlite) {
+        // SQLite/libsql handles ? placeholders naturally
+        return { sql, args };
     }
 
+    // Convert ? to $1, $2 for PostgreSQL
     let index = 0;
     const mappedSql = sql.replace(/\?/g, () => {
         index += 1;
@@ -31,16 +40,58 @@ const mapPlaceholders = (sql, args) => {
 
 const db = {
     async execute(input) {
-        const payload = typeof input === 'string'
+        let { sql, args } = typeof input === 'string'
             ? { sql: input, args: [] }
             : { sql: input.sql, args: input.args || [] };
 
-        const mapped = mapPlaceholders(payload.sql, payload.args);
-        const result = await pool.query(mapped.sql, mapped.args);
+        if (sqliteClient) {
+            // Translate PostgreSQL syntax to SQLite
+            sql = sql.replace(/SERIAL PRIMARY KEY/gi, 'INTEGER PRIMARY KEY AUTOINCREMENT');
+            sql = sql.replace(/::int/gi, '');
+            sql = sql.replace(/NULLS LAST/gi, '');
+            sql = sql.replace(/timestamp/gi, 'datetime');
+
+            // Handle ALTER TABLE ADD COLUMN IF NOT EXISTS (SQLite doesn't support IF NOT EXISTS for columns)
+            if (sql.toUpperCase().includes('ADD COLUMN IF NOT EXISTS')) {
+                sql = sql.replace(/ADD COLUMN IF NOT EXISTS/gi, 'ADD COLUMN');
+                try {
+                    const result = await sqliteClient.execute({ sql, args });
+                    return { rows: result.rows || [] };
+                } catch (err) {
+                    const msg = err.message.toLowerCase();
+                    if (msg.includes('duplicate column') || msg.includes('already exists')) {
+                        return { rows: [] }; // Ignore if column exists
+                    }
+                    throw err;
+                }
+            }
+
+            // Handle TRUNCATE RESTART IDENTITY for SQLite
+            if (sql.toUpperCase().includes('TRUNCATE TABLE')) {
+                const tableName = sql.match(/TRUNCATE TABLE\s+(\w+)/i)?.[1];
+                if (tableName) {
+                    await sqliteClient.execute(`DELETE FROM ${tableName}`);
+                    await sqliteClient.execute(`DELETE FROM sqlite_sequence WHERE name='${tableName}'`).catch(() => { });
+                    return { rows: [] };
+                }
+            }
+
+            try {
+                const result = await sqliteClient.execute({ sql, args });
+                return { rows: result.rows || [] };
+            } catch (err) {
+                console.error('SQLITE EXECUTE ERROR:', { sql, args, message: err.message });
+                throw err;
+            }
+        }
+
+        const mapped = mapPlaceholders(sql, args, false);
+        const result = await pgPool.query(mapped.sql, mapped.args);
         return { rows: result.rows };
     },
     async close() {
-        await pool.end();
+        if (pgPool) await pgPool.end();
+        if (sqliteClient) await sqliteClient.close();
     }
 };
 

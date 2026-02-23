@@ -22,20 +22,14 @@ function getAccountThemeMode() {
 
 function setProfileFormVisibility(visible) {
     const formWrap = document.getElementById('profileFormWrap');
-    const toggleBtn = document.getElementById('toggleProfileFormBtn');
-    if (!formWrap || !toggleBtn) return;
-
+    if (!formWrap) return;
     formWrap.style.display = visible ? 'block' : 'none';
-    toggleBtn.innerText = visible ? 'Hide Preferences Form' : 'Update Preferences';
 }
 
 function setPinFormVisibility(visible) {
     const formWrap = document.getElementById('pinFormWrap');
-    const toggleBtn = document.getElementById('togglePinFormBtn');
-    if (!formWrap || !toggleBtn) return;
-
+    if (!formWrap) return;
     formWrap.style.display = visible ? 'block' : 'none';
-    toggleBtn.innerText = visible ? 'Hide PIN Form' : 'Update PIN';
 }
 
 function initSettingsFormToggles() {
@@ -68,17 +62,16 @@ function updateUI() {
     }
     syncDevOpsThemeForCurrentUser(themeMode);
 
-    // Update theme toggle UI
-    const themeIcon = document.getElementById('themeIcon');
-    const themeLabel = document.getElementById('themeLabel');
+    const themeSwitch = document.getElementById('themeSwitch');
+    const themeIconGroup = document.querySelector('#themeToggleBtn .settings-item-icon i');
     const isDark = themeMode === 'dark';
 
-    if (themeIcon) {
-        themeIcon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
-        lucide.createIcons();
+    if (themeSwitch) {
+        themeSwitch.classList.toggle('active', isDark);
     }
-    if (themeLabel) {
-        themeLabel.innerText = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+    if (themeIconGroup) {
+        themeIconGroup.setAttribute('data-lucide', isDark ? 'moon' : 'sun');
+        lucide.createIcons();
     }
 
     const getDashboardPath = () => {
@@ -204,8 +197,8 @@ document.getElementById('themeToggleBtn')?.addEventListener('click', async () =>
     // Optimistically update UI
     if (currentUser) {
         currentUser.theme_mode = nextTheme;
-        updateUI();
     }
+    updateUI();
 
     try {
         await apiFetch('/api/profile/update', {

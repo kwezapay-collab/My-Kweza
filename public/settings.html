@@ -15,76 +15,117 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="My Kweza">
     <link rel="apple-touch-icon" href="/icons/kweza-192.png">
+    <style>
+        .main-content {
+            overflow: hidden !important;
+            height: 100vh;
+        }
+    </style>
 </head>
 
 <body class="scrollable">
     <main class="main-content">
-        <header class="dashboard-page-header">
-            <div>
-                <h1>Account Settings</h1>
-                <p style="color: var(--text-muted);">Manage your profile and security</p>
+        <div class="settings-container">
+            <div class="settings-header-text">
+                <h1>Settings</h1>
+                <p style="color: var(--text-muted);">Manage your account preferences</p>
             </div>
-        </header>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-            <!-- Appearance Settings -->
-            <section class="glass-card animate-fade">
-                <h2 style="margin-bottom: 1.5rem;"><i data-lucide="palette"
-                        style="vertical-align: middle; margin-right: 0.5rem;"></i>Appearance</h2>
-                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Choose your preferred
-                    application theme</p>
-                <button id="themeToggleBtn" type="button" class="btn btn-secondary"
-                    style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.8rem;">
-                    <i data-lucide="moon" id="themeIcon" style="width: 18px; height: 18px;"></i>
-                    <span id="themeLabel">Switch to Light Mode</span>
+            <!-- Account Group -->
+            <div class="settings-group">
+                <button id="toggleProfileFormBtn" class="settings-item">
+                    <div class="settings-item-icon"><i data-lucide="user"></i></div>
+                    <div class="settings-item-content">
+                        <span class="settings-item-title">Profile Information</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="settings-item-chevron"></i>
                 </button>
-            </section>
-
-            <!-- Profile Settings -->
-            <section class="glass-card animate-fade">
-                <h2 style="margin-bottom: 1.5rem;"><i data-lucide="user"
-                        style="vertical-align: middle; margin-right: 0.5rem;"></i>Profile Preferences</h2>
-                <button id="toggleProfileFormBtn" type="button" class="btn btn-secondary" style="width: 100%;">Update
-                    Preferences</button>
-                <div id="profileFormWrap" style="display: none; margin-top: 1rem;">
+                <div id="profileFormWrap" class="settings-inline-form" style="display: none;">
                     <form id="profileForm">
                         <div class="input-group">
-                            <label>Primary Name</label>
+                            <label>Full Name</label>
                             <input type="text" id="profileName" placeholder="Enter your name" autocomplete="name"
                                 maxlength="120" required>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Preferences</button>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Changes</button>
                     </form>
                 </div>
-            </section>
 
-            <!-- Security Settings -->
-            <section class="glass-card animate-fade">
-                <h2 style="margin-bottom: 1.5rem;"><i data-lucide="shield"
-                        style="vertical-align: middle; margin-right: 0.5rem;"></i>Security (Change PIN)</h2>
-                <button id="togglePinFormBtn" type="button" class="btn btn-secondary" style="width: 100%;">Update
-                    PIN</button>
-                <div id="pinFormWrap" style="display: none; margin-top: 1rem;">
+                <button id="togglePinFormBtn" class="settings-item">
+                    <div class="settings-item-icon"><i data-lucide="shield"></i></div>
+                    <div class="settings-item-content">
+                        <span class="settings-item-title">Privacy & Security</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="settings-item-chevron"></i>
+                </button>
+                <div id="pinFormWrap" class="settings-inline-form" style="display: none;">
                     <form id="pinForm">
                         <div class="input-group">
                             <label>Current PIN</label>
                             <input type="password" id="oldPin" placeholder="••••" maxlength="4" required>
                         </div>
                         <div class="input-group">
-                            <label>New PIN (4 digits)</label>
+                            <label>New PIN</label>
                             <input type="password" id="newPin" placeholder="••••" maxlength="4" required>
                         </div>
-                        <div class="input-group">
-                            <label>Confirm New PIN</label>
-                            <input type="password" id="confirmPin" placeholder="••••" maxlength="4" required>
-                        </div>
                         <button type="submit" class="btn btn-primary"
-                            style="width: 100%; background: var(--accent);">Update
-                            PIN</button>
+                            style="width: 100%; background: var(--accent);">Update PIN</button>
                     </form>
                 </div>
-            </section>
 
+            </div>
+
+            <!-- Preferences Group -->
+            <div class="settings-group">
+                <button id="themeToggleBtn" class="settings-item">
+                    <div class="settings-item-icon"><i data-lucide="sun"></i></div>
+                    <div class="settings-item-content">
+                        <span class="settings-item-title">Dark Mode</span>
+                    </div>
+                    <div id="themeSwitch" class="settings-switch"></div>
+                </button>
+
+                <div class="settings-item">
+                    <div class="settings-item-icon"><i data-lucide="bell"></i></div>
+                    <div class="settings-item-content">
+                        <span class="settings-item-title">Notifications</span>
+                    </div>
+                    <div class="settings-switch active"></div>
+                </div>
+
+                <div class="settings-item">
+                    <div class="settings-item-icon"><i data-lucide="database"></i></div>
+                    <div class="settings-item-content">
+                        <span class="settings-item-title">Save History</span>
+                    </div>
+                    <div class="settings-switch active"></div>
+                </div>
+
+                <div class="settings-item">
+                    <div class="settings-item-icon"><i data-lucide="languages"></i></div>
+                    <div class="settings-item-content">
+                        <span class="settings-item-title">Language</span>
+                    </div>
+                    <span class="settings-item-value">English</span>
+                    <i data-lucide="chevron-right" class="settings-item-chevron"></i>
+                </div>
+
+                <div class="settings-item">
+                    <div class="settings-item-icon"><i data-lucide="help-circle"></i></div>
+                    <div class="settings-item-content">
+                        <span class="settings-item-title">Help Center</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="settings-item-chevron"></i>
+                </div>
+
+                <div class="settings-item">
+                    <div class="settings-item-icon"><i data-lucide="info"></i></div>
+                    <div class="settings-item-content">
+                        <span class="settings-item-title">About</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="settings-item-chevron"></i>
+                </div>
+            </div>
         </div>
     </main>
 

@@ -2451,7 +2451,194 @@ html[data-theme="dark"] body.devops-purple-theme .bottom-nav-item:not(.active):h
     /* Minimal purple hover */
 }
 
-/* Mobile specific fixes */
+/* Native Mobile Settings Layout */
+.settings-container {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 2rem 1.25rem 140px;
+    margin: 0;
+    min-height: 100vh;
+}
+
+html:not([data-theme="dark"]) .settings-container {
+    background: #f8fafc;
+    /* Soft mobile OS background */
+}
+
+.settings-header-text {
+    display: block !important;
+    width: 100% !important;
+    margin-bottom: 2.5rem;
+    padding: 0 0.2rem;
+}
+
+.settings-header-text h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+}
+
+.settings-group {
+    background: #ffffff;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 1.2rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+html[data-theme="dark"] .settings-group {
+    background: rgba(30, 41, 59, 0.5);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.settings-group-label {
+    display: block !important;
+    width: 100% !important;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin: 1.5rem 0 0.6rem 0.5rem;
+    letter-spacing: 0.08em;
+}
+
+.settings-item {
+    display: flex !important;
+    align-items: center;
+    padding: 1.1rem 1.25rem;
+    gap: 1rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    width: 100% !important;
+    text-align: left;
+    background: transparent;
+    border-right: none;
+    border-left: none;
+    border-top: none;
+    color: #1e293b;
+}
+
+html[data-theme="dark"] .settings-item {
+    color: #f8fafc;
+    border-bottom-color: rgba(255, 255, 255, 0.03);
+}
+
+.settings-item:last-child {
+    border-bottom: none;
+}
+
+.settings-item:active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+html.light-mode .settings-item {
+    border-bottom-color: rgba(26, 77, 110, 0.05);
+}
+
+html.light-mode .settings-item:active {
+    background: rgba(26, 77, 110, 0.03);
+}
+
+.settings-item-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #475569;
+}
+
+html[data-theme="dark"] .settings-item-icon {
+    color: #94a3b8;
+}
+
+.settings-item-icon i {
+    width: 20px;
+    height: 20px;
+}
+
+.settings-item-content {
+    flex: 1;
+}
+
+.settings-item-title {
+    font-weight: 500;
+    font-size: 1rem;
+    display: block;
+    letter-spacing: -0.01em;
+}
+
+.settings-item-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.settings-item-chevron {
+    color: var(--text-muted);
+    opacity: 0.5;
+}
+
+/* Switch Toggle UI */
+.settings-switch {
+    width: 44px;
+    height: 24px;
+    background: #e2e8f0;
+    border-radius: 12px;
+    position: relative;
+    transition: background 0.3s ease;
+}
+
+.settings-switch::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.settings-switch.active {
+    background: #2ecc71;
+    /* Standard Green Toggle */
+}
+
+.settings-switch.active::after {
+    transform: translateX(20px);
+}
+
+html[data-theme="dark"] .settings-switch {
+    background: #334155;
+}
+
+html[data-theme="dark"] .settings-switch.active {
+    background: #22c55e;
+}
+
+.settings-item-value {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin-right: 0.2rem;
+}
+
+/* In-line forms */
+.settings-inline-form {
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+html.light-mode .settings-inline-form {
+    background: #f8fafc;
+    border-top-color: rgba(26, 77, 110, 0.05);
+}
+
 @media screen and (max-width: 480px) {
     .bottom-nav-container {
         bottom: 15px;
