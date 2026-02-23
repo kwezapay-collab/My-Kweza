@@ -737,7 +737,7 @@
         if (!response.ok) return;
         const user = await response.json();
         currentMenuUser = user;
-        const isDevOpsUser = user.role === 'Dev Operations Assistant';
+        const isDevOpsUser = user.role === 'Dev Operations Assistant' || user.member_id === 'CTM-2025-002';
         if (document.body) {
           document.body.dataset.useDevopsTheme = isDevOpsUser ? '1' : '0';
           const activeTheme = window.themeManager?.getTheme ? window.themeManager.getTheme() : 'dark';

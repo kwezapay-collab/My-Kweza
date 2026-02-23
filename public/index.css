@@ -2411,24 +2411,44 @@ html.light-mode .bottom-nav {
     box-shadow: 0 15px 35px rgba(26, 77, 110, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
+/* Default Dark Mode Nav (Neutral) */
 html[data-theme="dark"] .bottom-nav {
-    background: rgba(15, 23, 42, 0.85);
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(20px) saturate(120%);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
 }
 
 html[data-theme="dark"] .bottom-nav-item {
-    color: #94a3b8;
+    color: rgba(255, 255, 255, 0.45);
 }
 
 html[data-theme="dark"] .bottom-nav-item.active {
-    background: #fff;
-    color: #0d1117;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    box-shadow: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-html[data-theme="dark"] .bottom-nav-item:not(.active):hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
+/* Purple Theme for DevOps / Specific User (Dark Mode Only) */
+html[data-theme="dark"] body.devops-purple-theme .bottom-nav {
+    background: rgba(30, 15, 60, 0.92);
+    /* Deep purple base */
+    border: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+html[data-theme="dark"] body.devops-purple-theme .bottom-nav-item.active {
+    background: rgba(147, 51, 234, 0.15);
+    /* Subtle purple tint */
+    color: #f472b6;
+    /* Soft pink-purple */
+    border: 1px solid rgba(219, 39, 119, 0.15);
+}
+
+html[data-theme="dark"] body.devops-purple-theme .bottom-nav-item:not(.active):hover {
+    background: rgba(147, 51, 234, 0.08);
+    /* Minimal purple hover */
 }
 
 /* Mobile specific fixes */
