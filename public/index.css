@@ -2264,7 +2264,7 @@ body.light-mode .notification-chevron-wrap {
 
 .bottom-nav {
     width: 92%;
-    max-width: 420px;
+    max-width: 280px;
     height: 70px;
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px) saturate(180%);
