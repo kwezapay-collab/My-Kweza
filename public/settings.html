@@ -19,10 +19,7 @@
 
 <body class="scrollable">
     <main class="main-content">
-        <header style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
-            <button onclick="window.myKwezaPageTransition.go('/dashboard.html')" class="btn"
-                style="background: transparent; padding: 8px; color: var(--text-muted);"><i
-                    data-lucide="arrow-left"></i></button>
+        <header class="dashboard-page-header">
             <div>
                 <h1>Account Settings</h1>
                 <p style="color: var(--text-muted);">Manage your profile and security</p>
@@ -40,7 +37,8 @@
                     <form id="profileForm">
                         <div class="input-group">
                             <label>Primary Name</label>
-                            <input type="text" id="profileName" placeholder="Enter your name" autocomplete="name" maxlength="120" required>
+                            <input type="text" id="profileName" placeholder="Enter your name" autocomplete="name"
+                                maxlength="120" required>
                         </div>
                         <button type="submit" class="btn btn-primary" style="width: 100%;">Save Preferences</button>
                     </form>
